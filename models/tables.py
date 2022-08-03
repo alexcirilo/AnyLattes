@@ -1,6 +1,5 @@
 from app import db
 
-
 class Projetos(db.Model):
     __tablename__ = 'projetos'
     

@@ -1,8 +1,40 @@
 {% extends 'base.html'%}
 {%block content%}
 <h1>{%block title%} Projetos {%endblock%}</h1>
-    <p>Título: {{ registros['NOME-DO-PROJETO'] }}</p>
-    <p>Ano Início: {{ registros['ANO-INICIO'] }}</p>
-    <p>Título: {{ registros['NOME-DO-PROJETO'] }}</p>
-    <p>Título: {{ registros['NOME-DO-PROJETO'] }}</p>
+
+<!--
+<table class="table table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Nome:</th>
+            <th>Título:</th>
+            <th>Coordenador:</th>
+            <th>Ano Início:</th>
+            <th>Natureza:</th>
+            <th>Nome da Instituição:</th>
+            <th>Natureza:</th>
+            <th>Integrantes:</th>
+        </tr>
+    </thead>
+    <tbody>
+        {%for registro in registros %}
+
+        <tr>
+            <td> {{ registro['NOME-COMPLETO']}}</td>
+            <td> {{ registro['NOME-DO-PROJETO'] }} </td>
+            <td> {{ registro['NOME-COMPLETO'] }}</td>
+            <td> {{ registro['ANO-INICIO'] }}</td>
+            <td> {{ registro['NATUREZA'] }}</td>
+            <td> {{ registro['NOME-INSTITUICAO'] }}</td>
+            <td> {{ registro['NATUREZA'] }}</td>
+            <td> {{ registro['INTEGRANTES'] }}</td>
+        </tr>
+        {%endfor%}
+    </tbody>
+
+</table>
+-->
+
+<h1>Salvo com sucesso!</h1>
+
 {%endblock%}

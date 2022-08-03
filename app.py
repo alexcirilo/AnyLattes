@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 import xml.etree.ElementTree as ET
 #from flask_mysqldb import MySQL
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 
 
 # configurações de upload arquivos
@@ -26,8 +26,8 @@ else:
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Qwer#1234@localhost/lattes4web'
-db = SQLAlchemy(app)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Qwer#1234@localhost/lattes4web'
+#db = SQLAlchemy(app)
 
 
 @app.route('/connection')
@@ -44,7 +44,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER  # atribuição da pasta
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
+'''
 class Projetos(db.Model):
     __tablename__ = 'projetos'
 
@@ -68,7 +68,7 @@ class Projetos(db.Model):
 
 
 db.create_all()
-
+'''
 
 @app.route("/")
 def index():
@@ -265,4 +265,4 @@ def projetos():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

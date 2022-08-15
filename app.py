@@ -61,7 +61,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER  # atribuição da pasta
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
+@app.route("/")
+def index():
+    return render_template('index.html')
 
 
 @app.route("/imports", methods=['GET','POST'])
@@ -195,9 +197,7 @@ def gerar_tabela_qualis():
     return render_template('qualis.html'), load_qualis()
 
 
-@app.route("/")
-def index():
-    return render_template('index.html')
+
 
 if __name__ == "__main__":
     app.run()

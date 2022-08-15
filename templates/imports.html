@@ -1,8 +1,9 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 {%block content%}
 
+<h1>{%block title%} Arquivos Qualis {%endblock%}</h1>
+
 <form action="{{url_for('imports')}}" method="post" enctype="multipart/form-data" class="form-inline">
-    <h1>{%block title%} Arquivos Qualis {%endblock%}</h1>
     
     <div class="input-group">
         <input class="form-control" type="file" name="files[]" id="file" multiple required>

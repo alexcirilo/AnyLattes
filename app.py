@@ -47,11 +47,16 @@ ALLOWED_EXTENSIONS = {'xml', 'XML','pdf','xls'}  # extensões validas
 # verifica se pasta existe
 if os.path.isdir('curriculos'):
     UPLOAD_FOLDER = 'curriculos'
+    print('Existe')
 else:
     os.mkdir('curriculos')
-    os.mkdir('arquivos')
     UPLOAD_FOLDER = 'curriculos'
 
+if os.path.isdir('arquivos'):
+    print('Existe')
+else:
+    os.mkdir('arquivos')
+    
 # chave para validar sessão quando ocorre alteração de dados de cookie
 app.secret_key = 'lattes4web'
 

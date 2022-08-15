@@ -1,3 +1,5 @@
+create database lattes4web;
+use lattes4web;
 
 create table projetos(
 id int(11) not null auto_increment,

@@ -197,7 +197,5 @@ def gerar_tabela_qualis():
     return render_template('qualis.html'), load_qualis()
 
 
-
-
 if __name__ == "__main__":
     app.run()

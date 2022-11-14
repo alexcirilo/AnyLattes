@@ -1,3 +1,4 @@
+from MySQLdb import Error
 import mysql.connector
 
 
@@ -21,6 +22,7 @@ database = 'lattes4web'
 def conexao():
     try:
         db = mysql.connector.connect(user=user,password= pwd,host=host, database=database)
-        print("Connected!")
     except:
         print("YOU SHALL NOT PASS!")
+    return db
+

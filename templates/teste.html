@@ -1,14 +1,13 @@
 {% extends 'base.html'%}
-<h1>{%block title%} Arquivos Qualis {%endblock%}</h1>
+<h1>{%block title%} Projetos - Em Teste {%endblock%}</h1>
 
 {%block content%}
 
 {%for i in range(0, len)%}
-
 <tr>
-    <td>{{nomeProfs[i]}}</td>
+    <td>{{prof[i]}}</td>
 </tr>
-<table class="table table-hover">
+<table class="table table-hover table-sm" id="resultados">
     <thead class="table-dark">
         
         <tr>
@@ -26,27 +25,11 @@
     </thead>
     <tbody>
         
-        <tr>
-            <td>{{documento}}</td>
-            <td>{{ano_evento}}</td>
-            <td>{{tituloAnais}}</td>
-            <td>{{doi}}</td>
-            <td>{{sigla}}</td>
-            <td>{{nomeEvento}}</td>
-            <td>{{autor}}</td>
-            <td>{{estratos}}</td>
-            <td>{{notas}}</td>
-        </tr>
     </tbody>
-    
-    <thead>
-        <tr>
-            <th colspan='9'>Total: {{totalNotas}}</th>
-        </tr>
-    </thead>
 </table>
 
-<br />
+<br>
 
 {%endfor%}
+</tr>
 {%endblock%}

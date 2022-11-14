@@ -5,6 +5,17 @@ import glob
 import xml.etree.ElementTree as ET
 from flask import render_template
 import models.BaseDeCorrecoes
+import mysql.connector
+
+user = 'root'
+pwd = 'Qwer@1234'
+host = 'localhost'
+database = 'lattes4web'
+try:
+    db = mysql.connector.connect(user=user,password= pwd,host=host, database=database)
+    
+except:
+    print("not connect")
 
 
 def import_project():
@@ -13,7 +24,7 @@ def import_project():
     anos_validos = {'2017','2018','2019','2020'}
     respAno = ''
 
-    print('<br>Importando documentos: QUALIS_novo.pdf')
+    print('Importando documentos: QUALIS_novo.pdf')
     pdf = open("arquivos/QUALIS_novo.pdf", "rb")  # Script ler PDF inicio
     pdf_reader = PyPDF2.PdfFileReader(pdf)
     n = pdf_reader.numPages
@@ -161,14 +172,15 @@ def import_project():
         p20B4 = 0
         p20C = 0
         ##################################################################################
+        
 
         for t in root.iter('DADOS-GERAIS'):  # Imprimir nome do professor
             nomeProf = str(t.attrib['NOME-COMPLETO']).upper()
             print('Analisando publicações de {}'.format(nomeProf))
             x = x + 2
-            nomeProfs.append(nomeProf)
-            print(nomeProfs)
+            
         x = x + 1
+        
         for trabalhos in root.iter('TRABALHO-EM-EVENTOS'):  # Varre currículo
             autores = ''
             trabalho_valido = False
@@ -507,7 +519,18 @@ def import_project():
                             c20B4 = c20B4 + 1
                         elif (estratos == 'C'):
                             c20C = c20C + 1
-                x = x + 1
+                
+                #x = x + 1
+                
+                print(nomeProf," | ", resultado[0], " | ", resultado[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos," | ", nota)
+                c = db.cursor()
+                
+                data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
+                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                                            
+                c.execute(data,(nomeProf, resultado[0], resultado[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos, nota))
+                db.commit()
+                
         for trabalhos in root.iter('ARTIGO-PUBLICADO'):           #Varrer currículo
             autores = ''
             trabalho_valido = False
@@ -559,13 +582,13 @@ def import_project():
                         # nomePeriodico = str(resultado2[5]).upper()
                         if (str(resultado2[5]).upper() in resultado_total[i]):
                             if (' {} '.format(str(resultado2[5]).upper()) in resultado_total[i]):
-                                #print(resultado_total[i+1])
+                            #print(resultado_total[i+1])
                                 # #estratos2 = '-'
                                 continue
                             if (len(resultado2[5]) == len(resultado_total[i])):
-		#							print(resultado_total[i+1])
-                                    estratos2 = resultado_total[i+1]
-                                    break
+		#						print(resultado_total[i+1])
+                                estratos2 = resultado_total[i+1]
+                                break
                             elif (len(resultado2[5]) < len(resultado_total[i])):
                                 if ('{} (PRINT)'.format(str(resultado2[5]).upper()) == resultado_total[i]):
 		#							print(resultado_total[i+1])
@@ -619,7 +642,7 @@ def import_project():
                                         resp = False
                                         while (resp == False):
                                             if (same == 's' or same == 'S'):
-                                                #											print(resultado_total[i+1])
+                                                #print(resultado_total[i+1])
                                                 estratos2 = resultado_total[i+1]
                                                 resp = True
                                                 break
@@ -629,7 +652,7 @@ def import_project():
                                             else:
                                                 resp = input('Letra inválida. Digite "S" para sim ou "N" para não. \n')
                         elif (str(resultado2[6]).upper() in resultado_total[i]):
-                                    #						print(resultado_total[i+1])
+                            #print(resultado_total[i+1])
                             estratos2 = resultado_total[i+1]
                             break
                         else:
@@ -638,9 +661,9 @@ def import_project():
 		    	# print(resultado2[5])   #imprime apenas o nome do periódico
 				#print(estratos2)      #imprime só o estrato
 				#print(resultado2)     #imprime o resultado completo
-                documento.append(resultado2[0])
-                ano_evento.append(resultado2[1])
-                siglas.append('-')
+                # documento.append(resultado2[0])
+                # ano_evento.append(resultado2[1])
+                sigla = '-'
                 if ('COMPLETO' in resultado2[5]):                        #Correção de tabela, elimina o "COMPLETO" do lugar errado
                     tituloAnais = (resultado2[2] + resultado2[3])
                     doi = (resultado2[4])
@@ -653,9 +676,9 @@ def import_project():
                     else:
                         doi = '-'
 						# worksheet.write(x, 3, '-')
-                    sigla = resultado2[5]
-                    nomeEvento = resultado2[6]
-                estratoss.append(estratos2)
+                    nomeEvento = resultado2[5]
+                    autor = resultado2[6]
+                estratos2 = estratos2
                 # worksheet.write(x, 7, estratos2)
                 nota = 'SEM QUALIS'               #Calcula nota do estrato
                 if (estratos2 == 'A1'):
@@ -771,12 +794,23 @@ def import_project():
                             p20B4 = p20B4 + 1
                         elif (estratos2 == 'C'):
                             p20C = p20C + 1
-                x = x + 1
+                            
+                            
+                # x = x + 1
+                print(nomeProf," | ", resultado2[0]," | ", resultado2[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos2," | ", nota)
+                c = db.cursor()
+                data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
+                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                                            
+                c.execute(data,(nomeProf, resultado2[0], resultado2[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos2, nota))
+                db.commit()
+                c.close()
         totalNotas = []
         totalNotas.append(totalNota)
         print('Total de publicações = {}'.format(cont))            #Quantidade de documentos válidos de cada professor
         print('Pontuação total = {}'.format(totalNota))            #Nota do professor
         print('------------------------------------------------------------')
+        
         # worksheet.write(x, 7, 'Nota Total')
 		# worksheet.write(x, 8, totalNota)
         # if (respAno == '1'):
@@ -798,21 +832,6 @@ def import_project():
         #     contTotalc = cont20c
         #     contTotalp = cont20p
         #     totalNota = nota20
-        # print(nomeProfs,documento,ano_evento,tituloAnais,doi, sigla, nomeEvento, autor, estratos, notas, totalNotas) 
-        print(nomeProfs)
-        print(documento)
-        print(ano_evento)
-        print(tituloAnais)
-        print(doi)
-        print(sigla)
-        print(nomeEvento)
-        print(autor)
-        print(estratos)
-        print(notas)
-        print(totalNotas)
         
-                   
-    return render_template("teste.html",len = len(nomeProfs),l = len(resultados), nomeProfs=nomeProfs, resultados=resultados,
-                           sigla=sigla,estratos=estratos,tituloAnais=tituloAnais,nomeEvento=nomeEvento, doi=doi,autor=autor, 
-                           le = len(documento),totalNotas = totalNotas,
-                           documento=documento,ano_evento=ano_evento, notas = notas)
+            
+    return render_template("projetos.html")

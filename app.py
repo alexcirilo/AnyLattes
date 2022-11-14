@@ -11,6 +11,7 @@ import mysql.connector
 import models.connection
 from models.import_projetos import import_project
 from models.load_qualis import load_qualis
+from models.consulta import lista, busca_prof
 
 '''
 heroku access
@@ -24,20 +25,19 @@ database= 'heroku_34fb507d853ce4f'
 '''
 local access
 '''
-# user = 'root'
-# pwd = 'Qwer@1234'
-# host = 'localhost'
-# database = 'lattes4web'
+user = 'root'
+pwd = 'Qwer@1234'
+host = 'localhost'
+database = 'lattes4web'
 
 models.connection.conexao()
 
 app = Flask(__name__)
 
-# try:
-#     db = mysql.connector.connect(user=user,password= pwd,host=host, database=database)
-#     print("Connected!")
-# except:
-#     print("YOU SHALL NOT PASS!")
+try:
+    db = mysql.connector.connect(user=user,password= pwd,host=host, database=database)
+except:
+    print("YOU SHALL NOT PASS!")
 
 @app.route('/connection')
 def connection():
@@ -126,6 +126,11 @@ def gerar_tabela_qualis():
     return render_template('qualis.html'), load_qualis()
 
 
+@app.route('/listar')
+def listar():
+    listar = lista()
+    prof = busca_prof()
+    return render_template("teste.html", prof = prof, len = len(prof), listar = listar)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

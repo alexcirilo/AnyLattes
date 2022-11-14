@@ -6,6 +6,9 @@
 //
 // Scripts
 // 
+$(document).ready(function () {
+    $('#resultados').DataTable();
+});
 
 window.addEventListener('DOMContentLoaded', event => {
 

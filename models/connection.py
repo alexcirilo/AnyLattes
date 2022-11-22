@@ -1,4 +1,3 @@
-from MySQLdb import Error
 import mysql.connector
 
 

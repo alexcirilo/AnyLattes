@@ -16,20 +16,20 @@ from models.consulta import lista, busca_prof, total_notas
 '''
 heroku access
 '''
-'''
+
 user= 'b96e08051c345f'
 pwd= '2503c6ba'
 host= 'us-cdbr-east-06.cleardb.net'
 database= 'heroku_34fb507d853ce4f'
-'''
+
 '''
 local access
-'''
+
 user = 'root'
 pwd = 'Qwer@1234'
 host = 'localhost'
 database = 'lattes4web'
-
+'''
 models.connection.conexao()
 
 app = Flask(__name__)

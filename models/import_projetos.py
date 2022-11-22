@@ -396,7 +396,7 @@ def import_project():
                         doi = (resultado[3])
                     else:
                         doi = ('-')
-                    nomeEvento = (tituloAnais + ' / ' + nomeEvento)
+                    nomeEvento = (nomeEvento)
                     if (len(resultado) > 8):
                         if (nomeProf in str(autor).upper()):
                             autor = (autor)

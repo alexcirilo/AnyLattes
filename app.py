@@ -11,7 +11,7 @@ import mysql.connector
 import models.connection
 from models.import_projetos import import_project
 from models.load_qualis import load_qualis
-from models.consulta import lista, busca_prof
+from models.consulta import lista, busca_prof, total_notas
 
 '''
 heroku access
@@ -130,7 +130,8 @@ def gerar_tabela_qualis():
 def listar():
     listar = lista()
     prof = busca_prof()
-    return render_template("teste.html", prof = prof, len = len(prof), listar = listar)
+    totalNotas = total_notas()
+    return render_template("teste.html", prof = prof, len = len(prof), listar = listar, totalNotas = totalNotas)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

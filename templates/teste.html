@@ -3,13 +3,22 @@
 
 {%block content%}
 
-{%for i in range(0, len)%}
-<tr>
-    <td>{{prof[i]}}</td>
-</tr>
+{%for i in prof%}
+<table class="table table-hover table-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Docente:</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{i[0]}} </td>
+        </tr>
+    </tbody>
+</table>
 <table class="table table-hover table-sm" id="resultados">
     <thead class="table-dark">
-        
+
         <tr>
             <th>Documento:</th>
             <th>Ano:</th>
@@ -21,15 +30,29 @@
             <th>Estratos:</th>
             <th>Notas:</th>
         </tr>
-        
+
     </thead>
     <tbody>
-        
+        {%for lista in listar%}
+        <tr>
+            {%if i[0] == lista[1]%}
+            <td>{{lista[2]}}</td>
+            <td>{{lista[3]}}</td>
+            <td>{{lista[4]}}</td>
+            <td>{{lista[5]}}</td>
+            <td>{{lista[6]}}</td>
+            <td>{{lista[7]}}</td>
+            <td>{{lista[8]}}</td>
+            <td>{{lista[9]}}</td>
+            <td>{{lista[10]}}</td>
+            {%endif%}
+        </tr>
+
+        {%endfor%}
     </tbody>
 </table>
 
 <br>
 
 {%endfor%}
-</tr>
 {%endblock%}

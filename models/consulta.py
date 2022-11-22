@@ -22,3 +22,13 @@ def busca_prof():
     resultado = cursor.fetchall()
     
     return resultado
+
+def total_notas():
+    db = database.conexao()
+    cursor = db.cursor()
+    
+    sql=""" SELECT sum(notas), nome_docente FROM resultados"""
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    
+    return resultado

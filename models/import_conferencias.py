@@ -4,19 +4,10 @@ import PyPDF2
 import glob
 import xml.etree.ElementTree as ET
 from flask import render_template
-import models.BaseDeCorrecoes
+import models.BaseDeCorrecoes, models.connection as database
 import mysql.connector
 
-user = 'root'
-pwd = 'Qwer@1234'
-host = 'localhost'
-database = 'lattes4web'
-try:
-    db = mysql.connector.connect(user=user,password= pwd,host=host, database=database)
-    
-except:
-    print("not connect")
-
+db = database.conexao()
 
 def import_project():
     xi = 1

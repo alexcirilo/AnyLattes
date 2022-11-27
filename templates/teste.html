@@ -3,56 +3,118 @@
 
 {%block content%}
 
-{%for i in prof%}
-<table class="table table-hover table-sm">
-    <thead class="table-dark">
-        <tr>
-            <th>Docente:</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>{{i[0]}} </td>
-        </tr>
-    </tbody>
-</table>
-<table class="table table-hover table-sm" id="resultados">
-    <thead class="table-dark">
+<div id="resultados">
+    <h3>Dados</h3>
 
-        <tr>
-            <th>Documento:</th>
-            <th>Ano:</th>
-            <th>Título:</th>
-            <th>DOI:</th>
-            <th>Sigla:</th>
-            <th>Titulo Periódico:</th>
-            <th>Autores:</th>
-            <th>Estratos:</th>
-            <th>Notas:</th>
-        </tr>
+    
+    <table class="table table-hover table-sm table-responsive resultado" style="width: 98%;" id="resultado">
+        <thead class="table-secondary">
+            <tr>
+                <th>Docente</th>
+                <th>Documento:</th>
+                <th>Ano:</th>
+                <th>Título:</th>
+                <th>DOI:</th>
+                <th>Sigla:</th>
+                <th>Titulo Periódico:</th>
+                <th>Autores:</th>
+                <th>Estratos:</th>
+                <th>Notas:</th>
+            </tr>
 
-    </thead>
-    <tbody>
-        {%for lista in listar%}
-        <tr>
-            {%if i[0] == lista[1]%}
-            <td>{{lista[2]}}</td>
-            <td>{{lista[3]}}</td>
-            <td>{{lista[4]}}</td>
-            <td>{{lista[5]}}</td>
-            <td>{{lista[6]}}</td>
-            <td>{{lista[7]}}</td>
-            <td>{{lista[8]}}</td>
-            <td>{{lista[9]}}</td>
-            <td>{{lista[10]}}</td>
-            {%endif%}
-        </tr>
+        </thead>
+        <tbody>
 
-        {%endfor%}
-    </tbody>
-</table>
+            {%for lista in listar%}
+            <tr>
+                <td>{{lista[1]}}</td>
+                <td>{{lista[2]}}</td>
+                <td>{{lista[3]}}</td>
+                <td>{{lista[4]}}</td>
+                <td>{{lista[5]}}</td>
+                <td>{{lista[6]}}</td>
+                <td>{{lista[7]}}</td>
+                <td>{{lista[8]}}</td>
+                <td>{{lista[9]}}</td>
+                <td>{{lista[10]}}</td>
+            </tr>
+
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
 
 <br>
+<hr />
+<div class="container">
+    <h2 style="text-align: center;">Contador de Estratos</h2>
 
-{%endfor%}
+
+    <table class="table table-sm table-hover" id="contador">
+        <thead class="table-dark">
+            <tr>
+                <th>Docente:</th>
+                <th>Estratos</th>
+                <th>Quantidade</th>
+                <th>Ano Evento</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            {% for contador in contadorEstratos %}
+            <tr>
+                <td>{{contador[0]}}</td>
+                <td>{{contador[2]}}</td>
+                <td>{{contador[1]}}</td>
+                <td>{{contador[3]}}</td>
+            </tr>
+            {%endfor%}
+
+        </tbody>
+    </table>
+
+    <h2>Total de Notas</h2>
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th>Docente</th>
+                <th>Total:</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for total in totalNotas%}
+            <tr>
+                <td>{{total[0]}}</td>
+                <td>{{total[1]}}</td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+
+    <h2>Total de Periódicos / Conferências</h2>
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th>Docente</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#contador').DataTable();
+    });
+
+    $(document).ready(function () {
+        $('#resultado').DataTable();
+    });
+
+
+</script>
+
 {%endblock%}

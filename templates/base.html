@@ -17,8 +17,10 @@
         type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="{{url_for('static',filename= 'css/styles.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    
 </head>
 
 <body id="page-top">
@@ -35,7 +37,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                            href="{{url_for('projetos')}}">Projetos</a></li>
+                            href="{{url_for('import_projetos')}}">Projetos</a></li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
                             href="{{url_for('gerar_tabela_qualis')}}">Criar Qualis e Periódicos</a></li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
@@ -46,26 +48,18 @@
             </div>
         </div>
     </nav>
-    <!-- Masthead-->
-    
-    <!--
-        <header class="masthead bg-primary text-white text-center">
-            
-            
-            
-        </header>
-    -->
+
     <!-- Portfolio Section-->
     <section class="masthead text-center" id="portfolio">
-        {% for messages in get_flashed_messages() %}
-        <div class="alert alert-primary">{{messages}}</div>
-        {%endfor%}
         
-        <div class="container">
+        
+        <div class="container-fluid">
             {% block content %} {% endblock %}
         </div>
 
     </section>
-    
+    {% for messages in get_flashed_messages() %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">{{messages}}</div>
+    {%endfor%}
     <!-- Footer-->
     {%extends 'footer.html'%}

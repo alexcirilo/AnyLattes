@@ -3,39 +3,22 @@ import os
 import PyPDF2
 import glob
 import xml.etree.ElementTree as ET
-from flask import render_template
-import models.BaseDeCorrecoes
-import mysql.connector
+from flask import redirect
+import models.BaseDeCorrecoes, models.connection as database
+from models.crud import zera_banco
 
 
-'''
-heroku access
-'''
+db = database.conexao()
 
-user= 'b96e08051c345f'
-pwd= '2503c6ba'
-host= 'us-cdbr-east-06.cleardb.net'
-database= 'heroku_34fb507d853ce4f'
-
-'''
-local access
-
-user = 'root'
-pwd = 'Qwer@1234'
-host = 'localhost'
-database = 'lattes4web'
-'''
-try:
-    db = mysql.connector.connect(user=user,password= pwd,host=host, database=database)
+def import_project(anos):
     
-except:
-    print("not connect")
 
-
-def import_project():
     xi = 1
     curriculos = []
-    anos_validos = {'2017','2018','2019','2020'}
+    
+    for anos_validos in anos:
+        print(anos_validos)
+        anos_validos
     respAno = ''
 
     print('Importando documentos: QUALIS_novo.pdf')
@@ -535,7 +518,7 @@ def import_project():
                             c20C = c20C + 1
                 
                 #x = x + 1
-                
+                zera_banco()
                 print(nomeProf," | ", resultado[0], " | ", resultado[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos," | ", nota)
                 c = db.cursor()
                 
@@ -824,7 +807,7 @@ def import_project():
         print('Total de publicações = {}'.format(cont))            #Quantidade de documentos válidos de cada professor
         print('Pontuação total = {}'.format(totalNota))            #Nota do professor
         print('------------------------------------------------------------')
-        
+        print(anos_validos)
         # worksheet.write(x, 7, 'Nota Total')
 		# worksheet.write(x, 8, totalNota)
         # if (respAno == '1'):
@@ -848,4 +831,4 @@ def import_project():
         #     totalNota = nota20
         
             
-    return render_template("projetos.html")
+    return redirect('/listar')

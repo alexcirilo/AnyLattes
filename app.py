@@ -11,37 +11,36 @@ import mysql.connector
 import models.connection
 from models.import_projetos import import_project
 from models.load_qualis import load_qualis
-from models.consulta import lista, busca_prof, total_notas
+from models.consulta import lista, busca_prof, soma_nota, contador_estratos
 
 '''
 heroku access
-'''
 
 user= 'b96e08051c345f'
 pwd= '2503c6ba'
 host= 'us-cdbr-east-06.cleardb.net'
 database= 'heroku_34fb507d853ce4f'
-
+'''
 '''
 local access
-
-user = 'root'
-pwd = 'Qwer@1234'
-host = 'localhost'
-database = 'lattes4web'
 '''
-models.connection.conexao()
+# user = 'root'
+# pwd = 'Qwer@1234'
+# host = 'localhost'
+# database = 'lattes4web'
+
+# models.connection.conexao()
 
 app = Flask(__name__)
 
-try:
-    db = mysql.connector.connect(user=user,password= pwd,host=host, database=database)
-except:
-    print("YOU SHALL NOT PASS!")
+# try:
+#     db = mysql.connector.connect(user=user,password= pwd,host=host, database=database)
+# except:
+#     print("YOU SHALL NOT PASS!")
 
-@app.route('/connection')
-def connection():
-    return render_template('connection.html')
+# @app.route('/connection')
+# def connection():
+#     return render_template('connection.html')
 
 
 # configurações de upload arquivos
@@ -114,12 +113,19 @@ def upload():
                         "Não foi possível efetuar upload. Arquivo com extensão inválida")
         return redirect('/')
 
+@app.route('/import_projetos')
+def import_projetos():
+    return render_template('projetos.html')
 
-@app.route("/projetos")
-
+@app.route("/projetos", methods=['GET','POST'])
 def projetos():
+    anos_validos =[]
+    if request.method == 'POST':
+        anos_validos = request.form.getlist('anos')
     
-    return import_project()
+    return import_project(anos_validos)
+
+
 
 @app.route("/tabela_periodicos_e_qualis")
 def gerar_tabela_qualis():
@@ -129,9 +135,10 @@ def gerar_tabela_qualis():
 @app.route('/listar')
 def listar():
     listar = lista()
-    prof = busca_prof()
-    totalNotas = total_notas()
-    return render_template("teste.html", prof = prof, len = len(prof), listar = listar, totalNotas = totalNotas)
+    #prof = busca_prof()
+    totalNotas = soma_nota()
+    contadorEstratos = contador_estratos()
+    return render_template("teste.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

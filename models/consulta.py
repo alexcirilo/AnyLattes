@@ -23,12 +23,21 @@ def busca_prof():
     
     return resultado
 
-def total_notas():
+def soma_nota():
     db = database.conexao()
     cursor = db.cursor()
+    prof = busca_prof()
+    cursor.execute('SELECT distinct(nome_docente), sum(notas) from resultados where nome_docente in'
+                   +'(select distinct(nome_docente) from resultados) group by nome_docente')
+    resultado = cursor.fetchall()
     
-    sql=""" SELECT sum(notas), nome_docente FROM resultados"""
-    cursor.execute(sql)
+    return resultado
+
+def contador_estratos():
+    db = database.conexao()
+    cursor = db.cursor()
+    prof = busca_prof()
+    cursor.execute('select DISTINCT(nome_docente), count(estratos), estratos, ano_evento from resultados group by nome_docente, estratos, ano_evento; ')
     resultado = cursor.fetchall()
     
     return resultado

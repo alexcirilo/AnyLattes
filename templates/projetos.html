@@ -3,7 +3,19 @@
 <h1>{%block title%} Projetos {%endblock%}</h1>
 
 
+<form action="{{url_for('projetos')}}" method="post">
 
-<h1>Salvo com sucesso!</h1>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="anos" id="anos" value="{{'2010','2011','2012'}}"> 2010-2012
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="anos" id="anos" value="{{'2013','2014','2015','2016'}}"> 2013-2016
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="anos" id="anos" value="{{'2017','2018','2019','2020'}}"> 2017-2020
+    </div>
+    
+    <input type="submit" value="Enviar">
+</form>
 
 {%endblock%}

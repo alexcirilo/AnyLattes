@@ -9,6 +9,7 @@ from models.crud import zera_banco
 
 
 db = database.conexao()
+c = db.cursor()
 
 def import_project(anos):
     
@@ -520,7 +521,7 @@ def import_project(anos):
                 #x = x + 1
                 zera_banco()
                 print(nomeProf," | ", resultado[0], " | ", resultado[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos," | ", nota)
-                c = db.cursor()
+                # c = db.cursor()
                 
                 data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
@@ -795,7 +796,7 @@ def import_project(anos):
                             
                 # x = x + 1
                 print(nomeProf," | ", resultado2[0]," | ", resultado2[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos2," | ", nota)
-                c = db.cursor()
+                # c = db.cursor()
                 data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
                                             

@@ -35,8 +35,18 @@
                 <td>{{lista[6]}}</td>
                 <td>{{lista[7]}}</td>
                 <td>{{lista[8]}}</td>
-                <td>{{lista[9]}}</td>
-                <td>{{lista[10]}}</td>
+                
+                {% if lista[9] == '-' %}
+                    <td>C</td>
+                {%else%}
+                    <td>{{lista[9]}}</td>
+                {%endif%}
+
+                {%if lista[10] == 'SEM QUALIS' %}
+                    <td>0</td>
+                {%else%}
+                    <td>{{lista[10]}}</td>
+                {%endif%}
             </tr>
 
             {%endfor%}
@@ -64,7 +74,11 @@
             {% for contador in contadorEstratos %}
             <tr>
                 <td>{{contador[0]}}</td>
-                <td>{{contador[2]}}</td>
+                {% if contador[2] == '-' %}
+                    <td>C</td>
+                {%else%}
+                    <td>{{contador[2]}}</td>
+                {%endif%}
                 <td>{{contador[1]}}</td>
                 <td>{{contador[3]}}</td>
             </tr>

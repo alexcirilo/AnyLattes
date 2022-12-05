@@ -5,61 +5,80 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
-    <meta name="author" content="" />
+    <meta name="author" content="Alex Cirilo" />
+    <link rel="icon" href="{{url_for('static',filename= 'assets/favicon.ico') }}">
     <title>{% block title %}{% endblock %}</title>
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <!-- Font Awesome icons (free version)-->
+   
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-    <!-- Google fonts-->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
-        type="text/css" />
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="{{url_for('static',filename= 'css/styles.css') }}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <link href="{{url_for('static',filename= 'css/styles.css') }}" rel="stylesheet" />
+    <link href="{{url_for('static',filename= 'css/estilos.css') }}" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
     
 </head>
-
-<body id="page-top">
-    <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
-        <div class="container">
-            <a class="navbar-brand" href="{{url_for('index')}}">Lattes4Web</a>
-            <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button"
-                data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive"
-                aria-expanded="false" aria-label="Toggle navigation">
-                Menu
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                            href="{{url_for('import_projetos')}}">Projetos</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                            href="{{url_for('gerar_tabela_qualis')}}">Criar Qualis e Periódicos</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                            href="{{url_for('imports')}}">Uploads Arquivos Qualis</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-                        href="{{url_for('listar')}}">Listar Resultados</a></li>
-                </ul>
-            </div>
-        </div>
+<body>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="{{url_for('index')}}">Lattes4Web</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        
     </nav>
-
-    <!-- Portfolio Section-->
-    <section class="masthead text-center" id="portfolio">
-        
-        
-        <div class="container-fluid">
-            {% block content %} {% endblock %}
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Home</div>
+                        <a class="nav-link" href="{{url_for('index')}}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                            Home
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Qualis e Periódicos</div>
+                        <a class="nav-link" href="{{url_for('imports')}}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Importar Arquivos Qualis
+                        </a>
+                        <a class="nav-link" href="{{url_for('gerar_tabela_qualis')}}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Criar Qualis e Periódicos
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Resultados</div>
+                        <a class="nav-link" href="{{url_for('import_projetos')}}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Projetos
+                        </a>
+                        <a class="nav-link" href="{{url_for('index')}}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Importar Currículos
+                        </a>
+                        <a class="nav-link" href="{{url_for('listar')}}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Listar Resultados
+                        </a>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">A project with name:</div>
+                    <h6 style="text-align: center;">Lattes4Web</h6>
+                </div>
+            </nav>
         </div>
-
-    </section>
-    {% for messages in get_flashed_messages() %}
-        <div class="alert alert-primary alert-dismissible fade show" role="alert">{{messages}}</div>
-    {%endfor%}
-    <!-- Footer-->
-    {%extends 'footer.html'%}
+        <div id="layoutSidenav_content">
+            <main>
+                    <div class="container-fluid px-4">
+                        
+                        {% block content %} {% endblock %}
+                        
+                        {% for messages in get_flashed_messages() %}
+                            <div class="alert alert-primary alert-dismissible fade show" role="alert">{{messages}}</div>
+                        {%endfor%}
+                    </div>
+            </main>         
+            <!-- Footer-->
+            {%extends 'footer.html'%}

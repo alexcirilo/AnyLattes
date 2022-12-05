@@ -3,7 +3,7 @@
 
 <h1>{%block title%} Arquivos Qualis {%endblock%}</h1>
 
-<form action="{{url_for('imports')}}" method="post" enctype="multipart/form-data" class="form-inline">
+<form action="{{url_for('imports')}}" method="post" enctype="multipart/form-data" id="forms" class="form-inline">
     
     <div class="input-group">
         <input class="form-control" type="file" name="files[]" id="file" multiple required>

@@ -1,12 +1,11 @@
-import mysql.connector
 import models.connection as database
 
 
+db = database.conexao()
+cursor = db.cursor()
 
 def lista():
-    db = database.conexao()
-    cursor = db.cursor()
-    
+
     sql=""" SELECT * FROM resultados """
     cursor.execute(sql)
     resultado = cursor.fetchall()
@@ -14,8 +13,6 @@ def lista():
     return resultado
 
 def busca_prof():
-    db = database.conexao()
-    cursor = db.cursor()
     
     sql=""" SELECT distinct(nome_docente) FROM resultados"""
     cursor.execute(sql)
@@ -24,9 +21,7 @@ def busca_prof():
     return resultado
 
 def soma_nota():
-    db = database.conexao()
-    cursor = db.cursor()
-    prof = busca_prof()
+
     cursor.execute('SELECT distinct(nome_docente), sum(notas) from resultados where nome_docente in'
                    +'(select distinct(nome_docente) from resultados) group by nome_docente')
     resultado = cursor.fetchall()
@@ -34,9 +29,7 @@ def soma_nota():
     return resultado
 
 def contador_estratos():
-    db = database.conexao()
-    cursor = db.cursor()
-    prof = busca_prof()
+
     cursor.execute('select DISTINCT(nome_docente), count(estratos), estratos, ano_evento from resultados group by nome_docente, estratos, ano_evento; ')
     resultado = cursor.fetchall()
     

@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {%block content%}
 
-<h1>{%block title%} Upload Files {%endblock%}</h1>
+<div class="container" style="text-align: center;">
+<h1>{%block title%}Importar Currículos {%endblock%}</h1>
 
-<form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" class="form-inline">
+<form action="{{ url_for('upload') }}" method="post" id="forms" enctype="multipart/form-data"  class="form-inline">
     
     <div class="input-group">
         <input class="form-control" type="file" name="files[]" id="file" multiple required>
@@ -11,4 +12,5 @@
     </div>
 
 </form>
+</div>
 {%endblock%}

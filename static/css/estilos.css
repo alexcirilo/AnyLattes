@@ -1,0 +1,21 @@
+h1{
+    text-align: center;
+    margin: 1em;
+    padding: 1em;
+}
+h2{
+    text-align: center;
+    margin: 5px;
+    padding: 5px;
+}
+#resultado{
+    font-size: 14px;
+}
+#forms{
+    position: relative;
+    text-align: center;
+}
+
+#anos{
+    margin: 5px;
+}

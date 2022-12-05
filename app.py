@@ -119,11 +119,10 @@ def import_projetos():
 
 @app.route("/projetos", methods=['GET','POST'])
 def projetos():
-    anos_validos =[]
     if request.method == 'POST':
-        anos_validos = request.form.getlist('anos')
+        anos = request.form.getlist('anos')
     
-    return import_project(anos_validos)
+    return import_project(anos)
 
 
 
@@ -141,4 +140,4 @@ def listar():
     return render_template("teste.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', debug=True)

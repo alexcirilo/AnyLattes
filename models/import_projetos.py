@@ -6,14 +6,12 @@ import xml.etree.ElementTree as ET
 from flask import redirect
 import models.BaseDeCorrecoes, models.connection as database
 from models.crud import zera_banco
-
+from tkinter.messagebox import *
 
 db = database.conexao()
-c = db.cursor()
 
 def import_project(anos):
-    
-
+    zera_banco()
     xi = 1
     curriculos = []
     
@@ -429,7 +427,7 @@ def import_project(anos):
                 if (nota != 'SEM QUALIS'):                  #Contador de estratos das conferências
                     totalNota = totalNota + nota
                 if (estratos != '-'):
-                    if (resultado[1] == '2017'):
+                    if (resultado[1] == anos_validos[0]):
                         cont17c = cont17c + 1
                         if (nota != 'SEM QUALIS'):          #somador de notas de 2017
                             nota17 = nota17 + nota
@@ -451,7 +449,7 @@ def import_project(anos):
                             c17B4 = c17B4 + 1
                         elif (estratos == 'C'):
                             c17C = c17C + 1
-                    elif (resultado[1] == '2018'):
+                    elif (resultado[1] == anos_validos[1]):
                         cont18c = cont18c + 1
                         if (nota != 'SEM QUALIS'):          #somador de notas de 2018
                             nota18 = nota18 + nota
@@ -473,7 +471,7 @@ def import_project(anos):
                             c18B4 = c18B4 + 1
                         elif (estratos == 'C'):
                             c18C = c18C + 1
-                    elif (resultado[1] == '2019'):
+                    elif (resultado[1] == anos_validos[2]):
                         cont19c = cont19c + 1
                         if (nota != 'SEM QUALIS'):          #somador de notas de 2019
                             nota19 = nota19 + nota
@@ -495,7 +493,7 @@ def import_project(anos):
                             c19B4 = c19B4 + 1
                         elif (estratos == 'C'):
                             c19C = c19C + 1
-                    elif (resultado[1] == '2020'):
+                    elif (resultado[1] == anos_validos[3]):
                         cont20c = cont20c + 1
                         if (nota != 'SEM QUALIS'):          #somador de notas de 2020
                             nota20 = nota20 + nota
@@ -519,9 +517,9 @@ def import_project(anos):
                             c20C = c20C + 1
                 
                 #x = x + 1
-                zera_banco()
+                
                 print(nomeProf," | ", resultado[0], " | ", resultado[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos," | ", nota)
-                # c = db.cursor()
+                c = db.cursor()
                 
                 data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
@@ -621,34 +619,31 @@ def import_project(anos):
 										#print(resultado_total[i])
                                         break
                                     else:
-                                        same = input(resultado2[5] + ' é o mesmo que ' + resultado_total[i] + '? (S/N) \n')
-                                        resp = False
-                                        while (resp == False):
-                                            if (same == 's' or same == 'S'):
-                                                #											print(resultado_total[i+1])
-                                                estratos2 = resultado_total[i+1]
-                                                resp = True
-                                                break
-                                            elif (same == 'n' or same == 'N'):
-                                                estratos2 = '-'
-                                                resp = True
-                                            else:
-                                                same = input('Letra inválida. Digite "S" para sim ou "N" para não \n.')
+                                        result = askyesno(
+                                            title= "Verificação de valores",
+                                            message= resultado2[5] + ' é o mesmo que ' + resultado_total[i] + '?'
+                                        )
+                                        if (result == True):
+                                            #											print(resultado_total[i+1])
+                                            estratos2 = resultado_total[i+1]
+                                            
+                                            break
+                                        elif (result == 'no' or result == 'NO'):
+                                            estratos2 = '-'
+                                                    
                                 elif (len(resultado_total[i]) - len(resultado2[5]) > 12):
                                     if ('{} ('.format(str(resultado2[5]).upper()) in resultado_total[i]):
-                                        same = input(resultado2[5] + ' é o mesmo que ' + resultado_total[i] + '? (S/N) \n')
-                                        resp = False
-                                        while (resp == False):
-                                            if (same == 's' or same == 'S'):
-                                                #print(resultado_total[i+1])
-                                                estratos2 = resultado_total[i+1]
-                                                resp = True
-                                                break
-                                            elif (same == 'n' or same == 'N'):
-                                                    estratos2 = '-'
-                                                    resp = True
-                                            else:
-                                                resp = input('Letra inválida. Digite "S" para sim ou "N" para não. \n')
+                                        result = askyesno(
+                                            title= "Verificação de valores",
+                                            message= resultado2[5] + ' é o mesmo que ' + resultado_total[i] + '?'
+                                        )
+                                        if (result == True):
+                                            #print(resultado_total[i+1])
+                                            estratos2 = resultado_total[i+1]
+                                            
+                                        elif (result == False):
+                                                estratos2 = '-'
+                                                
                         elif (str(resultado2[6]).upper() in resultado_total[i]):
                             #print(resultado_total[i+1])
                             estratos2 = resultado_total[i+1]
@@ -796,7 +791,7 @@ def import_project(anos):
                             
                 # x = x + 1
                 print(nomeProf," | ", resultado2[0]," | ", resultado2[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos2," | ", nota)
-                # c = db.cursor()
+                c = db.cursor()
                 data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
                                             

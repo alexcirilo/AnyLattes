@@ -16,19 +16,19 @@ local access
 '''
 
 '''
+'''
 user = 'root'
 pwd = 'Qwer@1234'
 host = 'localhost'
 database = 'lattes4web'
-'''
 
 '''
 container access
-'''
 user = 'root'
 pwd = 'Qwer@1234'
 host = '172.17.0.2'
 database = 'lattes4web'
+'''
 
 def conexao():
     try:

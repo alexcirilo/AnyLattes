@@ -41,21 +41,21 @@
                         </a>
                         <div class="sb-sidenav-menu-heading">Qualis e Periódicos</div>
                         <a class="nav-link" href="{{url_for('imports')}}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-upload"></i></div>
                             Importar Arquivos Qualis
                         </a>
-                        <a class="nav-link" href="{{url_for('gerar_tabela_qualis')}}">
+                        {# <a class="nav-link" href="{{url_for('gerar_tabela_qualis')}}">
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Criar Qualis e Periódicos
-                        </a>
+                        </a> #}
                         <div class="sb-sidenav-menu-heading">Resultados</div>
+                        <a class="nav-link" href="{{url_for('index')}}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-upload"></i></div>
+                            Importar Currículos
+                        </a>
                         <a class="nav-link" href="{{url_for('import_projetos')}}">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Projetos
-                        </a>
-                        <a class="nav-link" href="{{url_for('index')}}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Importar Currículos
                         </a>
                         <a class="nav-link" href="{{url_for('listar')}}">
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>

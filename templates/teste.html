@@ -87,8 +87,11 @@
         </tbody>
     </table>
 
+    <br>
+    <hr />
+
     <h2>Total de Notas</h2>
-    <table class="table">
+    <table class="table" id="notas">
         <thead class="table-dark">
             <tr>
                 <th>Docente</th>
@@ -105,6 +108,8 @@
         </tbody>
     </table>
 
+    <br>
+    <hr />
     <h2>Total de Periódicos / Conferências</h2>
     <table class="table">
         <thead class="table-dark">
@@ -126,6 +131,9 @@
 
     $(document).ready(function () {
         $('#resultado').DataTable();
+    });
+    $(document).ready(function () {
+        $('#notas').DataTable();
     });
 
 

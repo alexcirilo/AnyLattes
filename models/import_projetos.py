@@ -518,7 +518,7 @@ def import_project(anos):
                 
                 #x = x + 1
                 
-                print(nomeProf," | ", resultado[0], " | ", resultado[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos," | ", nota)
+                # print(nomeProf," | ", resultado[0], " | ", resultado[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos," | ", nota)
                 c = db.cursor()
                 
                 data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
@@ -537,7 +537,8 @@ def import_project(anos):
                     trabalho_valido = True
                     cont = cont + 1
                 if trabalho_valido and trab.tag == 'DETALHAMENTO-DO-ARTIGO':
-                    periodico = periodico + ';'+ trab.attrib['TITULO-DO-PERIODICO-OU-REVISTA']				
+                    periodico = periodico + ';'+ trab.attrib['TITULO-DO-PERIODICO-OU-REVISTA'].replace(";","")
+                    periodico = periodico.replace("&amp","&")				
                 if trabalho_valido and trab.tag == 'AUTORES':
                     if autores: 
                         autores = autores + '/ '+ trab.attrib['NOME-COMPLETO-DO-AUTOR']
@@ -571,6 +572,9 @@ def import_project(anos):
                     estratos2 = 'A4'
                 elif(str('Journal of Communication and Information Systems').upper() in str(resultado2[5]).upper()):
                     estratos2 = 'A4' 
+                elif(str('International journal of simulation: systems, science & technology').upper() in str(resultado2[5]).upper()):
+                    estratos2 = 'B4'
+                    
                     #######################################################
                     
                 if (estratos2 == ''):
@@ -645,7 +649,7 @@ def import_project(anos):
                                                 estratos2 = '-'
                                                 
                         elif (str(resultado2[6]).upper() in resultado_total[i]):
-                            #print(resultado_total[i+1])
+                            # print(resultado_total[i+1])
                             estratos2 = resultado_total[i+1]
                             break
                         else:
@@ -790,7 +794,7 @@ def import_project(anos):
                             
                             
                 # x = x + 1
-                print(nomeProf," | ", resultado2[0]," | ", resultado2[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos2," | ", nota)
+                # print(nomeProf," | ", resultado2[0]," | ", resultado2[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos2," | ", nota)
                 c = db.cursor()
                 data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""

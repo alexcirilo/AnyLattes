@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {%block content%}
 
-<h1>{%block title%} Arquivos Qualis {%endblock%}</h1>
+<div class="container" style="text-align: center;">
+    <h1>{%block title%} Arquivos Qualis {%endblock%}</h1>
 
-<form action="{{url_for('imports')}}" method="post" enctype="multipart/form-data" id="forms" class="form-inline">
-    
-    <div class="input-group">
-        <input class="form-control" type="file" name="files[]" id="file" multiple required>
-        <input class="btn btn-outline-success" type="submit" value="Enviar" name="enviar">
-    </div>
-</form>
-
+    <form action="{{url_for('imports')}}" method="post" enctype="multipart/form-data" id="forms" class="form-inline">
+        
+        <div class="input-group">
+            <input class="form-control" type="file" name="files[]" id="file" multiple required>
+            <input class="btn btn-outline-success" type="submit" value="Enviar" name="enviar">
+        </div>
+    </form>
+</div>
 {%endblock%}

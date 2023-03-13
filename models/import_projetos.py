@@ -3,17 +3,26 @@ import os
 import PyPDF2
 import glob
 import xml.etree.ElementTree as ET
-from flask import redirect
+from flask import redirect, render_template
 import models.BaseDeCorrecoes, models.connection as database
 from models.crud import zera_banco
 from tkinter.messagebox import *
+from googletrans import Translator
+from models.consulta import * #qualis_repetidos,update_qualis_repetido
+from models.corrige_notas import *
+# from models.EventosQualis import EventosQualis
+from openpyxl import Workbook, load_workbook
 
 db = database.conexao()
 
 def import_project(anos):
+    
+    translator = Translator(service_urls=['translate.google.com'])    
+    
     zera_banco()
     xi = 1
     curriculos = []
+    eventosQualis = []
     
     for anos_validos in anos:
         print(anos_validos)
@@ -32,10 +41,11 @@ def import_project(anos):
     #    Script ler PDF fim
         resultado_total = (resultado_total + pg_extraida)
 
-    print('Importanto documento: QualisEventosComp.xls...')
-    workbook2 = xlrd.open_workbook('arquivos/QualisEventosComp.xls')  # Script ler xls
-    worksheet2 = workbook2.sheet_by_index(1)
-
+    print('Importanto documento: Qualis.xls...')
+    # workbook2 = xlrd.open_workbook('arquivos/QualisEventosComp.xls')  # Script ler xls
+    # worksheet2 = workbook2.sheet_by_index(1)
+    workbook2 = load_workbook('arquivos/QualisConferenciass.xlsx')
+    worksheet2 = workbook2.active
     x = 0
     somaNotas = 0
     cont = 0
@@ -50,7 +60,7 @@ def import_project(anos):
     autor = []
     estratoss = []
     totalNotas = []
-    
+    issn = []
 
     print('Lendo currículo(s)... \n')
     for f in glob.glob('curriculos/*.xml'):
@@ -188,7 +198,7 @@ def import_project(anos):
                     trabalho_valido = True
                     cont = cont + 1
                 if trabalho_valido and trab.tag == 'DETALHAMENTO-DO-TRABALHO':
-                        conferencia = conferencia + ';' + trab.attrib['NOME-DO-EVENTO'] + ';' + trab.attrib['TITULO-DOS-ANAIS-OU-PROCEEDINGS']
+                        conferencia = conferencia + ';' + trab.attrib['NOME-DO-EVENTO'].replace("amp;","") + ';' + trab.attrib['TITULO-DOS-ANAIS-OU-PROCEEDINGS'].replace("amp;","")
                 if trabalho_valido and trab.tag == 'AUTORES':
                     if autores:
                         autores = autores + '/ ' + trab.attrib['NOME-COMPLETO-DO-AUTOR']
@@ -204,178 +214,123 @@ def import_project(anos):
                 nomeEvento = resultado[5]
                 tituloAnais = resultado[6]
                 autor = resultado[7]
-                
-                
-                ###############################################
-                if (doi == str('10.1109/iV.2017.37').upper()):
-                    estratos = 'A4'
-                    condicao = '-'
-                elif(doi == str('10.1109/iV.2017.29').upper()):
-                    estratos = 'A4'
-                    condicao = '-'
-                elif(doi == str('10.1109/IV-2.2019.00019').upper()):
-                    estratos = 'A4'
-                    autor = autores #resultado[11]
-                    condicao = '-'
-                elif(doi == str('10.1109/IV-2.2019.00020').upper()):
-                    estratos = 'A4'
-                    autor = autores #resultado[11]
-                    condicao = '-'
-                elif(doi == str('10.1109/iccw.2018.8403776').upper()): #ICC Workshops
-                    estratos = 'B3'
-                    condicao = '-'
-                elif(doi == str('10.1145/3084226.3084278').upper()): #EASE
-                    estratos = 'A3'
-                    condicao = '-'
-                elif(doi == str('10.1145/3210459.3210462').upper()): #EASE
-                    estratos = 'A3'
-                    condicao = '-'
-                elif(doi == str('10.1109/IMOC.2017.8121084').upper()):
-                    estratos = 'B4'
-                    condicao = '-'
-                elif(doi == str('10.1109/icton.2017.8024977').upper()):
-                    estratos = 'A4'
-                    condicao = '-'
-                elif(doi == str('10.1109/IV-2.2019.00033').upper()):
-                    estratos = 'A4'
-                    autor = autores #resultado[7]
-                    condicao = '-'
-                elif(doi == str('10.1145/3275245.3275290').upper()):
-                    estratos = 'B1'
-                    condicao = '-'
-                elif(str('Brazilian Symposium on Computer Networks and Distributed Systems').upper() in str(tituloAnais).upper()):
-                    estratos = 'A4'
-                    condicao = '-'
-                elif(str('Brazilian Symposium on Computer Networks and Distributed Systems').upper() in str(resultado[7]).upper()):
-                    estratos = 'A4'
-                    condicao = '-'
-                elif(str('Proceedings of the 18th Brazilian Symposium on Human Factors in Computing Systems').upper() in str(tituloAnais).upper()):
-                    estratos = 'B1'
-                    condicao = '-'
-                elif(str('Anais do I Workshop de Computação Urbana').upper() in str(tituloAnais).upper()):
-                    estratos = 'B1'
-                    condicao = '-'
-                elif(str('The 33rd ACM/SIGAPP Symposium On Applied Computing').upper() in str(tituloAnais).upper()):
-                    estratos = 'A2'
-                    condicao = '-'
-                elif(str('Proceedings of 2018 International Joint Conference on Neural Networks').upper() in str(tituloAnais).upper()):
-                    estratos = 'A2'
-                    condicao = '-'
-                ###########################################
                     				
                 if (condicao != '-'):
-                    for row_num in range(worksheet2.nrows):                #Comparação por SIGLA no resultado[6]
-                        if row_num == 0:
+
+                    for i,rows in enumerate(worksheet2.values): #Comparação por SIGLA no resultado[6]
+                        if i == 0:
                             continue
-                        row = worksheet2.row_values(row_num)
-                        if (' {} '.format(row[0]) in tituloAnais):
-                            if (row[0] != 'SBRC'):
-                                sigla = row[0]
-                                estratos = row[8]
+                        if (' {} '.format(rows[0]) in tituloAnais):
+                            if (rows[0] != 'SBRC'):
+                                sigla = rows[0]
+                                estratos = rows[-1]
                                 break
-                        elif ('({})'.format(row[0]) in tituloAnais):
-                            sigla = row[0]
-                            estratos = row[8]
+                        elif ('({})'.format(rows[0]) in tituloAnais):
+                            sigla = rows[0]
+                            estratos = rows[-1]
                             break
-                        elif ('({} '.format(row[0]) in tituloAnais):
-                            sigla = row[0]
-                            estratos = row[8]
+                        elif ('({} '.format(rows[0]) in tituloAnais):
+                            sigla = rows[0]
+                            estratos = rows[-1]
                             break
-                        elif ('{}&'.format(row[0]) in tituloAnais):
-                            sigla = row[0]
-                            estratos = row[8]
+                        elif ('{}&'.format(rows[0]) in tituloAnais):
+                            sigla = rows[0]
+                            estratos = rows[-1]
                             break
-                        elif ('{}_'.format(row[0]) in tituloAnais):
-                            sigla = row[0]
-                            #					print(row[8] + ' --> ' + sigla)# + ' #6_#')
-                            estratos = row[8]
+                        elif ('{}_'.format(rows[0]) in tituloAnais):
+                            sigla = rows[0]
+                            
+                            estratos = rows[-1]
                             break
-                        elif (' {}2'.format(row[0]) in tituloAnais):
-                            sigla = row[0]
-                            #					print(row[8] + ' --> ' + sigla)# + ' # 62#')
-                            estratos = row[8]
+                        elif (' {}2'.format(rows[0]) in tituloAnais):
+                            sigla = rows[0]
+                            
+                            estratos = rows[-1]
                             break
-                        # Comparação por SIGLA no resultado[5]
-                        elif (' {} '.format(row[0]) in nomeEvento):
-                            sigla = row[0]
-                            #					print(row[8] + ' --> ' + sigla)# + ' # 5 #')
-                            estratos = row[8]
+                        
+                        elif (' {} '.format(rows[0]) in nomeEvento): # Comparação por SIGLA no resultado[5]
+                            sigla = rows[0]
+                            
+                            estratos = rows[-1]
                             break
-                        elif ('({})'.format(row[0]) in nomeEvento):
-                            sigla = row[0]
-                            #					print(row[8] + ' --> ' + sigla)# + ' #(5)')
-                            estratos = row[8]
+                        elif ('({})'.format(rows[0]) in nomeEvento):
+                            sigla = rows[0]
+                            
+                            estratos = rows[-1]
                             break
-                        elif ('({} '.format(row[0]) in nomeEvento):
-                            sigla = row[0]
-                            #					print(row[8] + ' --> ' + sigla)# + ' #(5 #')
-                            estratos = row[8]
+                        elif ('({} '.format(rows[0]) in nomeEvento):
+                            sigla = rows[0]
+                            
+                            estratos = rows[-1]
                             break
-                        elif ('{}&'.format(row[0]) in nomeEvento):
-                            sigla = row[0]
-                            #					print(row[8] + ' --> ' + sigla)# + ' #5&#')
-                            estratos = row[8]
+                        elif ('{}&'.format(rows[0]) in nomeEvento):
+                            sigla = rows[0]
+                            
+                            estratos = rows[-1]
                             break
-                        elif ('{}_'.format(row[0]) in nomeEvento):
-                            sigla = row[0]
-                            #					print(row[8] + ' --> ' + sigla)# + ' #5_#')
-                            estratos = row[8]
+                        elif ('{}_'.format(rows[0]) in nomeEvento):
+                            sigla = rows[0]
+                            
+                            estratos = rows[-1]
                             break
-                        elif (' {}2'.format(row[0]) in nomeEvento):
-                            sigla = row[0]
-                            #					print(row[8] + ' --> ' + sigla)# + ' # 52#')
-                            estratos = row[8]
+                        elif (' {}2'.format(rows[0]) in nomeEvento):
+                            sigla = rows[0]
+                           
+                            estratos = rows[-1]
                             break
-                        elif ('XVII {}'.format(row[0]) in str(nomeEvento).upper()):
-                            sigla = row[0]
-                            #					print(row[8] + ' --> ' + sigla)# + ' #XVII 5up#')
-                            estratos = row[8]
+                        elif ('XVII {}'.format(rows[0]) in str(nomeEvento).upper()):
+                            sigla = rows[0]
+                            
+                            estratos = rows[-1]
                             break
-                        elif ('({})'.format(row[0]) in resultado[7]):
-                            sigla = row[0]
-                            #					print(row[8] + ' --> ' + sigla)# + '#(5)')
-                            estratos = row[8]
+                        elif ('({})'.format(rows[0]) in resultado[7]):
+                            sigla = rows[0]
+                            
+                            estratos = rows[-1]
                             break
+                        
+                        elif rows[1] == tituloAnais:
+                            sigla = rows[0]
+                            estratos = rows[-1]
+                            break
+                        
                         else:
                             sigla = '-'
                             estratos = '-'
-                    # print(resultado)                #imprime resultado completo
-                    # print(tituloAnais)               #imprime apenas o titulo-do-anais-ou-periodico, resultado[6]
-                    # print(nomeEvento)                #imprime apenas o nome-do-evento, resultado[5]
-                    # print(estratos)      
-                    for row_num in range(worksheet2.nrows):                       #Comparação por nome
-                        if row_num == 0:
-                            continue
-                        row = worksheet2.row_values(row_num)
+                          
+                        if (estratos == '-'):  #Comparação por nome
+                            if (str(rows[1]).upper() == str(resultado[5]).upper()):
+                                sigla = rows[0]
+                                estratos = rows[-1]
+                                break
+                            elif (str(rows[1]).upper() in str(resultado[6]).upper()):
+                                sigla = rows[0]
+                                estratos = rows[-1]
+                                break
+                            
+                            elif (rows[1] in resultado[5]):
+                                sigla = rows[0]
+                                estratos = rows[-1]
+                                break
+                            elif (rows[1] in resultado[7]):
+                                sigla = rows[0]
+                                estratos = rows[-1]
+                                break
+                                
+                    for rows in worksheet2.values:
+                        
                         if (estratos == '-'):
-                            if (str(row[1]).upper() in str(resultado[6]).upper()):
-                                sigla = row[0]
-                                estratos = row[8]
+                            if (" ({}'2019)".format(rows[0]) in resultado[6]): #Comparação por SIGLA casos especiais
+                                sigla = rows[0]
+                                estratos = rows[-1]
                                 break
-                            elif (row[1] in resultado[5]):
-                                sigla = row[0]
-                                estratos = row[8]
+                            elif ("{}'18 ".format(rows[0]) in resultado[6] and rows[0] != 'ER'):
+                                sigla = rows[0]
+                                estratos = rows[-1]
                                 break
-                            elif (row[1] in resultado[7]):
-                                sigla = row[0]
-                                estratos = row[8]
-                                break
-                    for row_num in range(worksheet2.nrows):                #Comparação por SIGLA casos especiais
-                        if row_num == 0:
-                            continue
-                        row = worksheet2.row_values(row_num)
-                        if (estratos == '-'):
-                            if (" ({}'2019)".format(row[0]) in resultado[6]):
-                                sigla = row[0]
-                                estratos = row[8]
-                                break
-                            elif ("{}'18 ".format(row[0]) in resultado[6] and row[0] != 'ER'):
-                                sigla = row[0]
-                                estratos = row[8]
-                                break
-                documento.append(resultado[0])
-                ano_evento.append(resultado[1])
-                siglas.append(sigla)
+                # documento.append(resultado[0])
+                # ano_evento.append(resultado[1])
+                # siglas.append(sigla)
                 if ('COMPLETO' in tituloAnais):                          #Correção de tabela, elimina o "COMPLETO" do lugar errado
                     tituloAnais = (resultado[2] + resultado [3] + resultado[4])
                     doi = (resultado[5])
@@ -400,7 +355,7 @@ def import_project(anos):
                             autor = (resultado[8])
                     else:
                         autor = (autor)
-                estratoss.append(estratos)
+                # estratoss.append(estratos)
                 
                 nota = 'SEM QUALIS'             #Calcula a nota do estrato
                 if (estratos == 'A1'):
@@ -422,7 +377,7 @@ def import_project(anos):
                 elif (estratos == 'C'):
                     nota = models.BaseDeCorrecoes.Cc
                 
-                notas.append(nota)
+                # notas.append(nota)
                 
                 if (nota != 'SEM QUALIS'):                  #Contador de estratos das conferências
                     totalNota = totalNota + nota
@@ -519,6 +474,11 @@ def import_project(anos):
                 #x = x + 1
                 
                 # print(nomeProf," | ", resultado[0], " | ", resultado[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos," | ", nota)
+                
+                if(estratos == '' or estratos == '-' or estratos == ' C'):
+                    estratos= 'C'
+                    nota = '0'
+                    
                 c = db.cursor()
                 
                 data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
@@ -526,6 +486,27 @@ def import_project(anos):
                                             
                 c.execute(data,(nomeProf, resultado[0], resultado[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos, nota))
                 db.commit()
+                # result = askyesno(title= "Verificação de valores",message= 'Deseja recalcular as notas de Conferências? (Quando um título existe para mais de um docente)')
+                # if (result == True):
+                # for t in tituloAnais:
+                
+                e1 = []
+                # # e1.append(EventosQualis(nomeProf, resultado[0], resultado[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos, nota))
+                # e1.append(nomeProf)
+                # e1.append(resultado[0])
+                # e1.append(resultado[1])
+                e1.append(tituloAnais)
+                # e1.append(doi)
+                # e1.append(sigla)
+                # e1.append(nomeEvento)
+                # e1.append(autor)
+                # e1.append(estratos)
+                # e1.append(nota)
+                
+                
+                # for e in e1:
+                eventosQualis.append(e1)
+                
                 
         for trabalhos in root.iter('ARTIGO-PUBLICADO'):           #Varrer currículo
             autores = ''
@@ -538,130 +519,43 @@ def import_project(anos):
                     cont = cont + 1
                 if trabalho_valido and trab.tag == 'DETALHAMENTO-DO-ARTIGO':
                     periodico = periodico + ';'+ trab.attrib['TITULO-DO-PERIODICO-OU-REVISTA'].replace(";","")
-                    periodico = periodico.replace("&amp","&")				
+                    periodico = periodico.replace("&amp","&")
+                    issn = trab.attrib['ISSN']		
+                    issn = issn[0:4]+ '-' + issn[4:8]
                 if trabalho_valido and trab.tag == 'AUTORES':
                     if autores: 
                         autores = autores + '/ '+ trab.attrib['NOME-COMPLETO-DO-AUTOR']
                     else:
                         autores = trab.attrib['NOME-COMPLETO-DO-AUTOR']
+                
             if trabalho_valido:
                 resultado2 = (periodico + ';' + autores)
                 resultado2 = resultado2.split(";")
                 estratos2 = ''
                 doi = str(resultado2[3]).upper()
-                ##################################################### Base de correção dos Periódicos
-                if(doi == str('10.14209/jcis.2019.22').upper()):
-                    estratos2 = 'A4'
-                elif(doi == str('10.1155/2017/2865482').upper()):
-                    estratos2 = 'B1'
-                elif(doi == str('10.1177/1475921718799070').upper()):
-                    estratos2 = 'A1'
-                elif(doi == str('10.1007/s00530-015-0501-6').upper()):
-                    estratos2 = 'A2'
-                elif(doi == str('10.1016/j.compenvurbsys.2017.05.001').upper()):
-                    estratos2 = 'A1'
-                elif(doi == str('10.1002/spe.2637').upper()):
-                    estratos2 = 'A3'
-                elif(doi == str('10.1177/1475921718799070').upper()):
-                    estratos2 = 'A1'
-                elif(doi == str('10.1590/0074-02760170111').upper()):
-                    estratos2 = 'A2'
-                elif(doi == str('10.1002/nem.2055').upper()):
-                    estratos2 = 'A4'
-                elif(str('REVISTA DA ABET').upper() in str(resultado2[5]).upper()):
-                    estratos2 = 'A4'
-                elif(str('Journal of Communication and Information Systems').upper() in str(resultado2[5]).upper()):
-                    estratos2 = 'A4' 
-                elif(str('International journal of simulation: systems, science & technology').upper() in str(resultado2[5]).upper()):
-                    estratos2 = 'B4'
-                    
+                nomeEvento = resultado2[5]
+                                  
                     #######################################################
-                    
+                # if str(resultado2[5]) == translator.translate(str(resultado2[5]),src="en",dest="pt"):
+                #     nomeEvento = translator.translate(str(resultado2[5]),src="en",dest="pt")
+                #     print(nomeEvento)
+                # elif str(resultado2[5]) == translator.translate(str(resultado2[5]),src="pt",dest="en"):
+                #     nomeEvento = translator.translate(str(resultado2[5]),src="pt",dest="en")
+                #     print(nomeEvento)
+                # # nomeEvento = resultado2[5]
+                # print(nomeEvento)
+                
                 if (estratos2 == ''):
-                    for i in range(0,len(resultado_total)):                   #Comparação por nome
-                        # nomePeriodico = str(resultado2[5]).upper()
-                        if (str(resultado2[5]).upper() in resultado_total[i]):
-                            if (' {} '.format(str(resultado2[5]).upper()) in resultado_total[i]):
-                            #print(resultado_total[i+1])
-                                # #estratos2 = '-'
-                                continue
-                            if (len(resultado2[5]) == len(resultado_total[i])):
-		#						print(resultado_total[i+1])
-                                estratos2 = resultado_total[i+1]
-                                break
-                            elif (len(resultado2[5]) < len(resultado_total[i])):
-                                if ('{} (PRINT)'.format(str(resultado2[5]).upper()) == resultado_total[i]):
-		#							print(resultado_total[i+1])
-                                    estratos2 = resultado_total[i+1]
-		#							print(estratos2)
-                                    break
-                                if ('{} (ONLINE)'.format(str(resultado2[5]).upper()) == resultado_total[i]):
-                                    #								print(resultado_total[i+1])
-                                    estratos2 = resultado_total[i+1]
-		#							print(estratos2)
-                                    break
-                                elif ('ACS {}'.format(str(resultado2[5]).upper()) == resultado_total[i]):
-                                    #								print(resultado_total[i+1])
-                                    estratos2 = resultado_total[i+1]
-		#							print(estratos2)
-                                    break
-                                elif ('THE {}'.format(str(resultado2[5]).upper()) == resultado_total[i]):
-		#							print(resultado_total[i+1])
-                                    estratos2 = resultado_total[i+1]
-		#							print(estratos2)
-                                    break
-                                elif ('{} (19'.format(str(resultado2[5]).upper()) in resultado_total[i]):
-                                    #								print(resultado_total[i+1])
-                                    estratos2 = resultado_total[i+1]
-		#							print(estratos2)
-                                    break
-                                elif (len(resultado_total[i]) - len(resultado2[5]) <= 12):
-                                    if ('{} ('.format(str(resultado2[5]).upper()) in resultado_total[i]):
-		#								print(resultado_total[i+1])
-                                        estratos2 = resultado_total[i+1]
-		#								print(estratos2)
-										#print(resultado_total[i])
-                                        break
-                                    else:
-                                        result = askyesno(
-                                            title= "Verificação de valores",
-                                            message= resultado2[5] + ' é o mesmo que ' + resultado_total[i] + '?'
-                                        )
-                                        if (result == True):
-                                            #											print(resultado_total[i+1])
-                                            estratos2 = resultado_total[i+1]
-                                            
-                                            break
-                                        elif (result == 'no' or result == 'NO'):
-                                            estratos2 = '-'
-                                                    
-                                elif (len(resultado_total[i]) - len(resultado2[5]) > 12):
-                                    if ('{} ('.format(str(resultado2[5]).upper()) in resultado_total[i]):
-                                        result = askyesno(
-                                            title= "Verificação de valores",
-                                            message= resultado2[5] + ' é o mesmo que ' + resultado_total[i] + '?'
-                                        )
-                                        if (result == True):
-                                            #print(resultado_total[i+1])
-                                            estratos2 = resultado_total[i+1]
-                                            
-                                        elif (result == False):
-                                                estratos2 = '-'
-                                                
-                        elif (str(resultado2[6]).upper() in resultado_total[i]):
-                            # print(resultado_total[i+1])
-                            estratos2 = resultado_total[i+1]
-                            break
-                        else:
-                            estratos2 = '-'
-                                					
-		    	# print(resultado2[5])   #imprime apenas o nome do periódico
-				#print(estratos2)      #imprime só o estrato
-				#print(resultado2)     #imprime o resultado completo
-                # documento.append(resultado2[0])
-                # ano_evento.append(resultado2[1])
-                sigla = '-'
-                if ('COMPLETO' in resultado2[5]):                        #Correção de tabela, elimina o "COMPLETO" do lugar errado
+
+                    for i in range(0,len(resultado_total)):
+                        resultado_issn = resultado_total[i][0:9]
+                        if(issn in resultado_issn):
+                            print('yes')
+                            estratos2 = resultado_total[i][-2:]
+                            # print(resultado_total[i][-2:])
+                            
+                            
+                if ('COMPLETO' in nomeEvento):                        #Correção de tabela, elimina o "COMPLETO" do lugar errado
                     tituloAnais = (resultado2[2] + resultado2[3])
                     doi = (resultado2[4])
                     nomeEvento = resultado2[6]
@@ -672,11 +566,11 @@ def import_project(anos):
                         doi = resultado2[3]
                     else:
                         doi = '-'
-						# worksheet.write(x, 3, '-')
-                    nomeEvento = resultado2[5]
+						
+                    nomeEvento = nomeEvento
                     autor = resultado2[6]
                 estratos2 = estratos2
-                # worksheet.write(x, 7, estratos2)
+                
                 nota = 'SEM QUALIS'               #Calcula nota do estrato
                 if (estratos2 == 'A1'):
                     nota = models.BaseDeCorrecoes.A1p
@@ -697,8 +591,8 @@ def import_project(anos):
                 elif (estratos2 == 'C'):
                     nota = models.BaseDeCorrecoes.Cp
 					
-				# worksheet.write(x, 8, nota)
-                notas.append(nota)
+				
+                # notas.append(nota)
                     
                 if (nota != 'SEM QUALIS'):            #Contador de estratos dos periódicos
                     totalNota = totalNota + nota
@@ -795,6 +689,10 @@ def import_project(anos):
                             
                 # x = x + 1
                 # print(nomeProf," | ", resultado2[0]," | ", resultado2[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos2," | ", nota)
+                if(estratos2 == '' or estratos2 == '-' or estratos2 == ' C'):
+                    estratos2= 'C'
+                    nota = '0'
+                    
                 c = db.cursor()
                 data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
@@ -802,33 +700,42 @@ def import_project(anos):
                 c.execute(data,(nomeProf, resultado2[0], resultado2[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos2, nota))
                 db.commit()
                 c.close()
+                e2 = []
+                # e2.append(nomeProf)
+                # e2.append(resultado2[0])
+                # e2.append(resultado2[1])
+                e2.append(tituloAnais)
+                # e2.append(doi)
+                # e2.append(sigla)
+                # e2.append(nomeEvento)
+                # e2.append(autor)
+                # e2.append(estratos2)
+                # e2.append(nota)
+                # # e2 = EventosQualis(nomeProf, resultado2[0], resultado2[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos2, nota)
+                
+                # # eventosQualis.append(e1)
+                eventosQualis.append(e2)
+                
+            
+        
         totalNotas = []
         totalNotas.append(totalNota)
         print('Total de publicações = {}'.format(cont))            #Quantidade de documentos válidos de cada professor
         print('Pontuação total = {}'.format(totalNota))            #Nota do professor
         print('------------------------------------------------------------')
         print(anos_validos)
-        # worksheet.write(x, 7, 'Nota Total')
-		# worksheet.write(x, 8, totalNota)
-        # if (respAno == '1'):
-        #     contTotalc = cont17c + cont18c + cont19c + cont20c
-        #     contTotalp = cont17p + cont18p + cont19p + cont20p
-        # elif (respAno == '2'):
-        #     contTotalc = cont17c
-        #     contTotalp = cont17p
-        #     totalNota = nota17
-        # elif (respAno == '3'):
-        #     contTotalc = cont18c
-        #     contTotalp = cont18p
-        #     totalNota = nota18
-        # elif (respAno == '4'):
-        #     contTotalc = cont19c
-        #     contTotalp = cont19p
-        #     totalNota = nota19
-        # elif (respAno == '5'):
-        #     contTotalc = cont20c
-        #     contTotalp = cont20p
-        #     totalNota = nota20
-        
-            
+
+    # return render_template('teste.html',listar = eventosQualis)
+    # for evento in eventosQualis:
+    #     # print(evento[0])
+    #     rep = qualis_repetidos(titulo=evento[0])
+    #     for r in rep:
+    #         # print(r)
+    #         if r[0] == evento[0]:
+    #             media = float(r[1]) / float(r[3])
+    #             update_qualis_repetido(titulo=r[0],valor=str(media))
+    #             # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
+    #             break
+    #         else:
+    #             continue
     return redirect('/listar')

@@ -7,45 +7,20 @@ import glob
 import os
 from werkzeug.utils import secure_filename
 import xml.etree.ElementTree as ET
-import mysql.connector
-import models.connection
+# import models.graficos as g
+from models.corrige_notas import corrige_notas
 from models.import_projetos import import_project
 from models.load_qualis import load_qualis
-from models.consulta import lista, busca_prof, soma_nota, contador_estratos
+from models.consulta import * #lista, busca_prof, soma_nota, contador_estratos
 
-'''
-heroku access
 
-user= 'b96e08051c345f'
-pwd= '2503c6ba'
-host= 'us-cdbr-east-06.cleardb.net'
-database= 'heroku_34fb507d853ce4f'
-'''
-'''
-local access
-'''
-# user = 'root'
-# pwd = 'Qwer@1234'
-# host = 'localhost'
-# database = 'lattes4web'
-
-# models.connection.conexao()
 
 app = Flask(__name__)
-
-# try:
-#     db = mysql.connector.connect(user=user,password= pwd,host=host, database=database)
-# except:
-#     print("YOU SHALL NOT PASS!")
-
-# @app.route('/connection')
-# def connection():
-#     return render_template('connection.html')
 
 
 # configurações de upload arquivos
 
-ALLOWED_EXTENSIONS = {'xml', 'XML','pdf','xls'}  # extensões validas
+ALLOWED_EXTENSIONS = {'xml', 'XML','pdf','xls','xlsx'}  # extensões validas
 
 # verifica se pasta existe
 if os.path.isdir('curriculos'):
@@ -86,7 +61,20 @@ def imports():
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(
-                        'arquivos/', filename))
+                        'arquivos/'+ filename))
+                    f = file.filename.rsplit('.',1)[1].lower()
+                    dir = 'arquivos/'
+                    if f == 'pdf' or f == 'PDF':
+                        old = os.path.join(dir,filename)
+                        new = os.path.join(dir,'QUALIS_novo.pdf')
+                        os.rename(old,new)
+                        
+                    elif f == 'xls' or f == 'xlsx':
+                        old = os.path.join(dir,filename)
+                        new = os.path.join(dir,'QualisEventosComp.xls')
+                        os.rename(old,new)
+                    else :
+                        flash("Erro no sistema")
                     flash('File(s) uploaded successfully')
                 else:
                     flash(
@@ -117,11 +105,10 @@ def upload():
 def import_projetos():
     return render_template('projetos.html')
 
-@app.route("/projetos", methods=['GET','POST'])
+@app.route("/projetos", methods=['POST'])
 def projetos():
     if request.method == 'POST':
         anos = request.form.getlist('anos')
-    
     return import_project(anos)
 
 
@@ -133,11 +120,42 @@ def gerar_tabela_qualis():
 
 @app.route('/listar')
 def listar():
-    listar = lista()
-    #prof = busca_prof()
-    totalNotas = soma_nota()
+    
     contadorEstratos = contador_estratos()
+    titulosRepetidos = titulos_qualis()
+    for tits in titulosRepetidos:
+        for t in tits:
+            rep = qualis_repetidos(titulo=t)
+            for r in rep:
+                print(r)
+                if r[0] == t:
+                    media = float(r[1]) / float(r[3])
+                    update_qualis_repetido(titulo=r[0],valor=str(media))
+                    # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
+                    break
+    # corrige_notas(titulosRepetidos)
+    listar = lista()
+    totalNotas = soma_nota()
     return render_template("teste.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
+
+# def graficos():
+#     grafico = g.grafico()
+#     return render_template("grafico.html",grafico=grafico)
+
+@app.route('/corrige_notas')
+def corrige_notas():
+    titulosRepetidos = titulos_qualis()
+    for tits in titulosRepetidos:
+        for t in tits:
+            rep = qualis_repetidos(titulo=t)
+            for r in rep:
+                print(r)
+                if r[0] == t:
+                    media = float(r[1]) / float(r[3])
+                    update_qualis_repetido(titulo=r[0],valor=str(media))
+                    # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
+                    break
+    return redirect('/listar')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

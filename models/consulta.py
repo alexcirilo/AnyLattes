@@ -34,3 +34,25 @@ def contador_estratos():
     resultado = cursor.fetchall()
     
     return resultado
+
+def titulos_qualis():
+    cursor.execute('SELECT DISTINCT titulo FROM resultados r group by titulo having COUNT(*) >1 ;')
+    resultado = cursor.fetchall()
+    
+    return resultado
+
+def qualis_repetidos(titulo):
+    cursor.execute("SELECT distinct titulo, notas, estratos, count(*) FROM resultados r WHERE "+
+                   "titulo like '%"+titulo+"%' group by titulo, notas, estratos having COUNT(*) >1 ;")
+    resultado = cursor.fetchall()
+    return resultado
+
+def update_qualis_repetido(titulo,valor):
+    sql = "update resultados set notas = '"+valor+"' where titulo = '"+titulo+"';"
+    cursor.execute(sql)
+    try:
+        db.commit()
+        print("Atualizado com Sucesso!")
+    except:
+        print("Sem Sucesso!")
+    

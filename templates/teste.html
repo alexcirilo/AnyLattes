@@ -1,3 +1,63 @@
+{# {% extends 'base.html'%}
+<h1>{%block title%} Projetos - Em Teste {%endblock%}</h1>
+
+{%block content%}
+
+<div id="resultados">
+    <h3>Dados</h3>
+
+    
+    <table class="table table-hover table-sm table-responsive resultado" style="width: 98%;" id="resultado">
+        <thead class="table-secondary">
+            <tr>
+                <th>Docente</th>
+                <th>Documento:</th>
+                <th>Ano:</th>
+                <th>Título:</th>
+                <th>DOI:</th>
+                <th>Sigla:</th>
+                <th>Titulo Periódico:</th>
+                <th>Autores:</th>
+                <th>Estratos:</th>
+                <th>Notas:</th>
+            </tr>
+
+        </thead>
+        <tbody>
+
+            {%for lista in listar%}
+            <tr>
+                <td>{{lista[0]}}</td>
+                <td>{{lista[1]}}</td>
+                <td>{{lista[2]}}</td>
+                <td>{{lista[3]}}</td>
+                <td>{{lista[4]}}</td>
+                <td>{{lista[5]}}</td>
+                <td>{{lista[6]}}</td>
+                <td>{{lista[7]}}</td>
+                
+                {% if lista[8] == '-' %}
+                    <td>C</td>
+                {%else%}
+                    <td>{{lista[8]}}</td>
+                {%endif%}
+
+                {%if lista[9] == 'SEM QUALIS' %}
+                    <td>0</td>
+                {%else%}
+                    <td>{{lista[9]}}</td>
+                {%endif%}
+            </tr>
+
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+
+<br>
+<hr /> #}
+
+
 {% extends 'base.html'%}
 <h1>{%block title%} Projetos - Em Teste {%endblock%}</h1>
 
@@ -6,6 +66,7 @@
 <div id="resultados">
     <h3>Dados</h3>
 
+    {# <a href="{{url_for('corrige_notas')}}" class="btn btn-secondary">Recalcular Notas</a> #}
     
     <table class="table table-hover table-sm table-responsive resultado" style="width: 98%;" id="resultado">
         <thead class="table-secondary">
@@ -53,9 +114,6 @@
         </tbody>
     </table>
 </div>
-
-<br>
-<hr />
 <div class="container">
     <h2 style="text-align: center;">Contador de Estratos</h2>
 

@@ -1,16 +1,24 @@
 {% extends 'base.html' %}
 {%block content%}
 
-<div class="container" style="text-align: center;">
+
 <h1>{%block title%}Importar Currículos {%endblock%}</h1>
 
 <form action="{{ url_for('upload') }}" method="post" id="forms" enctype="multipart/form-data"  class="form-inline">
-    
-    <div class="input-group">
-        <input class="form-control" type="file" name="files[]" id="file" multiple required>
-        <input class="btn btn-outline-success" type="submit" value="Enviar" name="enviar">
-    </div>
 
+    
+    <div >
+        <div >
+            Importar currículos no formato XML
+        </div>
+        <!-- <div class="card-body"> -->
+            <div class="input-group">
+                <input class="form-control" type="file" name="files[]" id="file" multiple required>
+                <input class="btn btn-outline-success" type="submit" value="Enviar" name="enviar">
+            </div>
+        <!-- </div> -->
+        
+    </div>
 </form>
-</div>
+
 {%endblock%}

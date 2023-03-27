@@ -1,74 +1,77 @@
-{# {% extends 'base.html'%}
-<h1>{%block title%} Projetos - Em Teste {%endblock%}</h1>
-
-{%block content%}
-
-<div id="resultados">
-    <h3>Dados</h3>
-
-    
-    <table class="table table-hover table-sm table-responsive resultado" style="width: 98%;" id="resultado">
-        <thead class="table-secondary">
-            <tr>
-                <th>Docente</th>
-                <th>Documento:</th>
-                <th>Ano:</th>
-                <th>Título:</th>
-                <th>DOI:</th>
-                <th>Sigla:</th>
-                <th>Titulo Periódico:</th>
-                <th>Autores:</th>
-                <th>Estratos:</th>
-                <th>Notas:</th>
-            </tr>
-
-        </thead>
-        <tbody>
-
-            {%for lista in listar%}
-            <tr>
-                <td>{{lista[0]}}</td>
-                <td>{{lista[1]}}</td>
-                <td>{{lista[2]}}</td>
-                <td>{{lista[3]}}</td>
-                <td>{{lista[4]}}</td>
-                <td>{{lista[5]}}</td>
-                <td>{{lista[6]}}</td>
-                <td>{{lista[7]}}</td>
-                
-                {% if lista[8] == '-' %}
-                    <td>C</td>
-                {%else%}
-                    <td>{{lista[8]}}</td>
-                {%endif%}
-
-                {%if lista[9] == 'SEM QUALIS' %}
-                    <td>0</td>
-                {%else%}
-                    <td>{{lista[9]}}</td>
-                {%endif%}
-            </tr>
-
-            {%endfor%}
-        </tbody>
-    </table>
-</div>
-
-<br>
-<hr /> #}
-
-
 {% extends 'base.html'%}
 <h1>{%block title%} Projetos - Em Teste {%endblock%}</h1>
 
 {%block content%}
 
-<div id="resultados">
-    <h3>Dados</h3>
+<div class="row">
+    <h1>Dados</h1>
+    <div class="col-md-8">
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="{{url_for('index')}}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Dados</li>
+        </ol>
+    </div>
+    <div class="col-md-4">
+        <div class="card-body">
+            <small>Consultar os Docentes na base do Lattes</small>
+            <a href="https://buscatextual.cnpq.br/buscatextual/busca.do?metodo=apresentar" target="_blank">aqui</a>.
+        </div>
+    </div>
+</div>
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Relação das publicações
+    </div>
+    <div class="card-body">
+        <table id="resultados" class="table table-sm" style="font-size: small;">
+            <thead class="table-dark">
+                <tr>
+                    <th>Docente</th>
+                    <th>Documento:</th>
+                    <th>Ano:</th>
+                    <th>Título:</th>
+                    <!-- <th>DOI:</th> -->
+                    <!-- <th>Sigla:</th> -->
+                    <!-- <th>Titulo Periódico:</th> -->
+                    <!-- <th>Autores:</th> -->
+                    <th>Estratos:</th>
+                    <th>Notas:</th>
 
-    {# <a href="{{url_for('corrige_notas')}}" class="btn btn-secondary">Recalcular Notas</a> #}
-    
-    <table class="table table-hover table-sm table-responsive resultado" style="width: 98%;" id="resultado">
+                </tr>
+            </thead>
+
+            <tbody>
+                {%for lista in listar%}
+                <tr>
+
+                    <td><button class="btn btn-sm btn-transparent" data-toggle="modal"
+                            href="#dadosDoEvento?docente={{lista[0]}}">{{lista[1]}}</button></td>
+                    <td><a class="btn btn-sm btn-transparent" data-toggle="modal"
+                            href="#dadosDoEvento?docente={{lista[0]}}">{{lista[2]}}</a></td>
+                    <td><a class="btn btn-sm btn-transparent" data-toggle="modal"
+                            href="#dadosDoEvento?docente={{lista[0]}}">{{lista[3]}}</a></td>
+                    <td><a class="btn btn-sm btn-transparent" data-toggle="modal"
+                            href="#dadosDoEvento?docente={{lista[0]}}">{{lista[4]}}</a></td>
+                    <!-- <td>{{lista[5]}}</td> -->
+                    <!-- <td>{{lista[6]}}</td> -->
+                    <!-- <td>{{lista[7]}}</td> -->
+                    <!-- <td>{{lista[8]}}</td> -->
+                    <td><a class="btn btn-sm btn-transparent" data-toggle="modal"
+                            href="#dadosDoEvento?docente={{lista[0]}}">{{lista[9]}}</a></td>
+                    <td><a class="btn btn-sm btn-transparent" data-toggle="modal"
+                            href="#dadosDoEvento?docente={{lista[0]}}">{{lista[10]}}</a></td>
+
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{# <a href="{{url_for('corrige_notas')}}" class="btn btn-secondary">Recalcular Notas</a> #}
+
+<!-- <table class="table table-hover table-sm table-responsive resultado" style="width: 98%;" id="resultado">
         <thead class="table-secondary">
             <tr>
                 <th>Docente</th>
@@ -114,8 +117,8 @@
         </tbody>
     </table>
 </div>
-<div class="container">
-    <h2 style="text-align: center;">Contador de Estratos</h2>
+<div class="container"> -->
+<!-- <h2 style="text-align: center;">Contador de Estratos</h2>
 
 
     <table class="table table-sm table-hover" id="contador">
@@ -143,29 +146,25 @@
             {%endfor%}
 
         </tbody>
-    </table>
+    </table> -->
 
-    <br>
-    <hr />
-
+<!-- <br>
+    <hr />-->
+<div class="card mb-4">
     <h2>Total de Notas</h2>
-    <table class="table" id="notas">
-        <thead class="table-dark">
-            <tr>
-                <th>Docente</th>
-                <th>Total:</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%for total in totalNotas%}
-            <tr>
-                <td>{{total[0]}}</td>
-                <td>{{total[1]}}</td>
-            </tr>
-            {%endfor%}
-        </tbody>
-    </table>
-
+    <div class="row">
+        <div class="col-md-10">
+            <select name="nota" id="selectBox" class="form-select form-select-sm mb-3">
+                {%for total in totalNotas%}
+                    <option value="{{total[0]}}">{{total[0]}} | {{total[1]}} </option>
+                {%endfor%}
+            </select>
+            
+        </div>
+        
+    </div>
+</div>
+<!-- 
     <br>
     <hr />
     <h2>Total de Periódicos / Conferências</h2>
@@ -178,23 +177,25 @@
         <tbody>
 
         </tbody>
-    </table>
+    </table> -->
 
-</div>
+
 
 <script>
-    $(document).ready(function () {
-        $('#contador').DataTable();
-    });
+    //$(document).ready(function () {
+    //    $('#contador').DataTable();
+    //});
 
-    $(document).ready(function () {
-        $('#resultado').DataTable();
-    });
-    $(document).ready(function () {
-        $('#notas').DataTable();
-    });
+    //$(document).ready(function () {
+     //   $('#resultado').DataTable();
+    //});
 
-
+    //$(document).ready(function () {
+    //    $('#notas').DataTable();
+    //});
+    
 </script>
 
+
 {%endblock%}
+

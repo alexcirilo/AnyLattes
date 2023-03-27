@@ -8,7 +8,6 @@ import os
 from werkzeug.utils import secure_filename
 import xml.etree.ElementTree as ET
 # import models.graficos as g
-from models.corrige_notas import corrige_notas
 from models.import_projetos import import_project
 from models.load_qualis import load_qualis
 from models.consulta import * #lista, busca_prof, soma_nota, contador_estratos
@@ -71,7 +70,7 @@ def imports():
                         
                     elif f == 'xls' or f == 'xlsx':
                         old = os.path.join(dir,filename)
-                        new = os.path.join(dir,'QualisEventosComp.xls')
+                        new = os.path.join(dir,'QualisConferencias.xlsx')
                         os.rename(old,new)
                     else :
                         flash("Erro no sistema")
@@ -117,6 +116,14 @@ def projetos():
 def gerar_tabela_qualis():
     return render_template('qualis.html'), load_qualis()
 
+
+@app.route('/resultados')
+def resultados():
+    listar = lista()
+    #prof = busca_prof()
+    totalNotas = soma_nota()
+    contadorEstratos = contador_estratos()
+    return render_template("teste.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
 
 @app.route('/listar')
 def listar():

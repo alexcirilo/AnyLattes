@@ -5,10 +5,25 @@
     <h1>{%block title%} Arquivos Qualis {%endblock%}</h1>
 
     <form action="{{url_for('imports')}}" method="post" enctype="multipart/form-data" id="forms" class="form-inline">
-        
-        <div class="input-group">
-            <input class="form-control" type="file" name="files[]" id="file" multiple required>
-            <input class="btn btn-outline-success" type="submit" value="Enviar" name="enviar">
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="{{url_for('index')}}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Arquivos Qualis</li>
+        </ol>
+    
+        <div class="card mb-4">
+            <div class="card-header">
+                Importar Arquivos Qualis 
+                    <br>
+                    | Periódicos: PDF -
+                    Conferências: xlsx |
+            </div>
+            <div class="card-body">
+                <div class="input-group">
+                    <input class="form-control" type="file" name="files[]" id="file" multiple required>
+                    <input class="btn btn-outline-success" type="submit" value="Enviar" name="enviar">
+                </div>
+            </div>
+            
         </div>
     </form>
 </div>

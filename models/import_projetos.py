@@ -6,10 +6,9 @@ import xml.etree.ElementTree as ET
 from flask import redirect, render_template
 import models.BaseDeCorrecoes, models.connection as database
 from models.crud import zera_banco
-from tkinter.messagebox import *
 from googletrans import Translator
 from models.consulta import * #qualis_repetidos,update_qualis_repetido
-from models.corrige_notas import *
+# from models.corrige_notas import *
 # from models.EventosQualis import EventosQualis
 from openpyxl import Workbook, load_workbook
 
@@ -41,10 +40,10 @@ def import_project(anos):
     #    Script ler PDF fim
         resultado_total = (resultado_total + pg_extraida)
 
-    print('Importanto documento: Qualis.xls...')
+    print('Importanto documento: Qualis.xlsx...')
     # workbook2 = xlrd.open_workbook('arquivos/QualisEventosComp.xls')  # Script ler xls
     # worksheet2 = workbook2.sheet_by_index(1)
-    workbook2 = load_workbook('arquivos/QualisConferenciass.xlsx')
+    workbook2 = load_workbook('arquivos/QualisConferencias.xlsx')
     worksheet2 = workbook2.active
     x = 0
     somaNotas = 0

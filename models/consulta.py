@@ -6,7 +6,9 @@ cursor = db.cursor()
 
 def lista():
 
-    sql=""" SELECT * FROM resultados """
+    sql=""" select id, CONCAT(SUBSTRING_INDEX(nome_docente,' ',1),' ',SUBSTRING_INDEX(nome_docente,' ',-1)) as nome_docente,
+        documento,ano_evento, titulo,doi,sigla,nome_evento, autores,estratos, notas 
+        from resultados r;  """
     cursor.execute(sql)
     resultado = cursor.fetchall()
     
@@ -22,8 +24,9 @@ def busca_prof():
 
 def soma_nota():
 
-    cursor.execute('SELECT distinct(nome_docente), sum(notas) from resultados where nome_docente in'
-                   +'(select distinct(nome_docente) from resultados) group by nome_docente')
+    cursor.execute(""" SELECT distinct(CONCAT(SUBSTRING_INDEX(nome_docente,' ',1),' ',SUBSTRING_INDEX(nome_docente,' ',-1))) 
+as docente, sum(notas) from resultados where nome_docente in
+(select distinct(nome_docente) from resultados) group by nome_docente; """)
     resultado = cursor.fetchall()
     
     return resultado

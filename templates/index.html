@@ -11,14 +11,28 @@
         <div >
             Importar currículos no formato XML
         </div>
-        <!-- <div class="card-body"> -->
-            <div class="input-group">
-                <input class="form-control" type="file" name="files[]" id="file" multiple required>
-                <input class="btn btn-outline-success" type="submit" value="Enviar" name="enviar">
-            </div>
-        <!-- </div> -->
-        
+        <div class="input-group">
+            <input class="form-control" type="file" name="files[]" id="file" multiple required>
+        </div>
+    </div>
+    <br>
+    <div class="radio-inline">
+        <input  type="radio" name="anos" id="anos" value="{{'2010','2011','2012'}}"> 2010-2012
+    </div>
+    <div class="radio-inline">
+        <input  type="radio" name="anos" id="anos" value="{{'2013','2014','2015','2016'}}"> 2013-2016
+    </div>
+    <div class="radio-inline">
+        <input type="radio" name="anos" id="anos" value="{{'2017','2018','2019','2020'}}"> 2017-2020
+    </div>
+    <br>
+    <input class="btn btn-success" type="submit" value="Enviar">
+    <div>
+        <img src="{{url_for('static', filename='barchart.svg')}}" alt="">
     </div>
 </form>
+
+
+
 
 {%endblock%}

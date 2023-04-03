@@ -17,7 +17,10 @@ h2{
     position: relative;
     text-align: center;
 }
-
+#cont{
+    position: relative;
+    text-align: center;
+}
 /* #anos{
     margin: 5px;
 } */

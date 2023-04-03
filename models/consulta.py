@@ -24,12 +24,11 @@ def busca_prof():
 
 def soma_nota():
 
-    cursor.execute(""" SELECT distinct(CONCAT(SUBSTRING_INDEX(nome_docente,' ',1),' ',SUBSTRING_INDEX(nome_docente,' ',-1))) 
-as docente, sum(notas) from resultados where nome_docente in
-(select distinct(nome_docente) from resultados) group by nome_docente; """)
+    cursor.execute(""" SELECT distinct nome_docente , sum(notas) from resultados where nome_docente in
+                    (select distinct(nome_docente) from resultados)group by nome_docente;""")
     resultado = cursor.fetchall()
-    
     return resultado
+
 
 def contador_estratos():
 
@@ -58,4 +57,3 @@ def update_qualis_repetido(titulo,valor):
         print("Atualizado com Sucesso!")
     except:
         print("Sem Sucesso!")
-    

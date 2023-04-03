@@ -11,6 +11,7 @@
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -47,23 +48,24 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Criar Qualis e Periódicos
                         </a> #}
-                        <div class="sb-sidenav-menu-heading">Resultados</div>
+                        <!-- <div class="sb-sidenav-menu-heading">Resultados</div>
                         <a class="nav-link" href="{{url_for('index')}}">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-upload"></i></div>
                             Importar Currículos
-                        </a>
-                        <a class="nav-link" href="{{url_for('import_projetos')}}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Projetos
-                        </a>
+                        </a> -->
+                        
                         <a class="nav-link" href="{{url_for('resultados')}}">
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Listar Resultados
                         </a>
-                        {# <a class="nav-link" href="{{url_for('grafico')}}">
+                        <a class="nav-link" href="{{url_for('grafico')}}">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Gráficos
-                        </a> #}
+                        </a> 
+                        <a class="nav-link" href="{{url_for('bar')}}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            bar
+                        </a> 
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">

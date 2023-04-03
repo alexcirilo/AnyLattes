@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, redirect, render_template, request, flash
+from flask import Flask,jsonify, redirect, render_template, request, flash
 from audioop import add
 from fileinput import filename
 from genericpath import isdir
@@ -11,7 +11,12 @@ import xml.etree.ElementTree as ET
 from models.import_projetos import import_project
 from models.load_qualis import load_qualis
 from models.consulta import * #lista, busca_prof, soma_nota, contador_estratos
-
+from models.docente import *
+from dash import Dash, html, dcc
+import plotly.express as px
+import pandas as pd 
+import json
+import pygal
 
 
 app = Flask(__name__)
@@ -48,7 +53,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/imports", methods=['GET','POST'])
+@app.route("/imports", methods=['GET','POST']) #upload arquivos qualis
 def imports():
     if request.method == 'POST':
         files = request.files.getlist('files[]')
@@ -81,7 +86,7 @@ def imports():
     return render_template('imports.html')
 
 
-@app.route("/upload", methods=['GET', 'POST'])
+@app.route("/upload", methods=['GET', 'POST']) #upload currículos
 def upload():
     if request.method == 'POST':
         files = request.files.getlist('files[]')
@@ -98,11 +103,11 @@ def upload():
                 else:
                     flash(
                         "Não foi possível efetuar upload. Arquivo com extensão inválida")
-        return redirect('/')
+        return projetos()
 
-@app.route('/import_projetos')
-def import_projetos():
-    return render_template('projetos.html')
+# @app.route('/import_projetos')
+# def import_projetos():
+#     return render_template('projetos.html')
 
 @app.route("/projetos", methods=['POST'])
 def projetos():
@@ -163,6 +168,48 @@ def corrige_notas():
                     # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
                     break
     return redirect('/listar')
+
+@app.route('/contadores',methods=["POST","GET"])
+def contadores():
+    if request.method == 'POST':
+        nome_docente = request.form['query']
+        # print(nome_docente)
+        busca = request.form['query']
+        print(busca)
+        cont = contador(busca)
+        print("all list")
+    
+    return jsonify({'htmlresponse': render_template('response.html',cont=cont)})
+
+# @app.route('/grafico')    
+# def grafico():
+#     nome_docente = 'MARCELLE PEREIRA MOTA'
+#     nota = contador(nome_docente)
+#     employee = []
+#     content = {}
+
+#     for n in nota:
+#         content = {'ano': n[0], 'estratos': n[1], 'contador':n[2]}
+#         employee.append(content)
+#         content = {}
+    
+#     json_object = json.dumps(employee,indent=4)
+#     with open("arq.json","w") as outfile:
+#         outfile.write(json_object)
+#     return jsonify(employee)
+    
+
+# @app.route("/bar")
+# def bar():
+#     with open('arq.json','r') as bar_file:
+#         data = json.load(bar_file)
+    
+#     bar_chart = pygal.Bar()
+#     bar_chart.add('Notas', data)
+#     bar_chart.render_to_file('static/barchart.svg')
+#     return redirect('/')
+    
+        
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

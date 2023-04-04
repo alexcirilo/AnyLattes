@@ -2,10 +2,10 @@ import mysql.connector
 
 #railway access:
 user='root'
-pwd='MB4EAozSfFx5BWmetk67'
-host='containers-us-west-54.railway.app'
+pwd='BWwWCUof3O1iQogfP9hY'
+host='containers-us-west-70.railway.app'
 database='railway'
-port=6574
+port=6633
 '''
 '''
 

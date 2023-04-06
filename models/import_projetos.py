@@ -4,7 +4,8 @@ import PyPDF2
 import glob
 import xml.etree.ElementTree as ET
 from flask import redirect, render_template
-import models.BaseDeCorrecoes, models.connection as database
+import models.BaseDeCorrecoes
+import models.connection as database
 from models.consulta import *
 # from models.crud import zera_banco
 # from googletrans import Translator
@@ -13,7 +14,7 @@ from models.consulta import * #qualis_repetidos,update_qualis_repetido
 # from models.EventosQualis import EventosQualis
 from openpyxl import Workbook, load_workbook
 
-# db = database.conexao()
+db = database.conexao()
 
 def import_project(anos):
     
@@ -483,7 +484,7 @@ def import_project(anos):
                 c = db.cursor()
                 
                 data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
-                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                                VALUES (?,?,?,?,?,?,?,?,?,?)"""
                                             
                 c.execute(data,(nomeProf, resultado[0], resultado[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos, nota))
                 db.commit()
@@ -697,7 +698,7 @@ def import_project(anos):
                     
                 c = db.cursor()
                 data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
-                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                                VALUES (?,?,?,?,?,?,?,?,?,?)"""
                                             
                 c.execute(data,(nomeProf, resultado2[0], resultado2[1], tituloAnais, doi, sigla2 ,nomeEvento, autor, estratos2, nota))
                 db.commit()

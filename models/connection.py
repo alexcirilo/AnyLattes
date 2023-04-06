@@ -1,98 +1,38 @@
-# # import mysql.connector
-#
-# # '''
-# # local access
-# # '''
-#
-# # '''
-# # user = 'root'
-# # pwd = 'Qwer@1234'
-# # host = 'localhost'
-# # database = 'lattes4web'
-# # '''
-#
-# # '''
-# # container access
-# # '''
-# # user = 'root'
-# # pwd = 'qwe123'
-# # host = '172.17.0.2'
-# # database = 'lattes4web'
-# # port=3306
-#
-# # def conexao():
-# #     try:
-# #         db = mysql.connector.connect(user=user,password= pwd,host=host, database=database,port=port)
-# #         # print("Connected!")
-# #     except:
-# #         print("YOU SHALL NOT PASS!")
-# #     return db
-#
-#
-#
-# import sqlite3
-# conn = sqlite3.connect('lattes4web.db')
-# cursor = conn.cursor()
-#
-# def conexao():
-#     conn = sqlite3.connect('lattes4web.db')
-#     conn.row_factory = sqlite3.Row()
-#     return conn
-#
-#
-#
-# # cursor.execute("""
-# #             CREATE TABLE resultados(
-# #             id INTEGER NOT NULL primary key autoincrement,
-# #             nome_docente text NOT NULL,
-# #             documento text NOT NULL,
-# #             ano_evento text NOT NULL,
-# #             titulo text NOT NULL,
-# #             doi text NOT NULL,
-# #             sigla text NOT NULL,
-# #             nome_evento text NOT NULL,
-# #             autores text NOT NULL,
-# #             estratos text,
-# #             notas text
-# #             );
-# # """)
-# # print("Criado com sucesso")
-# # conn.close()
+import sqlite3
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, inspect
 from flask import flash
 
 def conexao():
-    database_url = 'sqlite:///../teste.db'
-    engine = create_engine(database_url, echo=True)
-    return engine
+    conn = sqlite3.connect(database='lattes4web.db',check_same_thread=False)
+    # flash("Abrindo conexão")
+    return conn
 
 
-def criar_tabela():
-    create_db = """
-                CREATE TABLE resultados(
-                id INTEGER NOT NULL primary key autoincrement,
-                nome_docente text NOT NULL,
-                documento text NOT NULL,
-                ano_evento text NOT NULL,
-                titulo text NOT NULL,
-                doi text NOT NULL,
-                sigla text NOT NULL,
-                nome_evento text NOT NULL,
-                autores text NOT NULL,
-                estratos text,
-                notas text
-                );
-    """
-    conn = engine.connect()
-    trans = conn.begin()
 
-    try:
-        conn.execute(create_db)
-    except Exception as e:
-        flash(e)
-    trans.commit()
-    conn.close()
+create_db = """
+            CREATE TABLE resultados(
+            id INTEGER NOT NULL primary key autoincrement,
+            nome_docente text NOT NULL,
+            documento text NOT NULL,
+            ano_evento text NOT NULL,
+            titulo text NOT NULL,
+            doi text NOT NULL,
+            sigla text NOT NULL,
+            nome_evento text NOT NULL,
+            autores text NOT NULL,
+            estratos text,
+            notas text
+            );
+"""
+conn = conexao()
+
+try:
+    conn.execute(create_db)
+except Exception as e:
+    print(e)
+conn.close()
 
 
 # class Resultado(db.Model):

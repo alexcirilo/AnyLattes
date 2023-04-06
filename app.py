@@ -1,27 +1,23 @@
 # -*- coding: utf-8 -*-
 import mysql.connector
-from flask import Flask,jsonify, redirect, render_template, request, flash, g
+from flask import Flask,jsonify, redirect, render_template, request, flash
 from audioop import add
-from fileinput import filename
-from genericpath import isdir
 import glob
 import os
 from werkzeug.utils import secure_filename
-import xml.etree.ElementTree as ET
-# import models.graficos as g
 from models.import_projetos import import_project
 from models.load_qualis import load_qualis
-from models.consulta import * #lista, busca_prof, soma_nota, contador_estratos
+from models.consulta import *
 from models.docente import *
 from models.crud import *
-from dash import Dash, html, dcc
-import plotly.express as px
-import pandas as pd 
+# from dash import Dash, html, dcc
+# import plotly.express as px
+# import pandas as pd 
 import json
-import pygal
+# import pygal
 import models.connection as database
 from flask_sqlalchemy import SQLAlchemy
-# from models.connection import db,Resultado
+
 
 
 
@@ -231,4 +227,5 @@ if __name__ == "__main__":
     # db.init_app(app=app)
     # with app.test_request_context():
     #     db.create_all()
+
     app.run(host='0.0.0.0', debug=True)

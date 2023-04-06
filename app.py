@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from flask import Flask,jsonify, redirect, render_template, request, flash
+import mysql.connector
+from flask import Flask,jsonify, redirect, render_template, request, flash, g
 from audioop import add
 from fileinput import filename
 from genericpath import isdir
@@ -12,14 +13,25 @@ from models.import_projetos import import_project
 from models.load_qualis import load_qualis
 from models.consulta import * #lista, busca_prof, soma_nota, contador_estratos
 from models.docente import *
+from models.crud import *
 from dash import Dash, html, dcc
 import plotly.express as px
 import pandas as pd 
 import json
 import pygal
+import models.connection as database
+from flask_sqlalchemy import SQLAlchemy
+# from models.connection import db,Resultado
+
 
 
 app = Flask(__name__)
+app.app_context().push()
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lattes4web.db'
+
+
+# db = database.conexao()
 
 
 # configurações de upload arquivos
@@ -89,6 +101,8 @@ def imports():
 @app.route("/upload", methods=['GET', 'POST']) #upload currículos
 def upload():
     if request.method == 'POST':
+        for f in os.listdir(app.config['UPLOAD_FOLDER']):
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], f))
         files = request.files.getlist('files[]')
         print(files)
         for file in files:
@@ -109,10 +123,12 @@ def upload():
 # def import_projetos():
 #     return render_template('projetos.html')
 
+
 @app.route("/projetos", methods=['POST'])
 def projetos():
     if request.method == 'POST':
         anos = request.form.getlist('anos')
+        zera_banco()
     return import_project(anos)
 
 
@@ -123,7 +139,8 @@ def gerar_tabela_qualis():
 
 
 @app.route('/resultados')
-def resultados():
+def resultados():  
+    
     listar = lista()
     #prof = busca_prof()
     totalNotas = soma_nota()
@@ -132,19 +149,19 @@ def resultados():
 
 @app.route('/listar')
 def listar():
-    
+    # listar = lista()
     contadorEstratos = contador_estratos()
-    titulosRepetidos = titulos_qualis()
-    for tits in titulosRepetidos:
-        for t in tits:
-            rep = qualis_repetidos(titulo=t)
-            for r in rep:
-                print(r)
-                if r[0] == t:
-                    media = float(r[1]) / float(r[3])
-                    update_qualis_repetido(titulo=r[0],valor=str(media))
-                    # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
-                    break
+    # titulosRepetidos = titulos_qualis()
+    # for tits in titulosRepetidos:
+    #     for t in tits:
+    #         rep = qualis_repetidos(titulo=t)
+    #         for r in rep:
+    #             print(r)
+    #             if r[0] == t:
+    #                 media = float(r[1]) / float(r[3])
+    #                 update_qualis_repetido(titulo=r[0],valor=str(media))
+    #                 # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
+    #                 break
     # corrige_notas(titulosRepetidos)
     listar = lista()
     totalNotas = soma_nota()
@@ -209,7 +226,9 @@ def contadores():
 #     bar_chart.render_to_file('static/barchart.svg')
 #     return redirect('/')
     
-        
-
+    
 if __name__ == "__main__":
+    # db.init_app(app=app)
+    # with app.test_request_context():
+    #     db.create_all()
     app.run(host='0.0.0.0', debug=True)

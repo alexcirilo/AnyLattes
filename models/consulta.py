@@ -2,14 +2,13 @@ import models.connection as database
 
 
 db = database.conexao()
-cursor = db.cursor()
-
+trans = db.begin()
 def lista():
 
     sql=""" select id, CONCAT(SUBSTRING_INDEX(nome_docente,' ',1),' ',SUBSTRING_INDEX(nome_docente,' ',-1)) as nome_docente,
         documento,ano_evento, titulo,doi,sigla,nome_evento, autores,estratos, notas 
         from resultados r;  """
-    cursor.execute(sql)
+    cursor = db.execute(sql)
     resultado = cursor.fetchall()
     
     return resultado

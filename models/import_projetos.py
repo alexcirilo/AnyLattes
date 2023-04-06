@@ -5,20 +5,22 @@ import glob
 import xml.etree.ElementTree as ET
 from flask import redirect, render_template
 import models.BaseDeCorrecoes, models.connection as database
-from models.crud import zera_banco
-from googletrans import Translator
+from models.consulta import *
+# from models.crud import zera_banco
+# from googletrans import Translator
 from models.consulta import * #qualis_repetidos,update_qualis_repetido
 # from models.corrige_notas import *
 # from models.EventosQualis import EventosQualis
 from openpyxl import Workbook, load_workbook
 
-db = database.conexao()
+# db = database.conexao()
 
 def import_project(anos):
     
-    translator = Translator(service_urls=['translate.google.com'])    
+    # translator = Translator(service_urls=['translate.google.com'])    
     
-    zera_banco()
+    # zera_banco()
+    
     xi = 1
     curriculos = []
     eventosQualis = []
@@ -533,6 +535,7 @@ def import_project(anos):
                 estratos2 = ''
                 doi = str(resultado2[3]).upper()
                 nomeEvento = resultado2[5]
+                sigla2= '-'
                                   
                     #######################################################
                 # if str(resultado2[5]) == translator.translate(str(resultado2[5]),src="en",dest="pt"):
@@ -696,7 +699,7 @@ def import_project(anos):
                 data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
                                             
-                c.execute(data,(nomeProf, resultado2[0], resultado2[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos2, nota))
+                c.execute(data,(nomeProf, resultado2[0], resultado2[1], tituloAnais, doi, sigla2 ,nomeEvento, autor, estratos2, nota))
                 db.commit()
                 c.close()
                 e2 = []
@@ -737,4 +740,15 @@ def import_project(anos):
     #             break
     #         else:
     #             continue
+    titulosRepetidos = titulos_qualis()
+    for tits in titulosRepetidos:
+        for t in tits:
+            rep = qualis_repetidos(titulo=t)
+            for r in rep:
+                print(r)
+                if r[0] == t:
+                    media = float(r[1]) / float(r[3])
+                    update_qualis_repetido(titulo=r[0],valor=str(media))
+                    # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
+                    break
     return redirect('/listar')

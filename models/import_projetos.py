@@ -8,7 +8,7 @@ import models.BaseDeCorrecoes
 import models.connection as database
 from models.consulta import *
 # from models.crud import zera_banco
-# from googletrans import Translator
+from googletrans import Translator
 from models.consulta import * #qualis_repetidos,update_qualis_repetido
 # from models.corrige_notas import *
 # from models.EventosQualis import EventosQualis
@@ -18,22 +18,23 @@ db = database.conexao()
 
 def import_project(anos):
     
-    # translator = Translator(service_urls=['translate.google.com'])    
+    translator = Translator(service_urls=['translate.google.com'])    
     
     # zera_banco()
     
     xi = 1
     curriculos = []
     eventosQualis = []
+    anos_validos = []
     
-    for anos_validos in anos:
-        print(anos_validos)
-        anos_validos
+    for validos in anos:
+        anos_validos.append(validos)
+        # validos +1
     respAno = ''
 
     print('Importando documentos: QUALIS_novo.pdf')
     pdf = open("arquivos/QUALIS_novo.pdf", "rb")  # Script ler PDF inicio
-    pdf_reader = PyPDF2.PdfFileReader(pdf)
+    pdf_reader = PyPDF2.PdfFileReader(pdf,strict=False)
     n = pdf_reader.numPages
 
     resultado_total = ['']
@@ -193,7 +194,7 @@ def import_project(anos):
             autores = ''
             trabalho_valido = False
             for trab in trabalhos.iter():  # Laço para identificar as conferências válidas
-                if trab.tag == 'DADOS-BASICOS-DO-TRABALHO' and trab.attrib['NATUREZA'] == 'COMPLETO' and trab.attrib['ANO-DO-TRABALHO'] in anos_validos:
+                if trab.tag == 'DADOS-BASICOS-DO-TRABALHO' and trab.attrib['NATUREZA'] == 'COMPLETO' and trab.attrib['ANO-DO-TRABALHO'] in str(anos_validos):
                     conferencia = 'Conferencia;'
                     conferencia = conferencia + trab.attrib['ANO-DO-TRABALHO'] + ';' + trab.attrib['TITULO-DO-TRABALHO'] + ';' + trab.attrib['DOI'] + ';' + trab.attrib['NATUREZA']
                     # ano_projeto = trab.attrib['ANO-DO-TRABALHO']
@@ -384,7 +385,7 @@ def import_project(anos):
                 if (nota != 'SEM QUALIS'):                  #Contador de estratos das conferências
                     totalNota = totalNota + nota
                 if (estratos != '-'):
-                    if (resultado[1] == anos_validos[0]):
+                    if (resultado[1] == str(anos_validos)[0]):
                         cont17c = cont17c + 1
                         if (nota != 'SEM QUALIS'):          #somador de notas de 2017
                             nota17 = nota17 + nota
@@ -406,7 +407,7 @@ def import_project(anos):
                             c17B4 = c17B4 + 1
                         elif (estratos == 'C'):
                             c17C = c17C + 1
-                    elif (resultado[1] == anos_validos[1]):
+                    elif (resultado[1] == str(anos_validos)[1]):
                         cont18c = cont18c + 1
                         if (nota != 'SEM QUALIS'):          #somador de notas de 2018
                             nota18 = nota18 + nota
@@ -428,7 +429,7 @@ def import_project(anos):
                             c18B4 = c18B4 + 1
                         elif (estratos == 'C'):
                             c18C = c18C + 1
-                    elif (resultado[1] == anos_validos[2]):
+                    elif (resultado[1] == str(anos_validos)[2]):
                         cont19c = cont19c + 1
                         if (nota != 'SEM QUALIS'):          #somador de notas de 2019
                             nota19 = nota19 + nota
@@ -450,7 +451,7 @@ def import_project(anos):
                             c19B4 = c19B4 + 1
                         elif (estratos == 'C'):
                             c19C = c19C + 1
-                    elif (resultado[1] == anos_validos[3]):
+                    elif (resultado[1] == str(anos_validos)[3]):
                         cont20c = cont20c + 1
                         if (nota != 'SEM QUALIS'):          #somador de notas de 2020
                             nota20 = nota20 + nota
@@ -488,25 +489,11 @@ def import_project(anos):
                                             
                 c.execute(data,(nomeProf, resultado[0], resultado[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos, nota))
                 db.commit()
-                # result = askyesno(title= "Verificação de valores",message= 'Deseja recalcular as notas de Conferências? (Quando um título existe para mais de um docente)')
-                # if (result == True):
-                # for t in tituloAnais:
                 
                 e1 = []
-                # # e1.append(EventosQualis(nomeProf, resultado[0], resultado[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos, nota))
-                # e1.append(nomeProf)
-                # e1.append(resultado[0])
-                # e1.append(resultado[1])
+
                 e1.append(tituloAnais)
-                # e1.append(doi)
-                # e1.append(sigla)
-                # e1.append(nomeEvento)
-                # e1.append(autor)
-                # e1.append(estratos)
-                # e1.append(nota)
-                
-                
-                # for e in e1:
+
                 eventosQualis.append(e1)
                 
                 
@@ -514,7 +501,7 @@ def import_project(anos):
             autores = ''
             trabalho_valido = False
             for trab in trabalhos.iter():
-                if trab.tag == 'DADOS-BASICOS-DO-ARTIGO' and trab.attrib['NATUREZA'] == 'COMPLETO' and trab.attrib['ANO-DO-ARTIGO'] in anos_validos:
+                if trab.tag == 'DADOS-BASICOS-DO-ARTIGO' and trab.attrib['NATUREZA'] == 'COMPLETO' and trab.attrib['ANO-DO-ARTIGO'] in str(anos_validos):
                     periodico = 'Periodico;'
                     periodico = periodico + trab.attrib['ANO-DO-ARTIGO'] + ';'+ trab.attrib['TITULO-DO-ARTIGO'] +';' + trab.attrib['DOI'] +';' + trab.attrib['NATUREZA']
                     trabalho_valido = True
@@ -538,7 +525,7 @@ def import_project(anos):
                 nomeEvento = resultado2[5]
                 sigla2= '-'
                                   
-                    #######################################################
+                #     ######################################################
                 # if str(resultado2[5]) == translator.translate(str(resultado2[5]),src="en",dest="pt"):
                 #     nomeEvento = translator.translate(str(resultado2[5]),src="en",dest="pt")
                 #     print(nomeEvento)
@@ -546,7 +533,8 @@ def import_project(anos):
                 #     nomeEvento = translator.translate(str(resultado2[5]),src="pt",dest="en")
                 #     print(nomeEvento)
                 # # nomeEvento = resultado2[5]
-                # print(nomeEvento)
+                # # print(nomeEvento)
+                
                 
                 if (estratos2 == ''):
 
@@ -704,19 +692,9 @@ def import_project(anos):
                 db.commit()
                 c.close()
                 e2 = []
-                # e2.append(nomeProf)
-                # e2.append(resultado2[0])
-                # e2.append(resultado2[1])
+
                 e2.append(tituloAnais)
-                # e2.append(doi)
-                # e2.append(sigla)
-                # e2.append(nomeEvento)
-                # e2.append(autor)
-                # e2.append(estratos2)
-                # e2.append(nota)
-                # # e2 = EventosQualis(nomeProf, resultado2[0], resultado2[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos2, nota)
-                
-                # # eventosQualis.append(e1)
+
                 eventosQualis.append(e2)
                 
             
@@ -726,21 +704,9 @@ def import_project(anos):
         print('Total de publicações = {}'.format(cont))            #Quantidade de documentos válidos de cada professor
         print('Pontuação total = {}'.format(totalNota))            #Nota do professor
         print('------------------------------------------------------------')
-        print(anos_validos)
+        print(str(anos_validos))
 
-    # return render_template('teste.html',listar = eventosQualis)
-    # for evento in eventosQualis:
-    #     # print(evento[0])
-    #     rep = qualis_repetidos(titulo=evento[0])
-    #     for r in rep:
-    #         # print(r)
-    #         if r[0] == evento[0]:
-    #             media = float(r[1]) / float(r[3])
-    #             update_qualis_repetido(titulo=r[0],valor=str(media))
-    #             # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
-    #             break
-    #         else:
-    #             continue
+
     titulosRepetidos = titulos_qualis()
     for tits in titulosRepetidos:
         for t in tits:
@@ -752,4 +718,4 @@ def import_project(anos):
                     update_qualis_repetido(titulo=r[0],valor=str(media))
                     # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
                     break
-    return redirect('/listar')
+    return redirect('/resultado_total')

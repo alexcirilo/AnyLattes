@@ -4,7 +4,7 @@ import models.connection as database
 db = database.conexao()
 def lista():
 
-    sql="select id, nome_docente, documento,ano_evento, titulo,doi,sigla,nome_evento, autores,estratos, notas from resultados r;"
+    sql="select id, nome_docente, documento,ano_evento, titulo,doi,sigla,nome_evento, autores,estratos, notas from resultados r order by ano_evento asc;"
     cursor = db.cursor()
     cursor.execute(sql.upper())
     resultado = cursor.fetchall()
@@ -22,8 +22,8 @@ def busca_prof():
 
 def soma_nota():
 
-    sql = (""" SELECT distinct nome_docente , sum(notas) from resultados where nome_docente in
-                    (select distinct(nome_docente) from resultados)group by nome_docente;""")
+    sql = (""" SELECT distinct nome_docente , round(sum(notas),3) from resultados where nome_docente in
+                    (select distinct(nome_docente) from resultados)group by nome_docente order by ano_evento asc;""")
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchall()
@@ -32,7 +32,7 @@ def soma_nota():
 
 def contador_estratos():
 
-    sql = ('select DISTINCT(nome_docente), count(estratos), estratos, ano_evento from resultados group by nome_docente, estratos, ano_evento; ')
+    sql = ('select DISTINCT(nome_docente), count(estratos), estratos, ano_evento from resultados group by nome_docente, estratos, ano_evento order by ano_evento asc')
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchall()
@@ -66,3 +66,30 @@ def update_qualis_repetido(titulo,valor):
         db.rollback()
         print("Sem Sucesso!")
     # db.close()
+def mostra_publicacao(id):
+    sql = "select id, nome_docente, titulo, doi, sigla, nome_evento, estratos from resultados r where id= "+id+";"
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchone()
+    return resultado
+
+def atualizar(id,nome_docente,titulo,doi,sigla,nome_evento,estratos, nota):
+    sql = ("update resultados set nome_docente = '"+nome_docente+"',"+
+           "titulo = '"+titulo+"', doi = '"+doi+"', sigla= '"+sigla+"', nome_evento = '"+nome_evento+"', estratos = '"+estratos+"', notas = '"+nota+"' where id = "+id+";")
+    cursor = db.cursor()
+    cursor.execute(sql)
+    try:
+        db.commit()
+        print("Atualizado com Sucesso!")
+    except:
+        db.rollback()
+        print("Sem Sucesso!")
+        
+def total_estratos():
+    sql = 'SELECT ano_evento,estratos, COUNT(estratos) from resultados r group by ano_evento,estratos;'
+    
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    
+    return resultado

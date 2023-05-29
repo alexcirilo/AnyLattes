@@ -1,2 +1,0 @@
-select distinct titulo, nome_docente, autores, count(titulo)  from resultados r where locate('marcelle', autores)
-group by titulo having count(titulo) >1 ;

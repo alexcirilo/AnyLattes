@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import mysql.connector
+# import mysql.connector
 from flask import Flask,jsonify, redirect, render_template, request, flash
 from audioop import add
 import glob
@@ -10,24 +10,17 @@ from models.load_qualis import load_qualis
 from models.consulta import *
 from models.docente import *
 from models.crud import *
-# from dash import Dash, html, dcc
-# import plotly.express as px
-# import pandas as pd 
 import json
-# import pygal
+import plotly
+import plotly.express as px
+from models.grafico import graficos
+import models.BaseDeCorrecoes
 import models.connection as database
 from flask_sqlalchemy import SQLAlchemy
 
 
-
-
 app = Flask(__name__)
 app.app_context().push()
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lattes4web.db'
-
-
-# db = database.conexao()
 
 
 # configurações de upload arquivos
@@ -37,13 +30,13 @@ ALLOWED_EXTENSIONS = {'xml', 'XML','pdf','xls','xlsx'}  # extensões validas
 # verifica se pasta existe
 if os.path.isdir('curriculos'):
     UPLOAD_FOLDER = 'curriculos'
-    print('Existe')
+    print('Existe a pasta Currículos')
 else:
     os.mkdir('curriculos')
     UPLOAD_FOLDER = 'curriculos'
 
 if os.path.isdir('arquivos'):
-    print('Existe')
+    print('Existe a pasta Arquivos')
 else:
     os.mkdir('arquivos')
     
@@ -100,7 +93,7 @@ def upload():
         for f in os.listdir(app.config['UPLOAD_FOLDER']):
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], f))
         files = request.files.getlist('files[]')
-        print(files)
+        # print(files)
         for file in files:
             if file.filename == '':
                 flash("No Selected file(s)")
@@ -115,27 +108,68 @@ def upload():
                         "Não foi possível efetuar upload. Arquivo com extensão inválida")
         return projetos()
 
-# @app.route('/import_projetos')
-# def import_projetos():
-#     return render_template('projetos.html')
+@app.route('/resultado_total')
+def resultado_total():
+    
+    dados = todosContador()
+    
+    listar = lista()
+    totalNotas = soma_nota()
+    contadorEstratos = total_estratos()
+    
+    
+
+    conteudo = {}
+    div = []
+    for d in dados:
+        conteudo = {'Ano':d[0],'Estratos':d[1],'Quantidade':d[2]}
+        div.append(conteudo)
+        conteudo = {}
+    json_object = json.dumps(div,indent=4)
+    with open("todos.json","w") as outfile:
+        outfile.write(json_object)
+    
+    with open('todos.json','r') as file:
+        data = json.load(file)
+        
+        
+    fig = px.bar(data,x='Ano',y='Quantidade', color='Estratos', barmode='stack')
+
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    
+    anos  = []
+    for c in data:
+        anos.append(c['Ano'])
+        
+    anos = sorted(set(anos))
+    print (anos)
+    
+    return render_template("resultados.html", anos=anos ,graphJSON=graphJSON, listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos, data=data)
 
 
 @app.route("/projetos", methods=['POST'])
 def projetos():
     if request.method == 'POST':
-        anos = request.form.getlist('anos')
+        anos = []
+        result = []
+        ano_inicio = request.form.get('ano_inicio')
+        ano_fim = request.form.get('ano_fim')
+        
+        for r in range(int(ano_inicio),int((ano_fim))+1):
+            anos.append(r)
+            r+1
+
+        # anos = [int(r) for r in range(result)]
         zera_banco()
     return import_project(anos)
-
-
 
 @app.route("/tabela_periodicos_e_qualis")
 def gerar_tabela_qualis():
     return render_template('qualis.html'), load_qualis()
 
 
-@app.route('/resultados')
-def resultados():  
+@app.route('/resultado_por_docente')
+def resultado_por_docente():  
     
     listar = lista()
     #prof = busca_prof()
@@ -145,27 +179,10 @@ def resultados():
 
 @app.route('/listar')
 def listar():
-    # listar = lista()
     contadorEstratos = contador_estratos()
-    # titulosRepetidos = titulos_qualis()
-    # for tits in titulosRepetidos:
-    #     for t in tits:
-    #         rep = qualis_repetidos(titulo=t)
-    #         for r in rep:
-    #             print(r)
-    #             if r[0] == t:
-    #                 media = float(r[1]) / float(r[3])
-    #                 update_qualis_repetido(titulo=r[0],valor=str(media))
-    #                 # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
-    #                 break
-    # corrige_notas(titulosRepetidos)
     listar = lista()
     totalNotas = soma_nota()
     return render_template("teste.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
-
-# def graficos():
-#     grafico = g.grafico()
-#     return render_template("grafico.html",grafico=grafico)
 
 @app.route('/corrige_notas')
 def corrige_notas():
@@ -185,47 +202,73 @@ def corrige_notas():
 @app.route('/contadores',methods=["POST","GET"])
 def contadores():
     if request.method == 'POST':
-        nome_docente = request.form['query']
-        # print(nome_docente)
         busca = request.form['query']
         print(busca)
         cont = contador(busca)
         print("all list")
-    
-    return jsonify({'htmlresponse': render_template('response.html',cont=cont)})
+        # os.remove('arq.json')
+        totalNotas = soma_nota()
 
-# @app.route('/grafico')    
-# def grafico():
-#     nome_docente = 'MARCELLE PEREIRA MOTA'
-#     nota = contador(nome_docente)
-#     employee = []
-#     content = {}
+    return jsonify({'htmlresponse': render_template('response.html',cont=cont, totalNotas=totalNotas)})
 
-#     for n in nota:
-#         content = {'ano': n[0], 'estratos': n[1], 'contador':n[2]}
-#         employee.append(content)
-#         content = {}
+@app.route('/grafico',methods=['POST','GET'])
+def gerar_grafico():
+    busca = request.form['query']
     
-#     json_object = json.dumps(employee,indent=4)
-#     with open("arq.json","w") as outfile:
-#         outfile.write(json_object)
-#     return jsonify(employee)
+        
+    graficos(busca)
+    with open('arq.json','r') as file:
+        data = json.load(file)
+
+
+    fig = px.bar(data,x='Ano',y='Quantidade', color='Estratos', barmode='stack')
     
 
-# @app.route("/bar")
-# def bar():
-#     with open('arq.json','r') as bar_file:
-#         data = json.load(bar_file)
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    print(graphJSON)
     
-#     bar_chart = pygal.Bar()
-#     bar_chart.add('Notas', data)
-#     bar_chart.render_to_file('static/barchart.svg')
-#     return redirect('/')
-    
-    
+    return jsonify({'htmlresponse': render_template('t.html',graphJSON=graphJSON)})
+
+@app.route("/edita_publicacao/<id>",methods=['POST','GET'])
+def edita_publicacao(id):
+    mostra = mostra_publicacao(id)
+    return render_template('edita_publicacao.html',mostra=mostra)
+
+@app.route('/atualiza',methods=['POST'])
+def atualiza():
+    if request.method=="POST":
+        id = request.form['id']
+        docente = request.form['nome_docente']
+        titulo = request.form['titulo']
+        nome_evento = request.form['nome_evento']
+        doi = request.form['doi']
+        sigla = request.form['sigla']
+        estratos = request.form['estratos']
+        estratos = estratos.upper()
+                
+        if (estratos == 'A1'):
+            nota = str(models.BaseDeCorrecoes.A1p)
+        elif (estratos == 'A2'):
+            nota = str(models.BaseDeCorrecoes.A2p)
+        elif (estratos == 'A3'):
+            nota = str(models.BaseDeCorrecoes.A3p)
+        elif (estratos == 'A4'):
+            nota = str(models.BaseDeCorrecoes.A4p)
+        elif (estratos == 'B1'):
+            nota = str(models.BaseDeCorrecoes.B1p)
+        elif (estratos == 'B2'):
+            nota = str(models.BaseDeCorrecoes.B2p)
+        elif (estratos == 'B3'):
+            nota = str(models.BaseDeCorrecoes.B3p)
+        elif (estratos == 'B4'):
+            nota = str(models.BaseDeCorrecoes.B4p)
+        elif (estratos == 'C'):
+            nota = str(models.BaseDeCorrecoes.Cp)
+            
+        atualizar(id, docente, titulo, doi, sigla, nome_evento, estratos, nota)
+    return resultado_total()
+
+
 if __name__ == "__main__":
-    # db.init_app(app=app)
-    # with app.test_request_context():
-    #     db.create_all()
-
+    database.tabela_resultados()
     app.run(host='0.0.0.0', debug=True)

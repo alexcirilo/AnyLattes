@@ -1,0 +1,46 @@
+{% extends 'base.html'%}
+{%block content%}
+<h1>{%block title%}Editar Publicações {%endblock%}</h1>
+<form action="{{ url_for('atualiza') }}" method="post" class="form-inline">
+    <div class="row">
+        <div class="col-md-9">
+            <input type="hidden" name="id" value="{{mostra[0]}}">
+
+            <div class="form-group">
+                <label for="nome_docente" class="form-label">Nome: </label>
+                <input type="text" name="nome_docente" value="{{mostra[1]}}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="titulo" class="form-label">Título:</label>
+                <input type="text" name="titulo" value="{{mostra[2]}}" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="nome_docente" class="form-label"> Evento: </label>
+                <input type="text" name="nome_evento" value="{{mostra[5]}}" class="form-control">
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="container">
+                    <label for="nome_docente" class="form-label"> DOI :
+                        <input type="text" name="doi" value="{{mostra[3]}}" class="form-control col-md-3">
+                    </label>
+
+                    <label for="nome_docente" class="form-label">Sigla:
+                        <input type="text" name="sigla" value="{{mostra[4]}}" class="form-control">
+                    </label>
+                    <label for="nome_docente" class="form-label">Estratos:
+                        <input type="text" name="estratos" value="{{mostra[6]}}" class="form-control col-md-2">
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-success">Enviar</button>
+        </div>
+    </div>
+</form>
+
+
+{%endblock%}

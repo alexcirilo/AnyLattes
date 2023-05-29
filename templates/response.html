@@ -1,7 +1,30 @@
-{%for row in cont%}
-<tr>
-    <td>{{row[0]}}</td>
-    <td>{{row[1]}}</td>
-    <td>{{row[2]}}</td>
-</tr>
-{%endfor%}
+<table class="table table-responsive table-striped table-bordered table-sm" id="tabela">
+    <thead class="table-dark">
+        <tr>
+            <th>Ano</th>
+            <th>Estrato</th>
+            <th>Quantidade</th>
+        </tr>
+    </thead>
+    {%for row in cont%}
+    <tr>
+        <td>{{row[0]}}</td>
+        <td>{{row[1]}}</td>
+        <td>{{row[2]}}</td>
+    </tr>
+    {%endfor%}
+</table>
+<hr>
+
+<table class="table table-sm table-responsive">
+    {%for total in totalNotas%}
+    <tr class="table table-dark">
+        <th colspan="4" style="text-align: center;">Média: {{total[1]}}</th>
+    </tr>
+    {%endfor%}
+</table>
+<style>
+    tr {
+        text-align: center;
+    }
+</style>

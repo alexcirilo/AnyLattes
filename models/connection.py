@@ -9,30 +9,46 @@ def conexao():
     # flash("Abrindo conexão")
     return conn
 
-
-
-create_db = """
-            CREATE TABLE resultados(
-            id INTEGER NOT NULL primary key autoincrement,
-            nome_docente text NOT NULL,
-            documento text NOT NULL,
-            ano_evento text NOT NULL,
-            titulo text NOT NULL,
-            doi text NOT NULL,
-            sigla text NOT NULL,
-            nome_evento text NOT NULL,
-            autores text NOT NULL,
-            estratos text,
-            notas text
-            );
-"""
 conn = conexao()
 
-try:
-    conn.execute(create_db)
-except Exception as e:
-    print(e)
-conn.close()
+def tabela_resultados():
+    create_db = """
+                CREATE TABLE IF NOT EXISTS resultados(
+                id INTEGER NOT NULL primary key autoincrement,
+                nome_docente text NOT NULL,
+                documento text NOT NULL,
+                ano_evento text NOT NULL,
+                titulo text NOT NULL,
+                doi text NOT NULL,
+                sigla text NOT NULL,
+                nome_evento text NOT NULL,
+                autores text NOT NULL,
+                estratos text,
+                notas text
+                );
+    """
+    
+
+    try:
+        conn.execute(create_db)
+    except Exception as e:
+        print(e)
+    # conn.close()
+
+# def tabela_periodicos():
+#     sql ="""
+#             CREATE TABLE periodicos(
+#             id INTEGER NOT NULL primary key autoincrement,
+#             issn text NOT NULL,
+#             titulo text NOT NULL,
+#             estratos text NOT NULL
+#             );
+#     """
+    
+#     try:
+#         conn.execute(sql)
+#     except Exception as e:
+#         print(e)
 
 
 # class Resultado(db.Model):

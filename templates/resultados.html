@@ -1,9 +1,21 @@
 {% extends 'base.html'%}
-<h1>{%block title%} Resultados {%endblock%}</h1>
 
 {%block content%}
 
-<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<h1>{%block title%} Resultados {%endblock%}</h1>
+<!-- <div class="spinner-wrapper">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div> -->
+<div class="col-md-8">
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{{url_for('index')}}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Resultados</li>
+    </ol>
+</div>
+<!-- <script src='https://cdn.plot.ly/plotly-latest.min.js'></script> -->
+<!-- <script src="{{url_for('static',filename= 'js/plotly.min.js') }}"></script> -->
 
 
 <div class="card-header">
@@ -76,6 +88,6 @@
 
 <script type='text/javascript'>
     var graphs = {{ graphJSON | safe}}
-    Plotly.plot('chart', graphs, {});
+    Plotly.newPlot('chart', graphs, {});
 </script>
 {%endblock%}

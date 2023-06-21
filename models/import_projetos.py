@@ -541,7 +541,7 @@ def import_project(anos):
                     for i in range(0,len(resultado_total)):
                         resultado_issn = resultado_total[i][0:9]
                         if(issn in resultado_issn):
-                            print('yes')
+                            # print('yes')
                             estratos2 = resultado_total[i][-2:]
                             # print(resultado_total[i][-2:])
                             
@@ -704,7 +704,7 @@ def import_project(anos):
         print('Total de publicações = {}'.format(cont))            #Quantidade de documentos válidos de cada professor
         print('Pontuação total = {}'.format(totalNota))            #Nota do professor
         print('------------------------------------------------------------')
-        print(str(anos_validos))
+        # print(str(anos_validos))
 
 
     titulosRepetidos = titulos_qualis()
@@ -712,7 +712,7 @@ def import_project(anos):
         for t in tits:
             rep = qualis_repetidos(titulo=t)
             for r in rep:
-                print(r)
+                # print(r)
                 if r[0] == t:
                     media = float(r[1]) / float(r[3])
                     update_qualis_repetido(titulo=r[0],valor=str(media))

@@ -3,6 +3,17 @@
 
 
 <h1>{%block title%}Importar Currículos {%endblock%}</h1>
+<!-- <div class="spinner-wrapper">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div> -->
+<div class="col-md-8">
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{{url_for('index')}}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Home</li>
+    </ol>
+</div>
 
 <form action="{{ url_for('upload') }}" method="post" id="forms" enctype="multipart/form-data" class="form-inline">
 
@@ -65,8 +76,5 @@
         color: #fff;
     }
 </style>
-
-
-
 
 {%endblock%}

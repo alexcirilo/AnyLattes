@@ -17,7 +17,8 @@ from models.grafico import graficos
 import models.BaseDeCorrecoes
 import models.connection as database
 from flask_sqlalchemy import SQLAlchemy
-
+import time
+import timeit
 
 app = Flask(__name__)
 app.app_context().push()
@@ -207,7 +208,7 @@ def contadores():
         cont = contador(busca)
         print("all list")
         # os.remove('arq.json')
-        totalNotas = soma_nota()
+        totalNotas = soma_nota_docente(busca)
 
     return jsonify({'htmlresponse': render_template('response.html',cont=cont, totalNotas=totalNotas)})
 
@@ -225,7 +226,7 @@ def gerar_grafico():
     
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-    print(graphJSON)
+    # print(graphJSON)
     
     return jsonify({'htmlresponse': render_template('t.html',graphJSON=graphJSON)})
 
@@ -267,7 +268,6 @@ def atualiza():
             
         atualizar(id, docente, titulo, doi, sigla, nome_evento, estratos, nota)
     return resultado_total()
-
 
 if __name__ == "__main__":
     database.tabela_resultados()

@@ -1,7 +1,17 @@
 {% extends 'base.html'%}
 {%block content%}
 <h1>{%block title%} Projetos {%endblock%}</h1>
-
+<!-- <div class="spinner-wrapper">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div> -->
+<div class="col-md-8">
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{{url_for('index')}}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Projetos</li>
+    </ol>
+</div>
 
 <form action="{{url_for('projetos')}}" method="post" id="forms">
 

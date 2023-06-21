@@ -42,8 +42,14 @@ $(document).ready(function () {
     $('#contadorEstratos').DataTable();
 });
 
-$(window).on('load', function(){
-    $('#preloader .inner').fadeOut('slow');
-    $('#preloader').delay(350).fadeOut('slow');
-    $('body').delay(350).css({'overflow':'visible'});
+const spinnerWrapperEl = document.querySelector('.spinner-wrapper');
+window.addEventListener('load',()=>{
+    spinnerWrapperEl.style.opacity = '0';
+    
+    setTimeout(()=>{
+        spinnerWrapperEl.style.display = 'none';
+    },200);
+
 });
+
+

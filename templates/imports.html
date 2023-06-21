@@ -3,6 +3,11 @@
 
 <div class="container" style="text-align: center;">
     <h1>{%block title%} Arquivos Qualis {%endblock%}</h1>
+    <!-- <div class="spinner-wrapper">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div> -->
 
     <form action="{{url_for('imports')}}" method="post" enctype="multipart/form-data" id="forms" class="form-inline">
         <ol class="breadcrumb mb-4">

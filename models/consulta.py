@@ -29,6 +29,15 @@ def soma_nota():
     resultado = cursor.fetchall()
     return resultado
 
+def soma_nota_docente(docente):
+
+    sql = (" SELECT distinct nome_docente , round(sum(notas),3) from resultados where nome_docente in"+
+                    "(select distinct(nome_docente) from resultados where nome_docente = '"+docente+"')group by nome_docente order by ano_evento asc;")
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    return resultado
+
 
 def contador_estratos():
 

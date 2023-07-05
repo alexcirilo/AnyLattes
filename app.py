@@ -14,6 +14,7 @@ import json
 import plotly
 import plotly.express as px
 from models.grafico import graficos
+from models.grafico import pizza
 import models.BaseDeCorrecoes
 import models.connection as database
 from flask_sqlalchemy import SQLAlchemy
@@ -144,8 +145,21 @@ def resultado_total():
         
     anos = sorted(set(anos))
     print (anos)
+    names = []
+    values = []
+    pizza()
+    with open ('pizza.json','r') as piz:
+        d = json.load(piz)
+        names.append(d[0]['Conferencia'])
+        names.append(d[0]['Periodico'])
+        values.append(d[0]['PercConferencia'])
+        values.append(d[0]['PercPeriodico'])
+        
+    figs = px.pie(names=names,values=values)
     
-    return render_template("resultados.html", anos=anos ,graphJSON=graphJSON, listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos, data=data)
+    graph = json.dumps(figs, cls=plotly.utils.PlotlyJSONEncoder)  
+    
+    return render_template("resultados.html", anos=anos ,graphJSON=graphJSON, graph=graph, listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos, data=data)
 
 
 @app.route("/projetos", methods=['POST'])
@@ -228,7 +242,15 @@ def gerar_grafico():
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     # print(graphJSON)
     
+      
+    
     return jsonify({'htmlresponse': render_template('t.html',graphJSON=graphJSON)})
+
+@app.route("/visualiza_dados/<id>", methods=['POST','GET'])
+def visualizaDados(id):
+    mostra = mostra_dados_faltantes(id)
+    retorna =  {'dados': id}
+    return jsonify(mostra=mostra)
 
 @app.route("/edita_publicacao/<id>",methods=['POST','GET'])
 def edita_publicacao(id):

@@ -70,13 +70,20 @@ def update_qualis_repetido(titulo,valor):
     cursor.execute(sql)
     try:
         db.commit()
-        print("Atualizado com Sucesso!")
+        print(titulo +"Atualizado com Sucesso!")
     except:
         db.rollback()
         print("Sem Sucesso!")
     # db.close()
 def mostra_publicacao(id):
     sql = "select id, nome_docente, titulo, doi, sigla, nome_evento, estratos from resultados r where id= "+id+";"
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchone()
+    return resultado
+
+def mostra_dados_faltantes(id):
+    sql = "select id, titulo, autores,  sigla, nome_evento from resultados r where id= "+id+";"
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchone()
@@ -89,7 +96,7 @@ def atualizar(id,nome_docente,titulo,doi,sigla,nome_evento,estratos, nota):
     cursor.execute(sql)
     try:
         db.commit()
-        print("Atualizado com Sucesso!")
+        print(titulo +"Atualizado com Sucesso!")
     except:
         db.rollback()
         print("Sem Sucesso!")
@@ -101,4 +108,23 @@ def total_estratos():
     cursor.execute(sql)
     resultado = cursor.fetchall()
     
+    return resultado
+
+def perc():
+    sql = ("select distinct total, 'Periodico', 'Conferencia', round(periodico * 100 / total,3 ) as percentual_periodico, round(conferencia * 100 / total,3 ) as percentual_conferencia "+
+        "from (select "+
+        "(select count(1) from resultados r ) as total,"
+        "(select count(1) from resultados r where r.documento = 'Periodico' ) as periodico,"+
+        "(select count(1) from resultados r where r.documento = 'Conferencia' ) as conferencia from resultados);")
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    
+    return resultado
+
+def busca_conferencias():
+    sql = "SELECT COUNT(1) FROM RESULTADOS WHERE DOCUMENTO = 'Conferencia' group by nome_docente, documento;"
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
     return resultado

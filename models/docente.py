@@ -14,3 +14,9 @@ def todosContador():
     resultado = cursor.execute(sql)
     
     return resultado
+
+def periodicos():
+    sql = "select count(1) from resultados where documento = 'Periodico' GROUP by nome_docente,documento"
+    resultado = cursor.execute(sql)
+    return resultado
+

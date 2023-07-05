@@ -57,8 +57,15 @@ def titulos_qualis():
     return resultado
 
 def qualis_repetidos(titulo):
-    sql = ("SELECT distinct titulo, notas, estratos, count(*) FROM resultados r WHERE "+
-                   "titulo like '%"+titulo+"%' group by titulo, notas, estratos having COUNT(*) >1 ;")
+    sql = ("SELECT distinct titulo, notas, estratos, count(*) FROM resultados r WHERE titulo like '%"+titulo+"%' group by titulo, notas, estratos having COUNT(*) >1 ;")
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    return resultado
+
+#verificar quais titulos se repetem e quais docentes publicaram
+def titulos_repetidos(titulo):
+    sql = ("SELECT titulo, nome_docente FROM resultados r WHERE titulo like '%"+titulo+"%' group by nome_docente ;")
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchall()
@@ -83,7 +90,7 @@ def mostra_publicacao(id):
     return resultado
 
 def mostra_dados_faltantes(id):
-    sql = "select id, titulo, autores,  sigla, nome_evento from resultados r where id= "+id+";"
+    sql = "select id, nome_docente, titulo, autores, sigla, nome_evento from resultados r where id= "+id+";"
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchone()
@@ -116,6 +123,18 @@ def perc():
         "(select count(1) from resultados r ) as total,"
         "(select count(1) from resultados r where r.documento = 'Periodico' ) as periodico,"+
         "(select count(1) from resultados r where r.documento = 'Conferencia' ) as conferencia from resultados);")
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    
+    return resultado
+
+def perc_docente(docente):
+    sql =( "select distinct total, 'periodico', 'conferencia', round(periodico * 100 / total,3 ) as percentual_periodico, round(conferencia * 100 / total,3 ) as percentual_conferencia "+
+          "from (select "+
+            "(select count(1) from resultados r where nome_docente = '"+docente+"' ) as total,"+
+            "(select count(documento) from resultados r where r.documento = 'Periodico' and  r.nome_docente = '"+docente+"' ) as periodico,"+
+            "(select count(documento) from resultados r where r.documento = 'Conferencia' and  r.nome_docente = '"+docente+"' ) as conferencia from resultados);")
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchall()

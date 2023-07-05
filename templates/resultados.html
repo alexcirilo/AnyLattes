@@ -88,13 +88,15 @@
 
             <div class="modal-body">
                 <dl class="row">
-                    <dt class="col-sm-3">Titulo</dt>
+                    <dt class="col-sm-3">Docente:</dt>
+                    <dd class="col-sm-9"><span id="nome_docente"></span></dd>
+                    <dt class="col-sm-3">Titulo:</dt>
                     <dd class="col-sm-9"><span id="titulo"></span></dd>
-                    <dt class="col-sm-3">Autores</dt>
+                    <dt class="col-sm-3">Autores:</dt>
                     <dd class="col-sm-9"><span id="autores"></span></dd>
-                    <dt class="col-sm-3">Evento</dt>
+                    <dt class="col-sm-3">Evento:</dt>
                     <dd class="col-sm-9"><span id="evento"></span></dd>
-                    <dt class="col-sm-3">Sigla</dt>
+                    <dt class="col-sm-3">Sigla:</dt>
                     <dd class="col-sm-9"><span id="sigla"></span></dd>
                 </dl>
             </div>
@@ -122,10 +124,11 @@
 
         const visModal = new bootstrap.Modal(document.getElementById('exampleModal'));
         
-        document.getElementById("titulo").innerHTML = resposta['mostra'][1]
-        document.getElementById("autores").innerHTML = resposta['mostra'][2];
-        document.getElementById("sigla").innerHTML = resposta['mostra'][3];
-        document.getElementById("evento").innerHTML = resposta['mostra'][4];
+        document.getElementById("nome_docente").innerHTML = resposta['mostra'][1];
+        document.getElementById("titulo").innerHTML = resposta['mostra'][2];
+        document.getElementById("autores").innerHTML = resposta['mostra'][3];
+        document.getElementById("sigla").innerHTML = resposta['mostra'][4];
+        document.getElementById("evento").innerHTML = resposta['mostra'][5];
         
     }
 </script>

@@ -29,3 +29,15 @@ def pizza():
     with open ("pizza.json", "w") as outfile:
         outfile.write(json_object)
     
+def pizza_por_docente(docente):
+    valor = perc_docente(docente)
+    employee = []
+    content = {}
+    
+    for n in valor:
+        content = {'Total':n[0],'Periodico':n[1],'Conferencia':n[2],'PercConferencia':n[4], 'PercPeriodico':n[3] }
+        employee.append(content)
+        content = {}
+        json_object = json.dumps(employee, indent=4)
+    with open ("pizza_docente.json", "w") as outfile:
+        outfile.write(json_object)

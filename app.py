@@ -15,6 +15,7 @@ import plotly
 import plotly.express as px
 from models.grafico import graficos
 from models.grafico import pizza
+from models.grafico import *
 import models.BaseDeCorrecoes
 import models.connection as database
 from flask_sqlalchemy import SQLAlchemy
@@ -240,11 +241,25 @@ def gerar_grafico():
     
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    
     # print(graphJSON)
+    names = []
+    values = []
+    pizza_por_docente(busca)
+    with open ('pizza_docente.json','r') as piz:
+        d = json.load(piz)
+        names.append(d[0]['Conferencia'])
+        names.append(d[0]['Periodico'])
+        values.append(d[0]['PercConferencia'])
+        values.append(d[0]['PercPeriodico'])
+        
+    figs = px.pie(names=names,values=values)
+    
+    graph = json.dumps(figs, cls=plotly.utils.PlotlyJSONEncoder)
     
       
     
-    return jsonify({'htmlresponse': render_template('t.html',graphJSON=graphJSON)})
+    return jsonify({'htmlresponse': render_template('t.html',graphJSON=graphJSON,graph=graph)})
 
 @app.route("/visualiza_dados/<id>", methods=['POST','GET'])
 def visualizaDados(id):

@@ -1,10 +1,19 @@
 <script src="../static/js/plotly.min.js"></script>
 
-	<div id='chart' class='chart'”></div>
+  
+    <div id='chart' class='chart'”></div>
+  
+    <!-- <div id='pizza' class='pizza'”></div> -->
+
 
 <script type='text/javascript'>
   var graphs = {{graphJSON | safe}}
   Plotly.newPlot('chart',graphs,{});
+</script>
+
+<script>
+  var graphs = {{graph | safe}}
+  Plotly.newPlot('pizza',graphs,{});
 </script>
 
 

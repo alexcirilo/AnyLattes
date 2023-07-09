@@ -11,7 +11,6 @@ from models.consulta import *
 from models.docente import *
 from models.crud import *
 import json
-import plotly
 import plotly.express as px
 from models.grafico import graficos
 from models.grafico import pizza
@@ -19,8 +18,6 @@ from models.grafico import *
 import models.BaseDeCorrecoes
 import models.connection as database
 from flask_sqlalchemy import SQLAlchemy
-import time
-import timeit
 
 app = Flask(__name__)
 app.app_context().push()
@@ -160,7 +157,44 @@ def resultado_total():
     
     graph = json.dumps(figs, cls=plotly.utils.PlotlyJSONEncoder)  
     
-    return render_template("resultados.html", anos=anos ,graphJSON=graphJSON, graph=graph, listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos, data=data)
+    grafico_media()
+    with open ('media_docentes.json','r') as med:
+        dados = json.load(med)
+    
+    
+    docente = []
+    media = []
+    mediana = []
+    m = []
+    for d in dados:
+        docente.append(d['Docente'])
+        media.append(d['Média'])
+        mediana.append(d['Mediana'])
+        
+    m.append(dados[-1]['Mediana'])
+    print(m)
+    val1 = str(m[-1])
+    val = m[-1]
+    figura = px.bar(dados,x='Docente',y='Média',color_discrete_sequence=px.colors.qualitative.T10,template='plotly_white',text='Média')
+    figura.add_scatter(x=docente,y=mediana,xaxis='x',name="Mediana: "+val1,marker=dict(color="crimson"))
+    
+    figura.update_layout( 
+        yaxis=dict(
+            tickmode="array",
+            tickfont=dict(size=15)
+            ,tickangle=0
+            
+        ),
+        font=dict(size=12)
+    )
+    figura.update_traces(
+        textfont_size=15,texttemplate='%{text:.3s}')
+    figura.update_yaxes(showticklabels=True)
+    
+       
+    medias = json.dumps(figura,cls=plotly.utils.PlotlyJSONEncoder)
+    
+    return render_template("resultados.html", anos=anos ,graphJSON=graphJSON, graph=graph, medias=medias, listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos, data=data)
 
 
 @app.route("/projetos", methods=['POST'])
@@ -257,9 +291,8 @@ def gerar_grafico():
     
     graph = json.dumps(figs, cls=plotly.utils.PlotlyJSONEncoder)
     
-      
-    
     return jsonify({'htmlresponse': render_template('t.html',graphJSON=graphJSON,graph=graph)})
+  
 
 @app.route("/visualiza_dados/<id>", methods=['POST','GET'])
 def visualizaDados(id):

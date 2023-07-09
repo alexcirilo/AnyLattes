@@ -44,3 +44,9 @@ h2{
     width: 60px;
 }
 /*Preloader final*/
+
+.media{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

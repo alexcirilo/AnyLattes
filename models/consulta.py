@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import models.connection as database
 
 
@@ -23,7 +24,7 @@ def busca_prof():
 def soma_nota():
 
     sql = (""" SELECT distinct nome_docente , round(sum(notas),3) from resultados where nome_docente in
-                    (select distinct(nome_docente) from resultados)group by nome_docente order by ano_evento asc;""")
+                    (select distinct(nome_docente) from resultados)group by nome_docente order by nome_docente asc;""")
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchall()
@@ -143,6 +144,14 @@ def perc_docente(docente):
 
 def busca_conferencias():
     sql = "SELECT COUNT(1) FROM RESULTADOS WHERE DOCUMENTO = 'Conferencia' group by nome_docente, documento;"
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    return resultado
+
+#media todos docentes
+def media_docentes():
+    sql = "select nome_docente, round(sum(notas),3) as media from resultados r group by nome_docente ;"
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchall()

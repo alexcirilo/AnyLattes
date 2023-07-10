@@ -1,4 +1,3 @@
-import xlrd
 import os
 import PyPDF2
 import glob

@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 # import mysql.connector
 from flask import Flask,jsonify, redirect, render_template, request, flash
-from audioop import add
 import glob
 import os
 from werkzeug.utils import secure_filename
 from models.import_projetos import import_project
-from models.load_qualis import load_qualis
 from models.consulta import *
 from models.docente import *
 from models.crud import *
 import json
+import plotly
 import plotly.express as px
 from models.grafico import graficos
 from models.grafico import pizza
@@ -174,7 +173,6 @@ def resultado_total():
     m.append(dados[-1]['Mediana'])
     print(m)
     val1 = str(m[-1])
-    val = m[-1]
     figura = px.bar(dados,x='Docente',y='Média',color_discrete_sequence=px.colors.qualitative.T10,template='plotly_white',text='Média')
     figura.add_scatter(x=docente,y=mediana,xaxis='x',name="Mediana: "+val1,marker=dict(color="crimson"))
     

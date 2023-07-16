@@ -95,14 +95,65 @@ def grafico_colaboracao():
             # print(docente2)
             if atual == anterior:
                 G.add_edge(docente1, docente2)
-                
-    # print(G.nodes)
     A = nx.adjacency_matrix(G)
-    # print(A.todense())
-    fig = plt.figure(1,figsize=(20,15),dpi=100)
-    nx.draw_circular(G, with_labels=True, node_size=5000,font_size=17)
+    # fig = plt.figure(1,figsize=(20,15),dpi=100)
+    # nx.draw_circular(G, with_labels=True, node_size=5000,font_size=15)
+    # plt.savefig("static/images/matriz_colaboracao_circular.png")
+    return G
+    
+def tipo_grafo(valor, G):
+    # plt.cla()
+    
+    if valor == 'circular':
+        fig = plt.figure(1,figsize=(20,15),dpi=100)
+        nx.draw_circular(G, with_labels=True, node_size=5000,font_size=15)
+        plt.savefig("static/images/matriz_colaboracao_circular.png")
 
-    # print(lista_docente)
-    # plt.margins()
-    plt.savefig("static/images/matriz_colaboracao.png")
-    # plt.show()
+    elif valor == 'kamada_kawai':
+        fig = plt.figure(1,figsize=(20,15),dpi=100)
+        nx.draw_kamada_kawai(G, with_labels=True, node_size=5000,font_size=15)
+        plt.savefig("static/images/matriz_colaboracao_kamada_kawai.png")
+        
+    elif valor == 'planar':
+        fig = plt.figure(1,figsize=(20,15),dpi=100)
+        nx.draw_planar(G, with_labels=True, node_size=5000,font_size=15)
+        plt.savefig("static/images/matriz_colaboracao_planar.png")
+        
+    elif valor == 'random':
+        fig = plt.figure(1,figsize=(20,15),dpi=100)
+        nx.draw_random(G, with_labels=True, node_size=5000,font_size=15)
+        plt.savefig("static/images/matriz_colaboracao_random.png")
+        
+    plt.clf()
+    # A = nx.adjacency_matrix(G)
+    
+    # fig = plt.figure(1,figsize=(20,15),dpi=100)
+    # nx.draw_circular(G, with_labels=True, node_size=5000,font_size=15)
+    # plt.savefig("static/images/matriz_colaboracao_circular.png")
+    # fig = plt.figure(1,figsize=(20,15),dpi=100)
+    # nx.draw_kamada_kawai(G, with_labels=True, node_size=5000,font_size=15)
+    # plt.savefig("static/images/matriz_colaboracao_kamada_kawai.png")
+    
+    # fig = plt.figure(1,figsize=(20,15),dpi=100)
+    # nx.draw_planar(G, with_labels=True, node_size=5000,font_size=15)
+    # plt.savefig("static/images/matriz_colaboracao_planar.png")
+    
+    # fig = plt.figure(1,figsize=(20,15),dpi=100)
+    # nx.draw_random(G, with_labels=True, node_size=5000,font_size=15)
+    # plt.savefig("static/images/matriz_colaboracao_random.png")
+    
+    # fig = plt.figure(1,figsize=(20,15),dpi=100)
+    # nx.draw_shell(G, with_labels=True, node_size=5000,font_size=15)
+    # plt.savefig("static/images/matriz_colaboracao_shell.png")
+    
+    # fig = plt.figure(1,figsize=(20,15),dpi=100)
+    # nx.draw_spectral(G, with_labels=True, node_size=5000,font_size=15)
+    # plt.savefig("static/images/matriz_colaboracao_spectral.png")
+    
+    # fig = plt.figure(1,figsize=(20,15),dpi=100)
+    # nx.draw_spring(G, with_labels=True, node_size=5000,font_size=15)
+    # plt.savefig("static/images/matriz_colaboracao_spring.png")
+    
+
+    
+    

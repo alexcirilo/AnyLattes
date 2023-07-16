@@ -52,6 +52,13 @@ h2{
 }
 
 .colaboracao{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.colaboracao img{
     max-width: 1024px;
     max-height: 768px;
     width: auto;

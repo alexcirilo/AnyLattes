@@ -31,9 +31,24 @@
     Grafo de Colaboração entre Docentes
 </div>
 
-<div class="card-body">
-    <div> 
-        <img src="{{url_for('static', filename='images/matriz_colaboracao.png')}}"  class="colaboracao" alt="Matriz de Colaboração">
+<div class="card-body" >
+    <div class="row">
+        <div class="colaboracao col-sm-10">
+            <div id="div-imagem">
+                <img src="{{url_for('static', filename='images/matriz_colaboracao_circular.png')}}" id="colaboracao" class="colaboracao" alt="Matriz de Colaboração">
+            </div> 
+        </div>
+    
+        <div class="col-sm-2">
+            <label>Tipo de Grafo:</label>
+            <select class="form-select form-select-sm mb-3"  name="tipo_grafo" id="tipo_grafo" onchange="javascript:tipoGrafo(this);" > 
+                <option value="circular">Circular</option>
+                <option value="kamada_kawai">Kamada Kawai</option>
+                <option value="planar">Planar</option>
+                <option value="random">Random</option>
+            </select>
+        </div>
+
     </div>
 </div>
 
@@ -164,6 +179,42 @@
         document.getElementById("sigla").innerHTML = resposta['mostra'][4];
         document.getElementById("evento").innerHTML = resposta['mostra'][5];
         
+    }
+
+    function tipoGrafo(valor){
+        var query = valor.value;
+        console.log(query);
+        grafo(query);
+
+    }
+
+    function grafo(query = '') {
+        $.ajax({
+            url: "/mostra_grafo",
+            method: "POST",
+            data: { query: query },
+
+            success: function (data) {
+                var g = document.getElementById("colaboracao");
+                console.log(g)
+
+                console.log(query)
+                document.getElementById("colaboracao").innerHTML = "";
+                document.getElementById("div-imagem").innerHTML= "";
+                if(query == 'circular'){
+                    document.getElementById("div-imagem").innerHTML += "<img src='{{url_for('static', filename='images/matriz_colaboracao_circular.png')}}' id='colaboracao' alt='Matriz de Colaboração'>";
+                }
+                else if(query == 'random'){
+                    document.getElementById("div-imagem").innerHTML += "<img src='{{url_for('static', filename='images/matriz_colaboracao_random.png')}}' id='colaboracao' alt='Matriz de Colaboração'>";
+                }
+                else if(query == 'planar'){
+                    document.getElementById("div-imagem").innerHTML += "<img src='{{url_for('static', filename='images/matriz_colaboracao_planar.png')}}' id='colaboracao' alt='Matriz de Colaboração'>";
+                }
+                else if(query == 'kamada_kawai'){
+                    document.getElementById("div-imagem").innerHTML += "<img src='{{url_for('static', filename='images/matriz_colaboracao_kamada_kawai.png')}}' id='colaboracao' alt='Matriz de Colaboração'>";
+                }
+            }
+        });
     }
 </script>
 

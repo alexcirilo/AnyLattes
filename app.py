@@ -14,6 +14,7 @@ import plotly.express as px
 from models.grafico import graficos
 from models.grafico import pizza
 from models.grafico import *
+# from models.grafico import tipo_grafo
 import models.BaseDeCorrecoes
 import models.connection as database
 from flask_sqlalchemy import SQLAlchemy
@@ -198,7 +199,11 @@ def resultado_total():
        
     medias = json.dumps(figura,cls=plotly.utils.PlotlyJSONEncoder)
     
-    grafico_colaboracao()
+    colaboracao  = grafico_colaboracao()
+    
+    valor_padrao = 'circular'
+    
+    tipo_grafo(valor_padrao,colaboracao)
     
     return render_template("resultados.html", anos=anos ,graphJSON=graphJSON, graph=graph, medias=medias, listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos, data=data)
 
@@ -344,6 +349,15 @@ def atualiza():
             
         atualizar(id, docente, titulo, doi, sigla, nome_evento, estratos, nota)
     return resultado_total()
+
+@app.route("/mostra_grafo", methods=['POST','GET'])
+def mostra_grafo():
+    if request.method == "POST":
+        tipo = request.form['query']
+        
+        g = grafico_colaboracao()
+        grafo = tipo_grafo(tipo,g)
+        return tipo
 
 if __name__ == "__main__":
     database.tabela_resultados()

@@ -50,3 +50,10 @@ h2{
     justify-content: center;
     align-items: center;
 }
+
+.colaboracao{
+    max-width: 1024px;
+    max-height: 768px;
+    width: auto;
+    height: auto;
+}

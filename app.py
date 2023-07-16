@@ -18,6 +18,7 @@ import models.BaseDeCorrecoes
 import models.connection as database
 from flask_sqlalchemy import SQLAlchemy
 
+
 app = Flask(__name__)
 app.app_context().push()
 
@@ -38,6 +39,11 @@ if os.path.isdir('arquivos'):
     print('Existe a pasta Arquivos')
 else:
     os.mkdir('arquivos')
+    
+if os.path.isdir('static/images'):
+    print('Existe a pasta Images')
+else:
+    os.mkdir('static/images')
     
 # chave para validar sessão quando ocorre alteração de dados de cookie
 app.secret_key = 'lattes4web'
@@ -192,6 +198,8 @@ def resultado_total():
        
     medias = json.dumps(figura,cls=plotly.utils.PlotlyJSONEncoder)
     
+    grafico_colaboracao()
+    
     return render_template("resultados.html", anos=anos ,graphJSON=graphJSON, graph=graph, medias=medias, listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos, data=data)
 
 
@@ -339,4 +347,7 @@ def atualiza():
 
 if __name__ == "__main__":
     database.tabela_resultados()
+    # from werkzeug.serving import run_simple
+    # run_simple('0.0.0.0', 5000, app)
+    # from werkzeug.serving import run_simple
     app.run(host='0.0.0.0', debug=True)

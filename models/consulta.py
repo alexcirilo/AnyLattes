@@ -73,6 +73,13 @@ def titulos_repetidos():
     resultado = cursor.fetchall()
     return resultado
 
+def docente_titulos_repetidos():
+    sql = "SELECT distinct  nome_docente FROM resultados r WHERE titulo in (SELECT DISTINCT titulo FROM resultados r group by titulo having COUNT(*) >1) group by titulo,nome_docente  order by titulo;"
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    return resultado
+
 def update_qualis_repetido(titulo,valor):
     sql = "update resultados set notas = '"+valor+"' where titulo = '"+titulo+"';"
     cursor = db.cursor()

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import models.connection as database
+from flask import flash
 
 
 db = database.conexao()
@@ -68,6 +69,14 @@ def qualis_repetidos(titulo):
 def titulos_repetidos():
     # sql = ("select nome_docente, titulo from resultados r where titulo like '%"+titulo+"%' GROUP by titulo HAVING count(*)>1")
     sql = "SELECT distinct titulo, nome_docente FROM resultados r WHERE titulo in (SELECT DISTINCT titulo FROM resultados r group by titulo having COUNT(*) >1) group by titulo,nome_docente  order by titulo;"
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    return resultado
+
+def titulo_repetidos(titulo):
+    sql = ("select nome_docente, titulo from resultados r where titulo like '%"+titulo+"%' GROUP by titulo HAVING count(*)>1")
+    # sql = "SELECT distinct titulo, nome_docente FROM resultados r WHERE titulo in (SELECT DISTINCT titulo FROM resultados r group by titulo having COUNT(*) >1) group by titulo,nome_docente  order by titulo;"
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchall()
@@ -164,3 +173,15 @@ def media_docentes():
     cursor.execute(sql)
     resultado = cursor.fetchall()
     return resultado
+
+def deletar_docente(docente):
+    sql = "delete from resultados where nome_docente = '"+docente+"'; "
+    cursor = db.cursor()
+    cursor.execute(sql)
+    try:
+        print(docente +"Removido com Sucesso!")
+        flash(docente + "Removido com Sucesso!")
+        db.commit()
+    except:
+        db.rollback()
+        print("Sem Sucesso!")

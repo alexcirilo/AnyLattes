@@ -350,6 +350,12 @@ def atualiza():
         atualizar(id, docente, titulo, doi, sigla, nome_evento, estratos, nota)
     return resultado_total()
 
+@app.route("/deletarDocente/<docente>",methods=['POST'])
+def deletarDocente(docente):
+    deletar_docente(docente)
+    
+    return render_template('teste.html')
+
 @app.route("/mostra_grafo", methods=['POST','GET'])
 def mostra_grafo():
     if request.method == "POST":

@@ -46,6 +46,9 @@
                     {%endfor%}
 
                 </select>
+                <label style="display: none;"id="deletar">Remover Docente?
+                    <button type="button" class="btn btn-outline-danger"  name="deletar" onclick="deletarDocente();">Deletar Docente</button>
+                </label>
             </form>
         </div>
         <!--
@@ -67,6 +70,9 @@
                 <option value="grafico">Mostrar Gráfico</option>
             </select>
         </div>
+        <!-- <div class="col-md-1">
+            
+        </div> -->
     </div>
 
     <input type="hidden" name="hidden_value" id="hidden_value">
@@ -173,7 +179,26 @@
         $('#mostrar').show();
         $('#mostrar').val('');
 
+        $('#deletar').show();
+        $('#deletar').val('');
+
     });
+
+
+    function deletarDocente(){
+        var docente = $("#hidden_value").val();
+        if(confirm('Deseja Realmente Remover '+docente+' ?')){
+            $.ajax({
+                url: "/deletarDocente/"+ docente ,
+                method: "POST",
+                data: {docente:docente},
+
+                success: function(data){
+                    location.reload(true);
+                }
+            })
+        }
+    }
 
 
 

@@ -1,57 +1,42 @@
 [
     {
-        "Ano": "2017",
-        "Estratos": "A3",
+        "Ano": "2021",
+        "Estratos": "A1",
         "Quantidade": 2
     },
     {
-        "Ano": "2017",
-        "Estratos": "B2",
-        "Quantidade": 1
-    },
-    {
-        "Ano": "2017",
-        "Estratos": "C",
-        "Quantidade": 1
-    },
-    {
-        "Ano": "2018",
+        "Ano": "2021",
         "Estratos": "A3",
-        "Quantidade": 2
+        "Quantidade": 8
     },
     {
-        "Ano": "2019",
-        "Estratos": "A3",
-        "Quantidade": 1
-    },
-    {
-        "Ano": "2019",
+        "Ano": "2021",
         "Estratos": "A4",
-        "Quantidade": 1
+        "Quantidade": 2
     },
     {
-        "Ano": "2019",
+        "Ano": "2021",
         "Estratos": "B1",
-        "Quantidade": 3
-    },
-    {
-        "Ano": "2020",
-        "Estratos": "A3",
-        "Quantidade": 3
-    },
-    {
-        "Ano": "2020",
-        "Estratos": "A4",
         "Quantidade": 1
     },
     {
-        "Ano": "2020",
-        "Estratos": "C",
+        "Ano": "2021",
+        "Estratos": "B2",
         "Quantidade": 1
     },
     {
         "Ano": "2021",
         "Estratos": "B3",
+        "Quantidade": 16
+    },
+    {
+        "Ano": "2021",
+        "Estratos": "C",
+        "Quantidade": 5
+    },
+    {
+        "Ano": "2022",
+        "Estratos": "A1",
         "Quantidade": 1
     },
     {
@@ -61,17 +46,37 @@
     },
     {
         "Ano": "2022",
+        "Estratos": "A3",
+        "Quantidade": 14
+    },
+    {
+        "Ano": "2022",
         "Estratos": "A4",
+        "Quantidade": 4
+    },
+    {
+        "Ano": "2022",
+        "Estratos": "B1",
         "Quantidade": 2
     },
     {
         "Ano": "2022",
-        "Estratos": "B4",
-        "Quantidade": 2
+        "Estratos": "B3",
+        "Quantidade": 14
     },
     {
         "Ano": "2022",
         "Estratos": "C",
         "Quantidade": 4
+    },
+    {
+        "Ano": "2023",
+        "Estratos": "A2",
+        "Quantidade": 2
+    },
+    {
+        "Ano": "2023",
+        "Estratos": "C",
+        "Quantidade": 1
     }
 ]

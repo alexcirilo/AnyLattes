@@ -121,12 +121,12 @@
 
 <!-- modal para exibir dados faltantes dos títulos-->
 
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Outras Informações</h5>
-                
             </div>
 
             <div class="modal-body">
@@ -167,6 +167,8 @@
 <script>
 
     async function visualizarDados(id) {
+        
+
         const dados = await fetch("/visualiza_dados/" + id);
         const resposta = await dados.json();
         console.log(resposta);

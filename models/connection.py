@@ -24,7 +24,8 @@ def tabela_resultados():
                 nome_evento text NOT NULL,
                 autores text NOT NULL,
                 estratos text,
-                notas text
+                notas text,
+                versao INTEGER DEFAULT 0 NOT NULL
                 );
     """
     

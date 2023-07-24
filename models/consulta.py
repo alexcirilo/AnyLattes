@@ -4,6 +4,27 @@ from flask import flash
 
 
 db = database.conexao()
+
+def lista_por_titulo(titulo,docente):
+    sql = "select * from resultados where titulo ='"+titulo+"' and nome_docente = '"+docente+"' "
+    
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    
+    if len(resultado)!=0 :
+        return resultado
+    else:
+        return 0
+
+def lista_por_id(id):
+    sql = "select * from resultados where id ='"+id+"' "
+    
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchone()
+    return resultado
+
 def lista():
 
     sql="select id, nome_docente, documento,ano_evento, titulo,doi,sigla,nome_evento, autores,estratos, notas from resultados r order by ano_evento asc;"
@@ -65,6 +86,17 @@ def qualis_repetidos(titulo):
     resultado = cursor.fetchall()
     return resultado
 
+def titulo_repetido(titulo):
+    sql = "select distinct titulo, notas, estratos, count(*), nome_docente from resultados r where titulo LIKE '%"+titulo+"%' group by nome_docente;"
+    
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    if len(resultado)!=0 :
+        return resultado
+    else:
+        return 0
+
 #verificar quais titulos se repetem e quais docentes publicaram
 def titulos_repetidos():
     # sql = ("select nome_docente, titulo from resultados r where titulo like '%"+titulo+"%' GROUP by titulo HAVING count(*)>1")
@@ -95,7 +127,7 @@ def update_qualis_repetido(titulo,valor):
     cursor.execute(sql)
     try:
         db.commit()
-        print(titulo +"Atualizado com Sucesso!")
+        print(titulo +" Atualizado com Sucesso!")
     except:
         db.rollback()
         print("Sem Sucesso!")
@@ -114,17 +146,17 @@ def mostra_dados_faltantes(id):
     resultado = cursor.fetchone()
     return resultado
 
-def atualizar(id,nome_docente,titulo,doi,sigla,nome_evento,estratos, nota):
-    sql = ("update resultados set nome_docente = '"+nome_docente+"',"+
-           "titulo = '"+titulo+"', doi = '"+doi+"', sigla= '"+sigla+"', nome_evento = '"+nome_evento+"', estratos = '"+estratos+"', notas = '"+nota+"' where id = "+id+";")
+def atualizar(id,doi,sigla,nome_evento,estratos, nota, versao):
+    
+    versao = versao + 1
+    
+    sql = ("update resultados set doi = '"+doi+"', sigla= '"+sigla+"', nome_evento = '"+nome_evento+"', estratos = '"+estratos+"', notas = '"+nota+"', versao = "+str(versao)+" where id = "+id+";")
     cursor = db.cursor()
     cursor.execute(sql)
-    try:
-        db.commit()
-        print(titulo +"Atualizado com Sucesso!")
-    except:
-        db.rollback()
-        print("Sem Sucesso!")
+    
+    db.commit()
+    print("Atualizado com Sucesso!")
+
         
 def total_estratos():
     sql = 'SELECT ano_evento,estratos, COUNT(estratos) from resultados r group by ano_evento,estratos;'
@@ -175,13 +207,34 @@ def media_docentes():
     return resultado
 
 def deletar_docente(docente):
+    
+    resultado = False
     sql = "delete from resultados where nome_docente = '"+docente+"'; "
     cursor = db.cursor()
     cursor.execute(sql)
     try:
-        print(docente +"Removido com Sucesso!")
-        flash(docente + "Removido com Sucesso!")
+        print(docente + " Removido com Sucesso!")
+        flash(docente + " Removido com Sucesso!")
         db.commit()
+        resultado = True
     except:
         db.rollback()
         print("Sem Sucesso!")
+        resultado = False
+    return resultado
+    
+
+def lista_especifica(docente):
+    sql = "select nome_docente, titulo from resultados where nome_docente = '"+docente+"'"
+    
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    return resultado
+
+def update_notas(nota, titulo):
+    sql = "update resultados set notas = '"+nota+"' where titulo = '"+titulo+"' "
+    cursor = db.cursor()
+    cursor.execute(sql)
+    db.commit()
+    

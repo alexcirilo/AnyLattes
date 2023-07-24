@@ -45,6 +45,7 @@ if os.path.isdir('static/images'):
     print('Existe a pasta Images')
 else:
     os.mkdir('static/images')
+    os.mkdir('static/images/nuvem_docente')
     
 # chave para validar sessão quando ocorre alteração de dados de cookie
 app.secret_key = 'lattes4web'
@@ -122,8 +123,6 @@ def resultado_total():
     listar = lista()
     totalNotas = soma_nota()
     contadorEstratos = total_estratos()
-    
-    
 
     conteudo = {}
     div = []
@@ -140,7 +139,7 @@ def resultado_total():
         
         
     fig = px.bar(data,x='Ano',y='Quantidade', color='Estratos', barmode='stack')
-
+    
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     
     anos  = []
@@ -188,7 +187,6 @@ def resultado_total():
             tickmode="array",
             tickfont=dict(size=15)
             ,tickangle=0
-            
         ),
         font=dict(size=12)
     )
@@ -196,7 +194,6 @@ def resultado_total():
         textfont_size=15,texttemplate='%{text:.3s}')
     figura.update_yaxes(showticklabels=True)
     
-       
     medias = json.dumps(figura,cls=plotly.utils.PlotlyJSONEncoder)
     
     colaboracao  = grafico_colaboracao()
@@ -220,8 +217,6 @@ def projetos():
             anos.append(r)
             r+1
 
-        # anos = [int(r) for r in range(result)]
-        zera_banco()
     return import_project(anos)
 
 @app.route("/tabela_periodicos_e_qualis")
@@ -320,8 +315,8 @@ def edita_publicacao(id):
 def atualiza():
     if request.method=="POST":
         id = request.form['id']
-        docente = request.form['nome_docente']
-        titulo = request.form['titulo']
+        # docente = request.form['nome_docente']
+        # titulo = request.form['titulo']
         nome_evento = request.form['nome_evento']
         doi = request.form['doi']
         sigla = request.form['sigla']
@@ -346,8 +341,12 @@ def atualiza():
             nota = str(models.BaseDeCorrecoes.B4p)
         elif (estratos == 'C'):
             nota = str(models.BaseDeCorrecoes.Cp)
-            
-        atualizar(id, docente, titulo, doi, sigla, nome_evento, estratos, nota)
+        
+        versao = lista_por_id(id)    
+        
+        atualizar(id, doi, sigla, nome_evento, estratos, nota, versao[11])
+        
+        flash("Atualizado com Sucesso! ")
     return resultado_total()
 
 @app.route("/deletarDocente/<docente>",methods=['POST'])
@@ -365,9 +364,19 @@ def mostra_grafo():
         grafo = tipo_grafo(tipo,g)
         return tipo
 
+@app.route("/nuvem")
+def nuvem():
+    nuvem_de_palavras()
+    prof = busca_prof()
+    return render_template('nuvem.html',prof=prof)
+
+@app.route("/nuvem_docente", methods=['POST','GET'])
+def nuvem_docente():
+    docente = request.form['query']
+    nuvem_por_docente(docente)
+    return render_template('nuvem.html')
+    
+
 if __name__ == "__main__":
     database.tabela_resultados()
-    # from werkzeug.serving import run_simple
-    # run_simple('0.0.0.0', 5000, app)
-    # from werkzeug.serving import run_simple
     app.run(host='0.0.0.0', debug=True)

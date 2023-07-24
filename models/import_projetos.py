@@ -7,7 +7,7 @@ import models.BaseDeCorrecoes
 import models.connection as database
 from models.consulta import *
 # from models.crud import zera_banco
-from googletrans import Translator
+# from googletrans import Translator
 from models.consulta import * #qualis_repetidos,update_qualis_repetido
 # from models.corrige_notas import *
 # from models.EventosQualis import EventosQualis
@@ -17,7 +17,7 @@ db = database.conexao()
 
 def import_project(anos):
     
-    translator = Translator(service_urls=['translate.google.com'])    
+    # translator = Translator(service_urls=['translate.google.com'])    
     
     # zera_banco()
     
@@ -483,11 +483,30 @@ def import_project(anos):
                     
                 c = db.cursor()
                 
-                data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
-                                VALUES (?,?,?,?,?,?,?,?,?,?)"""
-                                            
-                c.execute(data,(nomeProf, resultado[0], resultado[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos, nota))
-                db.commit()
+                tituloAnais = tituloAnais.replace("'","")
+                nomeEvento = nomeEvento.replace("'","")
+                autor = autor.replace("'","")
+                result = lista_por_titulo(tituloAnais, nomeProf)
+                
+                if result == 0 :    
+                    data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
+                                    VALUES (?,?,?,?,?,?,?,?,?,?)"""
+                                                
+                    c.execute(data,(nomeProf, resultado[0], resultado[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos, nota))
+                    db.commit()
+                elif result != 0:
+                    for r in result:
+                        if r[11] == 0 :
+                            data = """ 
+                                    update resultados set nome_docente=? , documento= ?,ano_evento=?, titulo = ?, doi = ?,
+                                    sigla = ?, nome_evento = ?, autores = ?,estratos = ?, notas = ? where id = ? """
+                            c.execute(data,(nomeProf, resultado[0], resultado[1], tituloAnais, doi, sigla ,nomeEvento, autor, estratos, nota, r[0]))
+                            db.commit()
+                            break
+                        else:
+                            continue
+                else:
+                    continue
                 
                 e1 = []
 
@@ -502,7 +521,7 @@ def import_project(anos):
             for trab in trabalhos.iter():
                 if trab.tag == 'DADOS-BASICOS-DO-ARTIGO' and trab.attrib['NATUREZA'] == 'COMPLETO' and trab.attrib['ANO-DO-ARTIGO'] in str(anos_validos):
                     periodico = 'Periodico;'
-                    periodico = periodico + trab.attrib['ANO-DO-ARTIGO'] + ';'+ trab.attrib['TITULO-DO-ARTIGO'] +';' + trab.attrib['DOI'] +';' + trab.attrib['NATUREZA']
+                    periodico = periodico + trab.attrib['ANO-DO-ARTIGO'] + ';'+ trab.attrib['TITULO-DO-ARTIGO'].replace("'","\'").replace("'","\'") +';' + trab.attrib['DOI'] +';' + trab.attrib['NATUREZA']
                     trabalho_valido = True
                     cont = cont + 1
                 if trabalho_valido and trab.tag == 'DETALHAMENTO-DO-ARTIGO':
@@ -684,11 +703,31 @@ def import_project(anos):
                     nota = '0'
                     
                 c = db.cursor()
-                data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
-                                VALUES (?,?,?,?,?,?,?,?,?,?)"""
-                                            
-                c.execute(data,(nomeProf, resultado2[0], resultado2[1], tituloAnais, doi, sigla2 ,nomeEvento, autor, estratos2, nota))
-                db.commit()
+                tituloAnais = tituloAnais.replace("'","")
+                nomeEvento = nomeEvento.replace("'","")
+                nomeEvento = nomeEvento.replace("&apos;","")
+                autor = autor.replace("'","")
+                result2 = lista_por_titulo(tituloAnais,nomeProf)
+                if result2 == 0 :
+                    data  = """ insert into resultados (nome_docente, documento, ano_evento, titulo, doi, sigla, nome_evento, autores,estratos, notas)
+                                    VALUES (?,?,?,?,?,?,?,?,?,?)"""
+                                                
+                    c.execute(data,(nomeProf, resultado2[0], resultado2[1], tituloAnais, doi, sigla2 ,nomeEvento, autor, estratos2, nota))
+                    db.commit()
+                    # c.close()
+                elif result2 != 0 :
+                    for r in result2:
+                        if r[11] == 0:    
+                            data = """ 
+                                    update resultados set nome_docente=? , documento= ?,ano_evento=?, titulo = ?, doi = ?,
+                                    sigla = ?, nome_evento = ?, autores = ?,estratos = ?, notas = ? where id = ?"""
+                            c.execute(data,(nomeProf, resultado2[0], resultado2[1], tituloAnais, doi, sigla2 ,nomeEvento, autor, estratos2, nota,r[0]))
+                            db.commit()
+                            break
+                        else:
+                            continue
+                else:
+                    continue
                 c.close()
                 e2 = []
 
@@ -696,7 +735,7 @@ def import_project(anos):
 
                 eventosQualis.append(e2)
                 
-            
+            #verificar aspas simples impedindo de inserir titulo
         
         totalNotas = []
         totalNotas.append(totalNota)
@@ -705,16 +744,39 @@ def import_project(anos):
         print('------------------------------------------------------------')
         # print(str(anos_validos))
 
-
-    titulosRepetidos = titulos_qualis()
-    for tits in titulosRepetidos:
-        for t in tits:
-            rep = qualis_repetidos(titulo=t)
+    for evento in eventosQualis:
+        rep = titulo_repetido(evento[0])
+        
+        if rep == 0:
+            continue
+        else:
             for r in rep:
-                # print(r)
-                if r[0] == t:
-                    media = float(r[1]) / float(r[3])
-                    update_qualis_repetido(titulo=r[0],valor=str(media))
-                    # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
-                    break
+                estrato = r[2]
+                
+                if estrato == 'A1':
+                    nota = str(models.BaseDeCorrecoes.A1p)
+                elif estrato == 'A2':
+                    nota = str(models.BaseDeCorrecoes.A2p)
+                elif estrato == 'A3':
+                    nota = str(models.BaseDeCorrecoes.A3p)
+                elif estrato == 'A4':
+                    nota = str(models.BaseDeCorrecoes.A4p)
+                elif estrato == 'B1':
+                    nota = str(models.BaseDeCorrecoes.B1p)
+                elif estrato == 'B2':
+                    nota = str(models.BaseDeCorrecoes.B2p)
+                elif estrato == 'B3':
+                    nota = str(models.BaseDeCorrecoes.B3p)
+                elif estrato == 'B4':
+                    nota = str(models.BaseDeCorrecoes.B4p)
+                elif estrato == 'C':
+                    nota = str(models.BaseDeCorrecoes.Cp)
+                    
+                update_notas(nota,r[0])
+        reps = qualis_repetidos(evento[0])
+        for r in reps:
+            media = float(r[1]) / float(r[3])
+            update_qualis_repetido(titulo=r[0],valor=str(media))
+            # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
+            break
     return redirect('/resultado_total')

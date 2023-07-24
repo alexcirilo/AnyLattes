@@ -7,6 +7,10 @@ import networkx as nx
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+# from wordcloud import WordCloud
+# import nltk
+# import wordcloud
+from models.gerar_nuvem import *
 
 def graficos(busca):
     nota = contador(busca)
@@ -105,54 +109,33 @@ def tipo_grafo(valor, G):
     # plt.cla()
     
     if valor == 'circular':
-        fig = plt.figure(1,figsize=(20,15),dpi=100)
+        fig = plt.figure(1,figsize=(18,15),dpi=100)
         nx.draw_circular(G, with_labels=True, node_size=5000,font_size=15)
         plt.savefig("static/images/matriz_colaboracao_circular.png")
 
     elif valor == 'kamada_kawai':
-        fig = plt.figure(1,figsize=(20,15),dpi=100)
+        fig = plt.figure(1,figsize=(18,15),dpi=100)
         nx.draw_kamada_kawai(G, with_labels=True, node_size=5000,font_size=15)
         plt.savefig("static/images/matriz_colaboracao_kamada_kawai.png")
         
     elif valor == 'planar':
-        fig = plt.figure(1,figsize=(20,15),dpi=100)
+        fig = plt.figure(1,figsize=(18,15),dpi=100)
         nx.draw_planar(G, with_labels=True, node_size=5000,font_size=15)
         plt.savefig("static/images/matriz_colaboracao_planar.png")
         
     elif valor == 'random':
-        fig = plt.figure(1,figsize=(20,15),dpi=100)
+        fig = plt.figure(1,figsize=(18,15),dpi=100)
         nx.draw_random(G, with_labels=True, node_size=5000,font_size=15)
         plt.savefig("static/images/matriz_colaboracao_random.png")
         
     plt.clf()
-    # A = nx.adjacency_matrix(G)
     
-    # fig = plt.figure(1,figsize=(20,15),dpi=100)
-    # nx.draw_circular(G, with_labels=True, node_size=5000,font_size=15)
-    # plt.savefig("static/images/matriz_colaboracao_circular.png")
-    # fig = plt.figure(1,figsize=(20,15),dpi=100)
-    # nx.draw_kamada_kawai(G, with_labels=True, node_size=5000,font_size=15)
-    # plt.savefig("static/images/matriz_colaboracao_kamada_kawai.png")
+def nuvem_de_palavras():    
+    nuvem_geral()
     
-    # fig = plt.figure(1,figsize=(20,15),dpi=100)
-    # nx.draw_planar(G, with_labels=True, node_size=5000,font_size=15)
-    # plt.savefig("static/images/matriz_colaboracao_planar.png")
     
-    # fig = plt.figure(1,figsize=(20,15),dpi=100)
-    # nx.draw_random(G, with_labels=True, node_size=5000,font_size=15)
-    # plt.savefig("static/images/matriz_colaboracao_random.png")
-    
-    # fig = plt.figure(1,figsize=(20,15),dpi=100)
-    # nx.draw_shell(G, with_labels=True, node_size=5000,font_size=15)
-    # plt.savefig("static/images/matriz_colaboracao_shell.png")
-    
-    # fig = plt.figure(1,figsize=(20,15),dpi=100)
-    # nx.draw_spectral(G, with_labels=True, node_size=5000,font_size=15)
-    # plt.savefig("static/images/matriz_colaboracao_spectral.png")
-    
-    # fig = plt.figure(1,figsize=(20,15),dpi=100)
-    # nx.draw_spring(G, with_labels=True, node_size=5000,font_size=15)
-    # plt.savefig("static/images/matriz_colaboracao_spring.png")
+def nuvem_por_docente(docente):
+    nuvem_especifica(docente)
     
 
     

@@ -13,7 +13,6 @@
 
 <!-- <script src="{{url_for('static',filename= 'js/plotly.min.js') }}"></script> -->
 
-
 <div class="row">
     <h1>Dados</h1>
     <div class="col-md-8">
@@ -29,6 +28,7 @@
         </div>
     </div>
 </div>
+<div id="message"></div>
 <div class="card mb-4">
     <h2>Docente</h2>
     <div class="row">
@@ -68,6 +68,7 @@
                 <option value="">Selecione uma Opção</option>
                 <option value="tabelaQte">Mostrar Tabela</option>
                 <option value="grafico">Mostrar Gráfico</option>
+                <option value="nuvem">Mostrar Nuvem de Palavras</option>
             </select>
         </div>
         <!-- <div class="col-md-1">
@@ -106,6 +107,19 @@
 
 
     </div>
+
+    <div class="col-sm-12" id="nuvem" style="display: none;">
+        <div class="card-header" id="card-header">
+            <i class="fas fa-cloud me-1"></i>
+            Nuvem de Palavras
+        </div>
+        <div class="card-body">
+            
+            <div id="div-nuvem" class="nuvem">
+                <img id="nuvem_especifica">
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -113,6 +127,7 @@
     function ocultar(id) {
         var obj = document.getElementById('tabelaQte').hidden = false;
         document.getElementById('pizza').hidden = true;
+        document.getElementById('nuvem').hidden = true;
         var query = $('#hidden_value').val();
         load_data(query);
         var obj = $('#chart').empty();
@@ -123,9 +138,10 @@
         var query = $('#hidden_value').val();
         carrega_grafico(query)
 
-
+        document.getElementById('chart').hidden = false;
         document.getElementById('pizza').hidden = false;
         var objs = document.getElementById('tabelaQte').hidden = true;
+        document.getElementById('nuvem').hidden = true;
     }
 
     function mostraAlerta(elemento) {
@@ -133,9 +149,9 @@
         if (elemento.value === 'tabelaQte') {
             ocultar(elemento);
         } else if (elemento.value === 'grafico') {
-
             mostrar(elemento);
-
+        }else if( elemento.value === 'nuvem'){
+            nuvem_docente(elemento.value);
         }
     }
 
@@ -151,6 +167,7 @@
                 $('#chart').append(data.htmlresponse);
                 $('#pizza').html(data);
                 $('#pizza').append(data.htmlresponse);
+
             }
         });
     }
@@ -181,23 +198,69 @@
 
         $('#deletar').show();
         $('#deletar').val('');
+        document.getElementById("nuvem").style.display = "None";
+        document.getElementById("div-nuvem").innerHTML = "<img id='nuvem_especifica'>";
+        
 
     });
-
-
+    
     function deletarDocente(){
+        deletar();
+    }
+
+    function deletar(){
         var docente = $("#hidden_value").val();
-        if(confirm('Deseja Realmente Remover '+docente+' ?')){
+        var resp = confirm('Deseja Realmente Remover '+docente+' ?')
+        if(resp == true){
             $.ajax({
                 url: "/deletarDocente/"+ docente ,
                 method: "POST",
                 data: {docente:docente},
 
                 success: function(data){
-                    location.reload(true);
+                    document.getElementById("message").innerHTML += "<div  class='alert alert-success alert-dismissible fade show' role='alert'>"+ docente +" Removido com sucesso!</div>";   
                 }
-            })
+                });
+            window.setTimeout(function(){
+                location.reload(true);
+            },2000);
         }
+    }
+
+    function nuvem_docente(valor){
+        var query = document.getElementById("hidden_value").value;
+        console.log(query);
+        document.getElementById('pizza').hidden = true;
+        document.getElementById('chart').hidden = true;
+        var objs = document.getElementById('tabelaQte').hidden = true;
+        document.getElementById('nuvem').hidden = false;
+        document.getElementById("div-nuvem").innerHTML = "<img id='nuvem_especifica'>";
+        document.getElementById("nuvem").style.display = "block";
+        //document.getElementById("div-nuvem").innerHTML = "<img src='{{url_for('static',filename='images/nuvem_especificaOLD.png')}}' id='nuvem_especifica' alt='Nuvem por Docente'>";
+        nuvem(query);
+    }
+
+    function nuvem(query = ''){
+        $.ajax({
+            url: "/nuvem_docente",
+            method: "POST",
+            data: { query: query },
+
+            success: function (data) {
+                var g = document.getElementById("nuvem_especifica");
+                
+                var docente  = document.getElementById("hidden_value").value;
+                console.log(docente)
+                document.getElementById("nuvem_especifica").innerHTML = "";
+                document.getElementById("div-nuvem").innerHTML= "";
+                
+
+                var img2  = "<img src='static/images/nuvem_docente/"+docente+".png' id='nuvem_especifica' alt='Nuvem por Docente'>";
+                document.getElementById("div-nuvem").innerHTML += img2;
+                
+                
+            }
+        })
     }
 
 
@@ -219,17 +282,5 @@
 
     }
 </style>
-<script>
-
-//    const spinnerWrapperEl = document.querySelector('.spinner-wrapper');
-//    window.addEventListener('load',()=>{
-//    spinnerWrapperEl.style.opacity = '0';
-//    
-//    setTimeout(()=>{
-//        spinnerWrapperEl.style.display = 'none';
-//    },200);
-//
-//});
-</script>
 
 {%endblock%}

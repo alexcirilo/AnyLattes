@@ -1,0 +1,81 @@
+{% extends 'base.html'%}
+<h1>{%block title%} Nuvem de palavras {%endblock%}</h1>
+{%block content%}
+
+<h1>Nuvem de Palavras</h1>
+<div class="col-md-12">
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{{url_for('index')}}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Nuvem de Palavras</li>
+    </ol>
+</div>
+
+<div class="card mb-4">
+    <!-- <div class="row"> -->
+        <div class="col-sm-12 ">
+            <div class="card-header"id="card-header">
+                <i class="fas fa-cloud me-1"></i>
+                Nuvem de palavras - Geral
+            </div>
+            <div class="card-body nuvem">
+                <img src="{{url_for('static', filename='images/nuvem_de_palavras.png')}}" alt="Nuvem de Palavras">
+            </div>
+        </div>
+    <!-- </div> -->
+    <!-- <div class="col-sm-6">
+        <div class="card-header">
+            <i class="fas fa-cloud me-1"></i>
+            Nuvem de palavras - Por Docente
+        </div>
+        <div class="card-body">
+            
+            Docente: 
+            <select name="docente" id="docente" class="form-select form-select-sm mb-3" onchange="javascript:nuvem_docente(this);">
+                {%for p in prof%}
+                    <option value="{{p[0]}}">{{p[0]}}</option>
+                {%endfor%}
+            </select>
+            <div id="div-nuvem" class="nuvem">
+                <img src="{{url_for('static',filename='images/nuvem_especificaOLD.png')}}" id="nuvem_especifica" alt="Nuvem por Docente">
+            </div>
+        </div>
+    </div> -->
+</div>
+
+<script>
+
+    function nuvem_docente(valor){
+        var query = valor.value;
+        console.log(query);
+        nuvem(query);
+    }
+
+
+    function nuvem(query = ''){
+        $.ajax({
+            url: "/nuvem_docente",
+            method: "POST",
+            data: { query: query },
+
+            success: function (data) {
+                var g = document.getElementById("nuvem_especifica");
+                
+                var docente  = document.getElementById("docente").value;
+                console.log(docente)
+                document.getElementById("nuvem_especifica").innerHTML = "";
+                document.getElementById("div-nuvem").innerHTML= "";
+                
+
+                var img2  = "<img src='static/images/nuvem_docente/"+docente+".png' id='nuvem_especifica' alt='Nuvem por Docente'>";
+                document.getElementById("div-nuvem").innerHTML += img2;
+                
+                
+            }
+        })
+    }
+    
+    
+</script>
+
+{%endblock%}
+

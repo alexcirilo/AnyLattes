@@ -48,7 +48,11 @@ h2{
 .media{
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center;  
+    max-width: 1360px;
+    max-height: 768px;
+    width: auto;
+    height: auto;
 }
 
 .colaboracao{
@@ -59,8 +63,24 @@ h2{
 }
 
 .colaboracao img{
+    max-width: 1366px;
+    max-height: 768px;
+    width: auto;
+    height: auto;
+}
+
+.nuvem{
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+.nuvem img{
     max-width: 1024px;
     max-height: 768px;
     width: auto;
     height: auto;
+    margin: 1px 1px 1px 1px;
+    padding: 1px 1px 1px 1px;
+
 }

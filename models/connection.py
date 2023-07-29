@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, inspect
 from flask import flash
 
 def conexao():
-    conn = sqlite3.connect(database='lattes4web.db',check_same_thread=False)
+    conn = sqlite3.connect(database='anylattes.db',check_same_thread=False)
     # flash("Abrindo conexão")
     return conn
 

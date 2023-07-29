@@ -99,7 +99,7 @@ def grafico_colaboracao():
             # print(docente2)
             if atual == anterior:
                 G.add_edge(docente1, docente2)
-    A = nx.adjacency_matrix(G)
+    # A = nx.adjacency_matrix(G)
     # fig = plt.figure(1,figsize=(20,15),dpi=100)
     # nx.draw_circular(G, with_labels=True, node_size=5000,font_size=15)
     # plt.savefig("static/images/matriz_colaboracao_circular.png")

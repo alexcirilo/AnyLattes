@@ -51,12 +51,7 @@
                 </label>
             </form>
         </div>
-        <!--
-        <div class="col-md-4">
-            <button type="button" id="mostrarGrafico" class="btn btn-secondary" onclick="mostrar('grafico')">Mostrar Grafico</button>
-            <button type="button" id="mostrarTabela" class="btn btn-secondary" onclick="ocultar('tabelaQte')">Mostrar Tabela</button>
-        </div>
-        -->
+
         <div class="col-md-4">
             <div class="card-header" id="card-header">
                 <i class="fas fa-chart-simple me-1"></i>
@@ -65,10 +60,10 @@
             <br>
             <select class="form-select form-select-sm mb-3" name="mostrar" id="mostrar"
                 onchange="javascript:mostraAlerta(this);" style="display: none;">
-                <option value="">Selecione uma Opção</option>
-                <option value="tabelaQte">Mostrar Tabela</option>
-                <option value="grafico">Mostrar Gráfico</option>
-                <option value="nuvem">Mostrar Nuvem de Palavras</option>
+                <option value="producaoIntelectual">Produção Intelectual</option>
+                <option value="tabelaQte" selected>Notas</option>
+                <option value="grafico">Gráficos</option>
+                <option value="nuvem">Nuvem de Palavras</option>
             </select>
         </div>
         <!-- <div class="col-md-1">
@@ -104,6 +99,13 @@
             </div>
 
         </div>
+        <div class="row">
+            <table class="table table-sm table-responsive" id="producao">
+                <thead class="table dadosProducaoIntelectual" >
+
+                </thead>
+            </table>
+        </div>
 
 
     </div>
@@ -128,6 +130,7 @@
         var obj = document.getElementById('tabelaQte').hidden = false;
         document.getElementById('pizza').hidden = true;
         document.getElementById('nuvem').hidden = true;
+        document.getElementById('producao').hidden = true;
         var query = $('#hidden_value').val();
         load_data(query);
         var obj = $('#chart').empty();
@@ -140,20 +143,12 @@
 
         document.getElementById('chart').hidden = false;
         document.getElementById('pizza').hidden = false;
-        var objs = document.getElementById('tabelaQte').hidden = true;
+        document.getElementById('tabelaQte').hidden = true;
         document.getElementById('nuvem').hidden = true;
+        document.getElementById('producao').hidden = true;
     }
 
-    function mostraAlerta(elemento) {
-        var query = $('#hidden_value').val();
-        if (elemento.value === 'tabelaQte') {
-            ocultar(elemento);
-        } else if (elemento.value === 'grafico') {
-            mostrar(elemento);
-        }else if( elemento.value === 'nuvem'){
-            nuvem_docente(elemento.value);
-        }
-    }
+    
 
 
     function carrega_grafico(query = '') {
@@ -176,6 +171,10 @@
         $('#chart').load(" #chart")
     }
 
+    function updateDiv(){ 
+        $( "#mostrar" ).load(window.location.href + " #mostrar" );
+    }
+
 
     function load_data(query = '') {
         $.ajax({
@@ -190,12 +189,25 @@
         });
     }
 
+    
+
     $('#nome_docente').change(function () {
         $('#hidden_value').val($('#nome_docente').val());
         var query = $('#hidden_value').val();
         $('#mostrar').show();
-        $('#mostrar').val('');
 
+        var mostrar = document.getElementById('mostrar');
+        document.getElementById('mostrar').innerHTML = '';
+        document.getElementById('mostrar').innerHTML += "<select class='form-select form-select-sm mb-3' name='mostrar' id='mostrar'";
+        mostrar.innerHTML += "onchange='javascript:mostraAlerta(this);' style='display: none;'>";
+        mostrar.innerHTML += "<option value='producaoIntelectual'>Produção Intelectual</option>";
+        mostrar.innerHTML += "<option value='tabelaQte' selected>Notas</option>";
+        mostrar.innerHTML += "<option value='grafico'>Gráficos</option>";
+        mostrar.innerHTML += "<option value='nuvem'>Nuvem de Palavras</option>";
+        mostrar.innerHTML += "</select>"
+
+
+        ocultar(query)
         $('#deletar').show();
         $('#deletar').val('');
         document.getElementById("nuvem").style.display = "None";
@@ -232,11 +244,11 @@
         console.log(query);
         document.getElementById('pizza').hidden = true;
         document.getElementById('chart').hidden = true;
+        document.getElementById('producao').hidden = true;
         var objs = document.getElementById('tabelaQte').hidden = true;
         document.getElementById('nuvem').hidden = false;
         document.getElementById("div-nuvem").innerHTML = "<img id='nuvem_especifica'>";
         document.getElementById("nuvem").style.display = "block";
-        //document.getElementById("div-nuvem").innerHTML = "<img src='{{url_for('static',filename='images/nuvem_especificaOLD.png')}}' id='nuvem_especifica' alt='Nuvem por Docente'>";
         nuvem(query);
     }
 
@@ -263,10 +275,49 @@
         })
     }
 
+    function producao(){
+        var query = $("#hidden_value").val()
+        producao_intelectual(query);
+        document.getElementById('producao').hidden = false;
+        document.getElementById('chart').hidden = true;
+        document.getElementById('pizza').hidden = true;
+        document.getElementById('tabelaQte').hidden = true;
+        document.getElementById('nuvem').hidden = true;
+        
+
+    }
+
+    function producao_intelectual(query = '') {
+        $.ajax({
+            url: "/producao_intelectual/"+query,
+            method: "POST",
+            data: { query: query },
+
+            success: function (data) {
+                $('.dadosProducaoIntelectual').html(data)
+                $('.dadosProducaoIntelectual').append(data.htmlresponse);
+            }
+        });
+    }
+
+
+    function mostraAlerta(elemento) {
+        var query = $('#hidden_value').val();
+        if (elemento.value === 'tabelaQte') {
+            ocultar(elemento);
+        } else if (elemento.value === 'grafico') {
+            mostrar(elemento);
+        }else if( elemento.value === 'nuvem'){
+            nuvem_docente(elemento.value);
+        }else if( elemento.value === 'producaoIntelectual'){
+            producao();
+        }
+    }
 
 
 </script>
 <style>
+    
     #card-header {
         background-color: #3b3a3a;
         color: #fff;

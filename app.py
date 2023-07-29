@@ -267,6 +267,12 @@ def contadores():
 
     return jsonify({'htmlresponse': render_template('response.html',cont=cont, totalNotas=totalNotas)})
 
+@app.route('/producao_intelectual/<docente>',methods=["POST","GET"])
+def producao_intelectual(docente):
+    listar = lista_docente(docente)
+    
+    return jsonify({'htmlresponse': render_template('producao_intelectual.html', listar=listar)})
+
 @app.route('/grafico',methods=['POST','GET'])
 def gerar_grafico():
     busca = request.form['query']

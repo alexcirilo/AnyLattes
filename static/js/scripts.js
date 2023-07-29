@@ -42,6 +42,10 @@ $(document).ready(function () {
     $('#contadorEstratos').DataTable();
 });
 
+$(document).ready(function () {
+    $('#dadosProducaoIntelectual').DataTable();
+});
+
 const spinnerWrapperEl = document.querySelector('.spinner-wrapper');
 window.addEventListener('load',()=>{
     spinnerWrapperEl.style.opacity = '0';

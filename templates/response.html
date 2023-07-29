@@ -1,14 +1,10 @@
-<!-- <div class="spinner-wrapper">
-    <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
-</div> -->
-<table class="table table-responsive table-striped table-bordered table-sm" id="tabela">
+<table class="table table-responsive table-striped table-bordered table-sm" id="resultado">
     <thead class="table-dark">
         <tr>
             <th>Ano</th>
             <th>Estrato</th>
             <th>Quantidade</th>
+            <th>Total Notas</th>
         </tr>
     </thead>
     {%for row in cont%}
@@ -16,6 +12,7 @@
         <td>{{row[0]}}</td>
         <td>{{row[1]}}</td>
         <td>{{row[2]}}</td>
+        <td>{{row[3]}}</td>
     </tr>
     {%endfor%}
 </table>
@@ -33,3 +30,9 @@
         text-align: center;
     }
 </style>
+
+<script>
+    $(document).ready(function () {
+        $('#resultado').DataTable();
+    });
+</script>

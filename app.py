@@ -317,6 +317,11 @@ def edita_publicacao(id):
     mostra = mostra_publicacao(id)
     return render_template('edita_publicacao.html',mostra=mostra)
 
+@app.route("/edita_publicacao_docente/<id>",methods=['POST','GET'])
+def edita_publicacao_docente(id):
+    mostra = mostra_publicacao(id)
+    return render_template('edita_publicacao_docente.html',mostra=mostra)
+
 @app.route('/atualiza',methods=['POST'])
 def atualiza():
     if request.method=="POST":

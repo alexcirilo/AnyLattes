@@ -1,9 +1,9 @@
 [
     {
-        "Total": 15,
+        "Total": 9,
         "Periodico": "periodico",
         "Conferencia": "conferencia",
-        "PercConferencia": 40.0,
-        "PercPeriodico": 60.0
+        "PercConferencia": 55.0,
+        "PercPeriodico": 44.0
     }
 ]

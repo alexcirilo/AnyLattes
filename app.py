@@ -294,8 +294,8 @@ def gerar_grafico():
     pizza_por_docente(busca)
     with open ('pizza_docente.json','r') as piz:
         d = json.load(piz)
-        names.append(d[0]['Conferencia'])
-        names.append(d[0]['Periodico'])
+        names.append(d[0]['Conferencia'].capitalize())
+        names.append(d[0]['Periodico'].capitalize())
         values.append(d[0]['PercConferencia'])
         values.append(d[0]['PercPeriodico'])
         

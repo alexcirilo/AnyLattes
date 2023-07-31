@@ -60,7 +60,7 @@ def nuvem_especifica(docente):
     texto = []
     res = lista_especifica(docente)
 
-    # nltk.download('stopwords')
+    nltk.download('stopwords')
 
     researchers_words = ' '
     pt_words = list(nltk.corpus.stopwords.words('portuguese'))

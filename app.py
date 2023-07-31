@@ -231,14 +231,14 @@ def resultado_por_docente():
     #prof = busca_prof()
     totalNotas = soma_nota()
     contadorEstratos = contador_estratos()
-    return render_template("teste.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
+    return render_template("resultados_por_docente.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
 
 @app.route('/listar')
 def listar():
     contadorEstratos = contador_estratos()
     listar = lista()
     totalNotas = soma_nota()
-    return render_template("teste.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
+    return render_template("resultados_por_docente.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
 
 @app.route('/corrige_notas')
 def corrige_notas():
@@ -265,7 +265,7 @@ def contadores():
         # os.remove('arq.json')
         totalNotas = soma_nota_docente(busca)
 
-    return jsonify({'htmlresponse': render_template('response.html',cont=cont, totalNotas=totalNotas)})
+    return jsonify({'htmlresponse': render_template('tabela_notas.html',cont=cont, totalNotas=totalNotas)})
 
 @app.route('/producao_intelectual/<docente>',methods=["POST","GET"])
 def producao_intelectual(docente):
@@ -303,7 +303,7 @@ def gerar_grafico():
     
     graph = json.dumps(figs, cls=plotly.utils.PlotlyJSONEncoder)
     
-    return jsonify({'htmlresponse': render_template('t.html',graphJSON=graphJSON,graph=graph)})
+    return jsonify({'htmlresponse': render_template('graficos.html',graphJSON=graphJSON,graph=graph)})
   
 
 @app.route("/visualiza_dados/<id>", methods=['POST','GET'])
@@ -364,7 +364,7 @@ def atualiza():
 def deletarDocente(docente):
     deletar_docente(docente)
     
-    return render_template('teste.html')
+    return render_template('resultados_por_docente.html')
 
 @app.route("/mostra_grafo", methods=['POST','GET'])
 def mostra_grafo():

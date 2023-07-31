@@ -59,7 +59,7 @@ plotly==5.14.0
 prompt-toolkit==3.0.39
 protobuf==3.20.1
 pure-eval==0.2.2
-# pycairo==1.24.0
+pycairo==1.24.0
 pycodestyle==2.8.0
 Pygments==2.15.1
 PyMySQL==1.1.0

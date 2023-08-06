@@ -24,7 +24,15 @@
 </ol>
 
 <hr/>
-<h2 align="center"> Instalação Linux </h2>
+<h2 align="center"> Instalação Linux (Debian / Ubuntu)</h2>
 <ol>
+<li> Baixe o projeto. Dentro do diretório, abra o terminal e execute o seguinte comando:
+<pre>./dependencias_linux.sh</pre>
+Ele irá instalar todas as dependências necessárias para a aplicação, desde a atualização da distro, instalação do Python, até as bibliotecas. O script utiliza do <strong>sudo</strong> para executar os comandos com as permissões, então, exgirá a senha com permissão root (admin) para prosseguir.</li>
+
+<li>Para rodar a aplicação, execute o comando:
+<pre>python app.py</pre>
+
+</li>
 
 </ol>

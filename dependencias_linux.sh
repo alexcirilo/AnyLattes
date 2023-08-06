@@ -11,7 +11,7 @@ sudo apt install python3-dev -y
 sudo apt-get install libcairo2-dev -y
 pip3 install Flask
 python3 -m venv venv
-source venv/bin/activate
+# source venv/bin/activate
 pip3 install xlrd
 pip3 install -r requirements.txt
 pip install PyPDF2

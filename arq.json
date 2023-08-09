@@ -1,7 +1,32 @@
 [
     {
+        "Ano": "2020",
+        "Estratos": "A2",
+        "Quantidade": 2
+    },
+    {
+        "Ano": "2021",
+        "Estratos": "A4",
+        "Quantidade": 1
+    },
+    {
+        "Ano": "2021",
+        "Estratos": "B1",
+        "Quantidade": 1
+    },
+    {
+        "Ano": "2021",
+        "Estratos": "C",
+        "Quantidade": 1
+    },
+    {
         "Ano": "2022",
-        "Estratos": "B3",
+        "Estratos": "A4",
+        "Quantidade": 1
+    },
+    {
+        "Ano": "2023",
+        "Estratos": "A1",
         "Quantidade": 1
     }
 ]

@@ -1,7 +1,47 @@
 [
     {
+        "Docente": "EDSON ADRIEL FREITAS RODRIGUES",
+        "M\u00e9dia": 4.5,
+        "Mediana": 0.65
+    },
+    {
+        "Docente": "GISELLE LORRANE NOBRE MELO",
+        "M\u00e9dia": 0.85,
+        "Mediana": 0.65
+    },
+    {
+        "Docente": "INGRID MOREIRA MIRANDA DA SILVA",
+        "M\u00e9dia": 0.0,
+        "Mediana": 0.65
+    },
+    {
         "Docente": "LUCAS LIMA SIM\u00d5ES",
         "M\u00e9dia": 0.1,
-        "Mediana": 0.1
+        "Mediana": 0.65
+    },
+    {
+        "Docente": "MARCOS RODRIGO MENDES SAAVEDRA",
+        "M\u00e9dia": 0.95,
+        "Mediana": 0.65
+    },
+    {
+        "Docente": "MATHEUS GOMES DA COSTA CORDOVIL",
+        "M\u00e9dia": 0.65,
+        "Mediana": 0.65
+    },
+    {
+        "Docente": "NICOLY DA SILVA MENEZES",
+        "M\u00e9dia": 0.0,
+        "Mediana": 0.65
+    },
+    {
+        "Docente": "RAFAEL DA SILVA LOPES",
+        "M\u00e9dia": 4.05,
+        "Mediana": 0.65
+    },
+    {
+        "Docente": "VICTOR DIAS LEITE",
+        "M\u00e9dia": 0.025,
+        "Mediana": 0.65
     }
 ]

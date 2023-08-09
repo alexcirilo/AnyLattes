@@ -171,8 +171,8 @@ def perc():
     sql = ("select distinct total, 'Periódico', 'Conferência', round(periodico * 100 / total,3 ) as percentual_periodico, round(conferencia * 100 / total,3 ) as percentual_conferencia "+
         "from (select "+
         "(select count(1) from resultados r ) as total,"
-        "(select count(1) from resultados r where r.documento = 'Periódico' ) as periodico,"+
-        "(select count(1) from resultados r where r.documento = 'Conferência' ) as conferencia from resultados);")
+        "(select count(1) from resultados r where r.documento like '%Peri%' ) as periodico,"+
+        "(select count(1) from resultados r where r.documento like '%Conf%' ) as conferencia from resultados);")
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchall()
@@ -183,8 +183,8 @@ def perc_docente(docente):
     sql =( "select distinct total, 'Periódico', 'Conferência', round(periodico * 100 / total,3 ) as percentual_periodico, round(conferencia * 100 / total,3 ) as percentual_conferencia "+
           "from (select "+
             "(select count(1) from resultados r where nome_docente = '"+docente+"' ) as total,"+
-            "(select count(documento) from resultados r where r.documento = 'Periódico' and  r.nome_docente = '"+docente+"' ) as periodico,"+
-            "(select count(documento) from resultados r where r.documento = 'Conferência' and  r.nome_docente = '"+docente+"' ) as conferencia from resultados);")
+            "(select count(documento) from resultados r where r.documento like '%Peri%' and  r.nome_docente = '"+docente+"' ) as periodico,"+
+            "(select count(documento) from resultados r where r.documento like '%Conf%' and  r.nome_docente = '"+docente+"' ) as conferencia from resultados);")
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchall()

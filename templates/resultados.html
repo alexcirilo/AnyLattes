@@ -88,7 +88,7 @@
     Relação das publicações
 </div>
 <div class="card-body">
-    <table id="resultado" class="table table-sm" style="font-size: small;">
+    <table id="resultados" class="table table-sm responsive" style="font-size: small;">
         <thead class="table-dark">
             <tr>
                 <th>Docente</th>
@@ -97,7 +97,9 @@
                 <th>Título:</th>
                 <th>Estratos:</th>
                 <th>Notas:</th>
-                <th colspan="2">Ação</th>
+                <th>Ação</th>
+                <th>DOI</th>
+                
             </tr>
         </thead>
 
@@ -112,11 +114,12 @@
                         data-bs-target="#exampleModal" data-bs-whatever="{{lista[4]}}">{{lista[4]}}</a></td>
                 <td>{{lista[9]}}</td>
                 <td>{{lista[10]}}</td>
+                <td><a href="{{url_for('edita_publicacao',id=lista[0])}}"><i class="fas fa-pen me-1"></i></a></td>
+
                 {%if lista[5] != '-': %}
-                    <td><a href="{{url_for('edita_publicacao',id=lista[0])}}"><i class="fas fa-pen me-1"></i></a></td>
                     <td><a href="http://dx.doi.org/{{lista[5]}}" target="_blank">DOI</a> </td>
                 {%else%}
-                    <td colspan="2"><a href="{{url_for('edita_publicacao',id=lista[0])}}"><i class="fas fa-pen me-1"></i></a></td>
+                    <td> - </td>
                 {%endif%}
             </tr>
             {%endfor%}

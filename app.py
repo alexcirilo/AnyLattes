@@ -113,7 +113,16 @@ def upload():
                 else:
                     flash(
                         "Não foi possível efetuar upload. Arquivo com extensão inválida")
-        return projetos()
+        anos = []
+        result = []
+        ano_inicio = request.form.get('ano_inicio')
+        ano_fim = request.form.get('ano_fim')
+        
+        # for r in range(int(ano_inicio),int((ano_fim))+1):
+        #     anos.append(r)
+        #     r+1
+        return render_template("loading.html",inicio=ano_inicio, fim=ano_fim)
+        # return projetos()
 
 @app.route('/resultado_total')
 def resultado_total():
@@ -191,7 +200,7 @@ def resultado_total():
         font=dict(size=12)
     )
     figura.update_traces(
-        textfont_size=15,texttemplate='%{text:.3s}')
+        textfont_size=15,texttemplate='%{text:.3rs}')
     figura.update_yaxes(showticklabels=True)
     
     medias = json.dumps(figura,cls=plotly.utils.PlotlyJSONEncoder)
@@ -205,13 +214,13 @@ def resultado_total():
     return render_template("resultados.html", anos=anos ,graphJSON=graphJSON, graph=graph, medias=medias, listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos, data=data)
 
 
-@app.route("/projetos", methods=['POST'])
-def projetos():
+@app.route("/projetos/inicio=<inicio>&fim=<fim>", methods=['POST'])
+def projetos(inicio,fim):
     if request.method == 'POST':
         anos = []
         result = []
-        ano_inicio = request.form.get('ano_inicio')
-        ano_fim = request.form.get('ano_fim')
+        ano_inicio = inicio
+        ano_fim = fim
         
         for r in range(int(ano_inicio),int((ano_fim))+1):
             anos.append(r)
@@ -390,4 +399,4 @@ def nuvem_docente():
 
 if __name__ == "__main__":
     database.tabela_resultados()
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0',debug=True)

@@ -27,7 +27,7 @@ def lista_por_id(id):
 
 def lista():
 
-    sql="select id, nome_docente, documento,ano_evento, titulo,doi,sigla,nome_evento, autores,estratos, notas from resultados r order by ano_evento asc;"
+    sql="select id, nome_docente, documento,ano_evento, titulo,doi,sigla,nome_evento, autores,estratos, round(notas,5) from resultados r order by ano_evento asc;"
     cursor = db.cursor()
     cursor.execute(sql.upper())
     resultado = cursor.fetchall()
@@ -168,11 +168,11 @@ def total_estratos():
     return resultado
 
 def perc():
-    sql = ("select distinct total, 'Periodico', 'Conferencia', round(periodico * 100 / total,3 ) as percentual_periodico, round(conferencia * 100 / total,3 ) as percentual_conferencia "+
+    sql = ("select distinct total, 'Periódico', 'Conferência', round(periodico * 100 / total,3 ) as percentual_periodico, round(conferencia * 100 / total,3 ) as percentual_conferencia "+
         "from (select "+
         "(select count(1) from resultados r ) as total,"
-        "(select count(1) from resultados r where r.documento = 'Periodico' ) as periodico,"+
-        "(select count(1) from resultados r where r.documento = 'Conferencia' ) as conferencia from resultados);")
+        "(select count(1) from resultados r where r.documento = 'Periódico' ) as periodico,"+
+        "(select count(1) from resultados r where r.documento = 'Conferência' ) as conferencia from resultados);")
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchall()
@@ -180,11 +180,11 @@ def perc():
     return resultado
 
 def perc_docente(docente):
-    sql =( "select distinct total, 'periodico', 'conferencia', round(periodico * 100 / total,3 ) as percentual_periodico, round(conferencia * 100 / total,3 ) as percentual_conferencia "+
+    sql =( "select distinct total, 'Periódico', 'Conferência', round(periodico * 100 / total,3 ) as percentual_periodico, round(conferencia * 100 / total,3 ) as percentual_conferencia "+
           "from (select "+
             "(select count(1) from resultados r where nome_docente = '"+docente+"' ) as total,"+
-            "(select count(documento) from resultados r where r.documento = 'Periodico' and  r.nome_docente = '"+docente+"' ) as periodico,"+
-            "(select count(documento) from resultados r where r.documento = 'Conferencia' and  r.nome_docente = '"+docente+"' ) as conferencia from resultados);")
+            "(select count(documento) from resultados r where r.documento = 'Periódico' and  r.nome_docente = '"+docente+"' ) as periodico,"+
+            "(select count(documento) from resultados r where r.documento = 'Conferência' and  r.nome_docente = '"+docente+"' ) as conferencia from resultados);")
     cursor = db.cursor()
     cursor.execute(sql)
     resultado = cursor.fetchall()

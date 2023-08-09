@@ -1,27 +1,7 @@
 [
     {
-        "Ano": "2021",
+        "Ano": "2022",
         "Estratos": "B3",
         "Quantidade": 1
-    },
-    {
-        "Ano": "2022",
-        "Estratos": "A2",
-        "Quantidade": 1
-    },
-    {
-        "Ano": "2022",
-        "Estratos": "A4",
-        "Quantidade": 2
-    },
-    {
-        "Ano": "2022",
-        "Estratos": "B4",
-        "Quantidade": 2
-    },
-    {
-        "Ano": "2022",
-        "Estratos": "C",
-        "Quantidade": 4
     }
 ]

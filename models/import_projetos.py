@@ -194,7 +194,7 @@ def import_project(anos):
             trabalho_valido = False
             for trab in trabalhos.iter():  # Laço para identificar as conferências válidas
                 if trab.tag == 'DADOS-BASICOS-DO-TRABALHO' and trab.attrib['NATUREZA'] == 'COMPLETO' and trab.attrib['ANO-DO-TRABALHO'] in str(anos_validos):
-                    conferencia = 'Conferencia;'
+                    conferencia = 'Conferência;'
                     conferencia = conferencia + trab.attrib['ANO-DO-TRABALHO'] + ';' + trab.attrib['TITULO-DO-TRABALHO'] + ';' + trab.attrib['DOI'] + ';' + trab.attrib['NATUREZA']
                     # ano_projeto = trab.attrib['ANO-DO-TRABALHO']
                     trabalho_valido = True
@@ -520,7 +520,7 @@ def import_project(anos):
             trabalho_valido = False
             for trab in trabalhos.iter():
                 if trab.tag == 'DADOS-BASICOS-DO-ARTIGO' and trab.attrib['NATUREZA'] == 'COMPLETO' and trab.attrib['ANO-DO-ARTIGO'] in str(anos_validos):
-                    periodico = 'Periodico;'
+                    periodico = 'Periídico;'
                     periodico = periodico + trab.attrib['ANO-DO-ARTIGO'] + ';'+ trab.attrib['TITULO-DO-ARTIGO'].replace("'","\'").replace("'","\'") +';' + trab.attrib['DOI'] +';' + trab.attrib['NATUREZA']
                     trabalho_valido = True
                     cont = cont + 1

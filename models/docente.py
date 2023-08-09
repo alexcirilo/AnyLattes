@@ -21,7 +21,7 @@ def periodicos():
     return resultado
 
 def lista_docente(docente):
-    sql = """select id, nome_docente, documento,ano_evento, titulo,doi,sigla,nome_evento, autores,estratos, notas from resultados r
+    sql = """select id, nome_docente, documento,ano_evento, titulo,doi,sigla,nome_evento, autores,estratos, round(notas,5) from resultados r
             where nome_docente = '"""+docente+"""'
             order by ano_evento asc"""
     cursor = db.cursor()

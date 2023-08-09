@@ -88,7 +88,7 @@
     Relação das publicações
 </div>
 <div class="card-body">
-    <table id="resultados" class="table table-sm" style="font-size: small;">
+    <table id="resultados" class="table table-sm responsive" style="font-size: small;">
         <thead class="table-dark">
             <tr>
                 <th>Docente</th>
@@ -98,6 +98,8 @@
                 <th>Estratos:</th>
                 <th>Notas:</th>
                 <th>Ação</th>
+                <th>DOI</th>
+                
             </tr>
         </thead>
 
@@ -113,6 +115,12 @@
                 <td>{{lista[9]}}</td>
                 <td>{{lista[10]}}</td>
                 <td><a href="{{url_for('edita_publicacao',id=lista[0])}}"><i class="fas fa-pen me-1"></i></a></td>
+
+                {%if lista[5] != '-': %}
+                    <td><a href="http://dx.doi.org/{{lista[5]}}" target="_blank">DOI</a> </td>
+                {%else%}
+                    <td> - </td>
+                {%endif%}
             </tr>
             {%endfor%}
         </tbody>

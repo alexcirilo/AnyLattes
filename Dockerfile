@@ -5,5 +5,5 @@ COPY . .
 RUN pip install --no-cache-dir Flask xlrd pycairo==1.24.0
 run pip install -r requirements.txt --no-cache-dir
 
-# CMD ["python" "app.py"]
-CMD python app.py
+CMD [ "python", "-m" , "flask", "run", "--host=0.0.0.0" ]
+#CMD python app.py

@@ -314,7 +314,6 @@ def gerar_grafico():
     
     return jsonify({'htmlresponse': render_template('graficos.html',graphJSON=graphJSON,graph=graph)})
   
-
 @app.route("/visualiza_dados/<id>", methods=['POST','GET'])
 def visualizaDados(id):
     mostra = mostra_dados_faltantes(id)

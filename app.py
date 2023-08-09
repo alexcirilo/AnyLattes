@@ -396,7 +396,6 @@ def nuvem_docente():
     nuvem_por_docente(docente)
     return render_template('nuvem.html')
     
-
 if __name__ == "__main__":
     database.tabela_resultados()
     app.run(host='0.0.0.0')

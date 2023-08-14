@@ -477,8 +477,11 @@ def import_project(anos):
                 
                 # print(nomeProf," | ", resultado[0], " | ", resultado[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos," | ", nota)
                 
-                if(estratos == '' or estratos == '-' or estratos == ' C'):
+                if(estratos == 'c' or estratos == 'C ' or estratos == ' C'):
                     estratos= 'C'
+                    nota = '0'
+                
+                if estratos == 'SEM QUALIS' or estratos == '-':
                     nota = '0'
                     
                 c = db.cursor()
@@ -698,8 +701,11 @@ def import_project(anos):
                             
                 # x = x + 1
                 # print(nomeProf," | ", resultado2[0]," | ", resultado2[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos2," | ", nota)
-                if(estratos2 == '' or estratos2 == '-' or estratos2 == ' C'):
+                if(estratos2 == 'c' or estratos2 == 'C ' or estratos2 == ' C'):
                     estratos2= 'C'
+                    nota = '0'
+                
+                if estratos2 == 'SEM QUALIS' or estratos2 == '-':
                     nota = '0'
                     
                 c = db.cursor()

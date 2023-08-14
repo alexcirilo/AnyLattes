@@ -360,6 +360,8 @@ def atualiza():
             nota = str(models.BaseDeCorrecoes.B4p)
         elif (estratos == 'C'):
             nota = str(models.BaseDeCorrecoes.Cp)
+        elif (estratos == 'SEM QUALIS' or estratos == ' ' or estratos == '-' ):
+            nota = '0'
         
         versao = lista_por_id(id)    
         

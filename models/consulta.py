@@ -238,3 +238,27 @@ def update_notas(nota, titulo):
     cursor.execute(sql)
     db.commit()
     
+def lista_pontuacoes():
+    sql = "select * from pontuacoes"
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchall()
+    return resultado
+
+def busca_pontuacao_estrato(estrato):
+    if estrato == '-':
+        estrato = 'SEM QUALIS'
+    sql = "select nota from pontuacoes where estrato = '"+estrato+"'"
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchone()
+    return resultado
+    
+    
+
+def update_pontuacoes(estrato, nota):
+    sql = ("update pontuacoes set nota = '"+nota+"' where estrato = '"+estrato+"';")
+    cursor = db.cursor()
+    cursor.execute(sql)
+    db.commit()
+    

@@ -37,13 +37,24 @@
                 <i class="fas fa-user me-1"></i>
                 Docente
             </div>
+            
+            <input type="hidden" id="hidden_nome_docente" name="hidden_nome_docente" value="{{docente}}">
+            
             <br>
             <form method="get" id="forms">
                 <select id="nome_docente" name="nome_docente" class="form-select form-select-sm mb-3">
                     <option value="" aria-required="true">DOCENTE </option>
+                    {%if docente: %}
+                        <option value="{{docente}}" selected>{{docente}}</option>
+                    
                     {%for total in totalNotas%}
-                    <option value="{{total[0]}}">{{total[0]}}<i class="fas fa-chart-simple me-1"></i> </option>
+                        <option value="{{total[0]}}">{{total[0]}}<i class="fas fa-chart-simple me-1"></i> </option>
                     {%endfor%}
+                    {%else%}
+                        {%for total in totalNotas%}
+                            <option value="{{total[0]}}">{{total[0]}}<i class="fas fa-chart-simple me-1"></i> </option>
+                        {%endfor%}
+                    {%endif%}
 
                 </select>
                 <label style="display: none;"id="deletar">Remover Docente?
@@ -129,23 +140,33 @@
         document.getElementById('nuvem').hidden = true;
         document.getElementById('producao').hidden = true;
         var query = $('#hidden_value').val();
-        load_data(query);
+        if(query == ""){
+            var query = $('#hidden_nome_docente').val();
+            load_data(query);
+        }else{
+            load_data(query);
+        }
         var obj = $('#chart').empty();
     }
 
     function mostrar(id) {
-
-        var query = $('#hidden_value').val();
-        carrega_grafico(query)
 
         document.getElementById('chart').hidden = false;
         document.getElementById('pizza').hidden = false;
         document.getElementById('tabelaQte').hidden = true;
         document.getElementById('nuvem').hidden = true;
         document.getElementById('producao').hidden = true;
-    }
+        
+        var query = $('#hidden_value').val();
+        if(query == ""){
+            var query = $('#hidden_nome_docente').val();
+            carrega_grafico(query);
+        }else{
+            carrega_grafico(query);
+        }
 
-    
+        
+    }
 
 
     function carrega_grafico(query = '') {
@@ -186,7 +207,27 @@
         });
     }
 
-    
+    var selecionado = $("#nome_docente").val();
+    //var valorSelecionado = selecionado.options[selecionado.selectIndex];
+    console.log(selecionado);
+    if (selecionado == $('#hidden_nome_docente').val()){
+        $('#mostrar').show();
+        var view = document.getElementById('mostrar');
+        document.getElementById('mostrar').innerHTML = '';
+        document.getElementById('mostrar').innerHTML += "<select class='form-select form-select-sm mb-3' name='mostrar' id='mostrar'";
+        view.innerHTML += "onchange='javascript:mostraAlerta(this);' style='display: none;'>";
+        view.innerHTML += "<option value='producaoIntelectual' selected>Produção Intelectual</option>";
+        view.innerHTML += "<option value='tabelaQte'>Notas</option>";
+        view.innerHTML += "<option value='grafico'>Gráficos</option>";
+        view.innerHTML += "<option value='nuvem'>Nuvem de Palavras</option>";
+        view.innerHTML += "</select>"
+        producao();
+
+        $('#deletar').show();
+        $('#deletar').val('');
+        document.getElementById("nuvem").style.display = "None";
+        document.getElementById("div-nuvem").innerHTML = "<img id='nuvem_especifica'>";
+    }
 
     $('#nome_docente').change(function () {
         $('#hidden_value').val($('#nome_docente').val());
@@ -219,6 +260,9 @@
 
     function deletar(){
         var docente = $("#hidden_value").val();
+        if(docente == ""){
+            docente = $('#hidden_nome_docente').val();
+        }
         var resp = confirm('Deseja Realmente Remover '+docente+' ?')
         if(resp == true){
             $.ajax({
@@ -238,6 +282,12 @@
 
     function nuvem_docente(valor){
         var query = document.getElementById("hidden_value").value;
+        if(query == ""){
+            var query = $('#hidden_nome_docente').val();
+            nuvem(query);
+        }else{
+            nuvem(query);
+        }
         console.log(query);
         document.getElementById('pizza').hidden = true;
         document.getElementById('chart').hidden = true;
@@ -246,7 +296,7 @@
         document.getElementById('nuvem').hidden = false;
         document.getElementById("div-nuvem").innerHTML = "<img id='nuvem_especifica'>";
         document.getElementById("nuvem").style.display = "block";
-        nuvem(query);
+        
     }
 
     function nuvem(query = ''){
@@ -259,6 +309,9 @@
                 var g = document.getElementById("nuvem_especifica");
                 
                 var docente  = document.getElementById("hidden_value").value;
+                if(docente == ""){
+                    var docente = $('#hidden_nome_docente').val();
+                }
                 console.log(docente)
                 document.getElementById("nuvem_especifica").innerHTML = "";
                 document.getElementById("div-nuvem").innerHTML= "";
@@ -273,8 +326,13 @@
     }
 
     function producao(){
-        var query = $("#hidden_value").val()
-        producao_intelectual(query);
+        var query = $("#hidden_value").val();
+        if(query == ""){
+            var query = $('#hidden_nome_docente').val();
+            producao_intelectual(query);
+        }else{
+            producao_intelectual(query);
+        }
         document.getElementById('producao').hidden = false;
         document.getElementById('chart').hidden = true;
         document.getElementById('pizza').hidden = true;
@@ -310,6 +368,8 @@
             producao();
         }
     }
+
+    
 
 
 </script>

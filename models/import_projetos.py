@@ -360,24 +360,27 @@ def import_project(anos):
                 # estratoss.append(estratos)
                 
                 nota = 'SEM QUALIS'             #Calcula a nota do estrato
-                if (estratos == 'A1'):
-                    nota = models.BaseDeCorrecoes.A1c
-                elif (estratos == 'A2'):
-                    nota = models.BaseDeCorrecoes.A2c
-                elif (estratos == 'A3'):
-                    nota = models.BaseDeCorrecoes.A3c
-                elif (estratos == 'A4'):
-                    nota = models.BaseDeCorrecoes.A4c
-                elif (estratos == 'B1'):
-                    nota = models.BaseDeCorrecoes.B1c
-                elif (estratos == 'B2'):
-                    nota = models.BaseDeCorrecoes.B2c
-                elif (estratos == 'B3'):
-                    nota = models.BaseDeCorrecoes.B3c
-                elif (estratos == 'B4'):
-                    nota = models.BaseDeCorrecoes.B4c
-                elif (estratos == 'C'):
-                    nota = models.BaseDeCorrecoes.Cc
+                
+                nota_temp = busca_pontuacao_estrato(estratos)
+                nota = float(nota_temp[0])
+                # if (estratos == 'A1'):
+                #     nota = models.BaseDeCorrecoes.A1c
+                # elif (estratos == 'A2'):
+                #     nota = models.BaseDeCorrecoes.A2c
+                # elif (estratos == 'A3'):
+                #     nota = models.BaseDeCorrecoes.A3c
+                # elif (estratos == 'A4'):
+                #     nota = models.BaseDeCorrecoes.A4c
+                # elif (estratos == 'B1'):
+                #     nota = models.BaseDeCorrecoes.B1c
+                # elif (estratos == 'B2'):
+                #     nota = models.BaseDeCorrecoes.B2c
+                # elif (estratos == 'B3'):
+                #     nota = models.BaseDeCorrecoes.B3c
+                # elif (estratos == 'B4'):
+                #     nota = models.BaseDeCorrecoes.B4c
+                # elif (estratos == 'C'):
+                #     nota = models.BaseDeCorrecoes.Cc
                 
                 # notas.append(nota)
                 
@@ -584,24 +587,26 @@ def import_project(anos):
                 estratos2 = estratos2
                 
                 nota = 'SEM QUALIS'               #Calcula nota do estrato
-                if (estratos2 == 'A1'):
-                    nota = models.BaseDeCorrecoes.A1p
-                elif (estratos2 == 'A2'):
-                    nota = models.BaseDeCorrecoes.A2p
-                elif (estratos2 == 'A3'):
-                    nota = models.BaseDeCorrecoes.A3p
-                elif (estratos2 == 'A4'):
-                    nota = models.BaseDeCorrecoes.A4p
-                elif (estratos2 == 'B1'):
-                    nota = models.BaseDeCorrecoes.B1p
-                elif (estratos2 == 'B2'):
-                    nota = models.BaseDeCorrecoes.B2p
-                elif (estratos2 == 'B3'):
-                    nota = models.BaseDeCorrecoes.B3p
-                elif (estratos2 == 'B4'):
-                    nota = models.BaseDeCorrecoes.B4p
-                elif (estratos2 == 'C'):
-                    nota = models.BaseDeCorrecoes.Cp
+                nota = busca_pontuacao_estrato(estratos2)
+                nota = float(nota_temp[0])
+                # if (estratos2 == 'A1'):
+                #     nota = models.BaseDeCorrecoes.A1p
+                # elif (estratos2 == 'A2'):
+                #     nota = models.BaseDeCorrecoes.A2p
+                # elif (estratos2 == 'A3'):
+                #     nota = models.BaseDeCorrecoes.A3p
+                # elif (estratos2 == 'A4'):
+                #     nota = models.BaseDeCorrecoes.A4p
+                # elif (estratos2 == 'B1'):
+                #     nota = models.BaseDeCorrecoes.B1p
+                # elif (estratos2 == 'B2'):
+                #     nota = models.BaseDeCorrecoes.B2p
+                # elif (estratos2 == 'B3'):
+                #     nota = models.BaseDeCorrecoes.B3p
+                # elif (estratos2 == 'B4'):
+                #     nota = models.BaseDeCorrecoes.B4p
+                # elif (estratos2 == 'C'):
+                #     nota = models.BaseDeCorrecoes.Cp
 					
 				
                 # notas.append(nota)
@@ -750,39 +755,40 @@ def import_project(anos):
         print('------------------------------------------------------------')
         # print(str(anos_validos))
 
-    for evento in eventosQualis:
-        rep = titulo_repetido(evento[0])
+    # for evento in eventosQualis:
+    #     rep = titulo_repetido(evento[0])
         
-        if rep == 0:
-            continue
-        else:
-            for r in rep:
-                estrato = r[2]
-                
-                if estrato == 'A1':
-                    nota = str(models.BaseDeCorrecoes.A1p)
-                elif estrato == 'A2':
-                    nota = str(models.BaseDeCorrecoes.A2p)
-                elif estrato == 'A3':
-                    nota = str(models.BaseDeCorrecoes.A3p)
-                elif estrato == 'A4':
-                    nota = str(models.BaseDeCorrecoes.A4p)
-                elif estrato == 'B1':
-                    nota = str(models.BaseDeCorrecoes.B1p)
-                elif estrato == 'B2':
-                    nota = str(models.BaseDeCorrecoes.B2p)
-                elif estrato == 'B3':
-                    nota = str(models.BaseDeCorrecoes.B3p)
-                elif estrato == 'B4':
-                    nota = str(models.BaseDeCorrecoes.B4p)
-                elif estrato == 'C':
-                    nota = str(models.BaseDeCorrecoes.Cp)
+    #     if rep == 0:
+    #         continue
+    #     else:
+    #         for r in rep:
+    #             estrato = r[2]
+    #             nota_temp = busca_pontuacao_estrato(estrato)
+    #             nota = nota_temp[0]
+    #             # if estrato == 'A1':
+    #             #     nota = str(models.BaseDeCorrecoes.A1p)
+    #             # elif estrato == 'A2':
+    #             #     nota = str(models.BaseDeCorrecoes.A2p)
+    #             # elif estrato == 'A3':
+    #             #     nota = str(models.BaseDeCorrecoes.A3p)
+    #             # elif estrato == 'A4':
+    #             #     nota = str(models.BaseDeCorrecoes.A4p)
+    #             # elif estrato == 'B1':
+    #             #     nota = str(models.BaseDeCorrecoes.B1p)
+    #             # elif estrato == 'B2':
+    #             #     nota = str(models.BaseDeCorrecoes.B2p)
+    #             # elif estrato == 'B3':
+    #             #     nota = str(models.BaseDeCorrecoes.B3p)
+    #             # elif estrato == 'B4':
+    #             #     nota = str(models.BaseDeCorrecoes.B4p)
+    #             # elif estrato == 'C':
+    #             #     nota = str(models.BaseDeCorrecoes.Cp)
                     
-                update_notas(nota,r[0])
-        reps = qualis_repetidos(evento[0])
-        for r in reps:
-            media = float(r[1]) / float(r[3])
-            update_qualis_repetido(titulo=r[0],valor=str(media))
-            # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
-            break
+    #             update_notas(nota,r[0])
+    #     reps = qualis_repetidos(evento[0])
+    #     for r in reps:
+    #         media = float(r[1]) / float(r[3])
+    #         update_qualis_repetido(titulo=r[0],valor=str(media))
+    #         # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
+    #         break
     return redirect('/resultado_total')

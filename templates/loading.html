@@ -22,6 +22,11 @@
                 console.log(inicio);
                 console.log(fim);
                 window.location.replace('/resultado_total');
+            },
+            error: function(){
+                window.location.replace('/');
+                //document.getElementById("alert").innerHTML = "<div id='alert' class='alert alert-danger alert-dismissible fade show' role='alert'>!</div>";   
+                alert('Falha ao importar currículo(s)!')
             }
         });
     }

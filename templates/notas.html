@@ -1,0 +1,78 @@
+{% extends 'base.html'%}
+<h1>{%block title%}Configurações{%endblock%}</h1>
+{%block content%}
+
+<h1>Pontuações Qualis</h1>
+<div class="col-md-8">
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{{url_for('index')}}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Configurações</li>
+    </ol>
+</div>
+<div class="card mb-4">
+    <div class="row">
+        <div class="col-6">
+            <div class="card-header" id="card-header">
+                <i class="fas fa-table"></i>
+                Pontuações Qualis
+            </div>
+            <form action="{{url_for('tabela_qualis')}}" method="post">
+                <div class="container" style="text-align: center; width: 200px" valign="left">
+                    <table id="valores_qualis" class="table table-bordered table-sm ">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Estratos</th>
+                                <th>Notas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%for val in valor%}
+                            <tr>
+                                <td><input class="form-control" value="{{val[1]}}" style="width: 120px;" disabled><input type="hidden" name="estrato" value="{{val[1]}}"></td>
+                                <td><input class="form-control" type="text" name="nota" id="nota" style="width: 100px;" id="{{val[2]}}"
+                                        value="{{val[2]}}"></td>
+                            </tr>
+                            {%endfor%}
+    
+                        </tbody>
+                    </table>
+                    <button type="submit" class="btn btn-outline-success" name="enviar"><i class="fas fa-floppy-disk"></i></button>
+                </div>
+            </form>
+        </div>
+        <div class="col-6">
+            <div class="card-header" id="card-header">
+                <i class="fas fa-table"></i>
+                Correção de Notas
+            </div>
+            <form action="{{url_for('corrige_notas')}}" method="post">
+                <div class="alert alert-info fade-show-out" role="alert">
+                    <p>A correção é aplicada em títulos que estão presentes em mais de um Currículo</p>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-outline-danger" name="corrigir" onclick="confirm('Deseja Aplicar a Correção de Notas? ')" >Corrigir Títulos</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+//<script>
+//    function corrigirTitulos(query = ''){
+//        var resp = confirm('Deseja Aplicar a Correção de Notas?')
+//        if(resp == true){
+//            $.ajax({
+//                url: "/corrige_notas",
+//                method: "GET",
+//
+//                success: function(response){
+//                    window.location.reload('/configuracoes')
+//                }
+//                });
+//            
+//        }
+//    }
+//
+//
+//</script>
+
+{%endblock%}

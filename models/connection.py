@@ -27,6 +27,12 @@ def tabela_resultados():
                 notas text,
                 versao INTEGER DEFAULT 0 NOT NULL
                 );
+                
+                CREATE TABLE IF NOT EXISTS pontuacoes(
+                    id INTEGER NOT NULL primary key autoincrement,
+                    estrato text not null,
+                    nota text
+                );
     """
     
 

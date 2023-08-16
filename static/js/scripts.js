@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', event => {
 // Popup alerta de sucesso ou falha, limitado a alguns segundos.
 $(document).ready(function(){			
     setTimeout(function() {
-	$(".alert").fadeOut("slow", function(){
+	$("#alert").fadeOut("slow", function(){
 		$(this).alert('close');
 	});				
     }, 500);			

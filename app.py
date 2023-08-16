@@ -14,7 +14,6 @@ import plotly.express as px
 from models.grafico import graficos
 from models.grafico import pizza
 from models.grafico import *
-# from models.grafico import tipo_grafo
 import models.BaseDeCorrecoes
 import models.connection as database
 from flask_sqlalchemy import SQLAlchemy
@@ -249,20 +248,30 @@ def listar():
     totalNotas = soma_nota()
     return render_template("resultados_por_docente.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
 
-@app.route('/corrige_notas')
+@app.route('/corrige_notas', methods=['POST','GET'])
 def corrige_notas():
     titulosRepetidos = titulos_qualis()
+    
     for tits in titulosRepetidos:
         for t in tits:
-            rep = qualis_repetidos(titulo=t)
-            for r in rep:
+            rep = titulo_repetido(t)
+            if rep == 0:
+                continue
+            else:
+                for r in rep:
+                    estrato = r[2]
+                    nota_temp = busca_pontuacao_estrato(estrato)
+                    nota = float(nota_temp[0])
+                    update_notas(nota,r[0])
+            reps = qualis_repetidos(titulo=t)
+            for r in reps:
                 print(r)
                 if r[0] == t:
                     media = float(r[1]) / float(r[3])
                     update_qualis_repetido(titulo=r[0],valor=str(media))
                     # showinfo(title="VALIDADO",message="Corrigido com Sucesso!")
                     break
-    return redirect('/listar')
+    return redirect('/configuracoes')
 
 @app.route('/contadores',methods=["POST","GET"])
 def contadores():
@@ -314,7 +323,6 @@ def gerar_grafico():
     
     return jsonify({'htmlresponse': render_template('graficos.html',graphJSON=graphJSON,graph=graph)})
   
-
 @app.route("/visualiza_dados/<id>", methods=['POST','GET'])
 def visualizaDados(id):
     mostra = mostra_dados_faltantes(id)
@@ -342,25 +350,10 @@ def atualiza():
         sigla = request.form['sigla']
         estratos = request.form['estratos']
         estratos = estratos.upper()
-                
-        if (estratos == 'A1'):
-            nota = str(models.BaseDeCorrecoes.A1p)
-        elif (estratos == 'A2'):
-            nota = str(models.BaseDeCorrecoes.A2p)
-        elif (estratos == 'A3'):
-            nota = str(models.BaseDeCorrecoes.A3p)
-        elif (estratos == 'A4'):
-            nota = str(models.BaseDeCorrecoes.A4p)
-        elif (estratos == 'B1'):
-            nota = str(models.BaseDeCorrecoes.B1p)
-        elif (estratos == 'B2'):
-            nota = str(models.BaseDeCorrecoes.B2p)
-        elif (estratos == 'B3'):
-            nota = str(models.BaseDeCorrecoes.B3p)
-        elif (estratos == 'B4'):
-            nota = str(models.BaseDeCorrecoes.B4p)
-        elif (estratos == 'C'):
-            nota = str(models.BaseDeCorrecoes.Cp)
+        
+        nota_temp = busca_pontuacao_estrato(estratos)
+        nota = nota_temp[0] 
+
         
         versao = lista_por_id(id)    
         
@@ -368,6 +361,42 @@ def atualiza():
         
         flash("Atualizado com Sucesso! ")
     return resultado_total()
+
+@app.route('/atualiza_docente',methods=['POST'])
+def atualiza_docente():
+    if request.method=="POST":
+        id = request.form['id']
+        docente = request.form['hidden_nome_docente']
+        # titulo = request.form['titulo']
+        nome_evento = request.form['nome_evento']
+        doi = request.form['doi']
+        sigla = request.form['sigla']
+        estratos = request.form['estratos']
+        estratos = estratos.upper()
+        
+        nota_temp = busca_pontuacao_estrato(estratos)
+        nota = nota_temp[0]
+        
+        versao = lista_por_id(id)    
+        
+        atualizar(id, doi, sigla, nome_evento, estratos, nota, versao[11])
+        
+        flash("Atualizado com Sucesso! ")
+    return resultado_docente(docente)
+
+@app.route('/resultado_docente',methods=['POST'])
+def resultado_docente(docente):
+    
+    return resultado_editado(docente)
+
+def resultado_editado(docente):  
+    
+    listar = lista()
+    #prof = busca_prof()
+    totalNotas = soma_nota()
+    contadorEstratos = contador_estratos()
+    return render_template("resultados_por_docente.html", docente=docente, listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
+
 
 @app.route("/deletarDocente/<docente>",methods=['POST'])
 def deletarDocente(docente):
@@ -395,8 +424,53 @@ def nuvem_docente():
     docente = request.form['query']
     nuvem_por_docente(docente)
     return render_template('nuvem.html')
+
+@app.route("/configuracoes")
+def configuracoes():
+    valor = lista_pontuacoes()
+    return render_template('notas.html',valor=valor)
+
+@app.route("/tabela_qualis",methods=['POST'])
+def tabela_qualis():
+    nota = request.form.getlist('nota')
+    estrato = request.form.getlist('estrato')
+    notas = []
+    for n in nota:
+        
+        notas.append(float(n.replace(",",".")))
     
+    dados = {}
+    dados = zip(estrato,notas)
+    print(dados)
+    
+    for dado in dados:
+        update_pontuacoes(dado[0],dado[1])
+    return recalcula_notas()
+
+def recalcula_notas():
+    titulos = lista()
+    
+    for t in titulos:
+        estratos = t[9]
+        nota_temp = busca_pontuacao_estrato(estratos)
+        nota = float(nota_temp[0])
+        update_notas(nota,t[4])
+        # for t in tits:
+        #     rep = titulo_repetido(t)
+        #     if rep == 0:
+        #         continue
+        #     else:
+        #         for r in rep:
+        #             estrato = r[2]
+        #             nota_temp = busca_pontuacao_estrato(estrato)
+        #             nota = nota_temp[0]
+        #             update_notas(nota,r[0])
+    flash("Tabela atualizada com sucesso!")
+    return configuracoes()
 
 if __name__ == "__main__":
     database.tabela_resultados()
-    app.run(host='0.0.0.0')
+    database.tabela_pontuacoes()
+    database.insert_pontuacoes()
+
+    app.run(host='0.0.0.0', debug=True)

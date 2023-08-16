@@ -122,9 +122,9 @@ def docente_titulos_repetidos():
     return resultado
 
 def update_qualis_repetido(titulo,valor):
-    sql = "update resultados set notas = '"+valor+"' where titulo = '"+titulo+"';"
+    sql = "update resultados set notas = ? where titulo = ?"
     cursor = db.cursor()
-    cursor.execute(sql)
+    cursor.execute(sql,(valor,titulo))
     try:
         db.commit()
         print(titulo +" Atualizado com Sucesso!")
@@ -150,9 +150,9 @@ def atualizar(id,doi,sigla,nome_evento,estratos, nota, versao):
     
     versao = versao + 1
     
-    sql = ("update resultados set doi = '"+doi+"', sigla= '"+sigla+"', nome_evento = '"+nome_evento+"', estratos = '"+estratos+"', notas = '"+nota+"', versao = "+str(versao)+" where id = "+id+";")
+    sql = ("update resultados set doi = ?, sigla= ?, nome_evento = ?, estratos = ?, notas = ?, versao = ? where id = ?")
     cursor = db.cursor()
-    cursor.execute(sql)
+    cursor.execute(sql,(doi,sigla,nome_evento,estratos,nota,str(versao),id))
     
     db.commit()
     print("Atualizado com Sucesso!")
@@ -233,8 +233,32 @@ def lista_especifica(docente):
     return resultado
 
 def update_notas(nota, titulo):
-    sql = "update resultados set notas = '"+nota+"' where titulo = '"+titulo+"' "
+    sql = "update resultados set notas = ? where titulo = ? "
+    cursor = db.cursor()
+    cursor.execute(sql,(nota,titulo))
+    db.commit()
+    
+def lista_pontuacoes():
+    sql = "select * from pontuacoes"
     cursor = db.cursor()
     cursor.execute(sql)
+    resultado = cursor.fetchall()
+    return resultado
+
+def busca_pontuacao_estrato(estrato):
+    if estrato == '-':
+        estrato = 'SEM QUALIS'
+    sql = "select nota from pontuacoes where estrato = '"+estrato+"'"
+    cursor = db.cursor()
+    cursor.execute(sql)
+    resultado = cursor.fetchone()
+    return resultado
+    
+    
+
+def update_pontuacoes(estrato, nota):
+    sql = ("update pontuacoes set nota = ? where estrato = ?")
+    cursor = db.cursor()
+    cursor.execute(sql,(nota,estrato))
     db.commit()
     

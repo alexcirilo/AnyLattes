@@ -61,9 +61,11 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-cloud"></i></div>
                             Nuvem de Palavras
                         </a>
-                        
-                        
-
+                        <div class="sb-sidenav-menu-heading">Configurações</div>
+                        <a class="nav-link" href="{{url_for('configuracoes')}}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-gear"></i></div>
+                            Configurações
+                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -80,11 +82,15 @@
                                 <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
-                        {% block content %} {% endblock %}
+                        <div class="container" style="text-align: center;">
+                            {% for messages in get_flashed_messages() %}
+                                <div id="alert" class="alert alert-primary alert-dismissible fade show" role="alert">{{messages}}</div>
+                            {%endfor%}
+                        </div>
+                        {% block content %} 
                         
-                        {% for messages in get_flashed_messages() %}
-                            <div class="alert alert-primary alert-dismissible fade show" role="alert">{{messages}}</div>
-                        {%endfor%}
+                        {% endblock %}
+                        
                     </div>
             </main>         
             <!-- Footer-->

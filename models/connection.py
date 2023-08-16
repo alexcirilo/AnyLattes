@@ -24,16 +24,12 @@ def tabela_resultados():
                 nome_evento text NOT NULL,
                 autores text NOT NULL,
                 estratos text,
-                notas text,
+                notas REAL,
                 versao INTEGER DEFAULT 0 NOT NULL
-                );
-                
-                CREATE TABLE IF NOT EXISTS pontuacoes(
-                    id INTEGER NOT NULL primary key autoincrement,
-                    estrato text not null,
-                    nota text
-                );
+                );               
     """
+
+    
     
 
     try:
@@ -41,7 +37,50 @@ def tabela_resultados():
     except Exception as e:
         print(e)
     # conn.close()
+    
+def tabela_pontuacoes():
+    create_db = """ CREATE TABLE IF NOT EXISTS pontuacoes(
+                    id INTEGER NOT NULL primary key autoincrement,
+                    estrato TEXT not null,
+                    nota REAL
+                );
+                """
+    
+    try:
+        conn.execute(create_db)
+    except Exception as e:
+        print(e)
 
+def insert_pontuacoes():
+    sql = "select count(*) from pontuacoes;"
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    resultado_temp = cursor.fetchall()
+    
+    resultado = resultado_temp[0]
+    if resultado[0] == 0:
+        
+        db = """ 
+            insert into pontuacoes (estrato, nota) 
+                values 
+                ('A1',1.0),
+                ('A2',0.875),
+                ('A3',0.75),
+                ('A4',0.625),
+                ('B1',0.5),
+                ('B2',0.2),
+                ('B3',0.1),
+                ('B4',0.05),
+                ('C',0.0),
+                ('SEM QUALIS',0.0);
+            """
+        try:
+            cursor.execute(db)
+            conn.commit()
+        except Exception as e:
+            print(e)
+    else:
+        print("Valores já inseridos")
 # def tabela_periodicos():
 #     sql ="""
 #             CREATE TABLE periodicos(

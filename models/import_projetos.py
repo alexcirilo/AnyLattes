@@ -82,105 +82,7 @@ def import_project(anos):
         autores = ''
         conferencia = ''
         periodico = ''
-        notas = []
-        ####################################################################################
-        # Contadores de Conferências por ano
-        cont17c = 0
-        cont18c = 0
-        cont19c = 0
-        cont20c = 0
-        # Contadores de Periódicos por ano
-        cont17p = 0
-        cont18p = 0
-        cont19p = 0
-        cont20p = 0
-        # Contadores de Nota por ano
-        nota17 = 0
-        nota18 = 0
-        nota19 = 0
-        nota20 = 0
-        # Contadores de estratos por conferência em 2017
-        c17A1 = 0
-        c17A2 = 0
-        c17A3 = 0
-        c17A4 = 0
-        c17B1 = 0
-        c17B2 = 0
-        c17B3 = 0
-        c17B4 = 0
-        c17C = 0
-        # Contadores de estratos por periódico em 2017
-        p17A1 = 0
-        p17A2 = 0
-        p17A3 = 0
-        p17A4 = 0
-        p17B1 = 0
-        p17B2 = 0
-        p17B3 = 0
-        p17B4 = 0
-        p17C = 0
-        # Contadores de estratos por conferência em 2018
-        c18A1 = 0
-        c18A2 = 0
-        c18A3 = 0
-        c18A4 = 0
-        c18B1 = 0
-        c18B2 = 0
-        c18B3 = 0
-        c18B4 = 0
-        c18C = 0
-        # Contadores de estratos por periódico em 2018
-        p18A1 = 0
-        p18A2 = 0
-        p18A3 = 0
-        p18A4 = 0
-        p18B1 = 0
-        p18B2 = 0
-        p18B3 = 0
-        p18B4 = 0
-        p18C = 0
-        # Contadores de estratos por conferência em 2019
-        c19A1 = 0
-        c19A2 = 0
-        c19A3 = 0
-        c19A4 = 0
-        c19B1 = 0
-        c19B2 = 0
-        c19B3 = 0
-        c19B4 = 0
-        c19C = 0
-        # Contadores de estratos por periódico em 2019
-        p19A1 = 0
-        p19A2 = 0
-        p19A3 = 0
-        p19A4 = 0
-        p19B1 = 0
-        p19B2 = 0
-        p19B3 = 0
-        p19B4 = 0
-        p19C = 0
-        # Contadores de estratos por conferência em 2020
-        c20A1 = 0
-        c20A2 = 0
-        c20A3 = 0
-        c20A4 = 0
-        c20B1 = 0
-        c20B2 = 0
-        c20B3 = 0
-        c20B4 = 0
-        c20C = 0
-        # Contadores de estratos por periódico em 2020
-        p20A1 = 0
-        p20A2 = 0
-        p20A3 = 0
-        p20A4 = 0
-        p20B1 = 0
-        p20B2 = 0
-        p20B3 = 0
-        p20B4 = 0
-        p20C = 0
-        ##################################################################################
-        
+        notas = []        
 
         for t in root.iter('DADOS-GERAIS'):  # Imprimir nome do professor
             nomeProf = str(t.attrib['NOME-COMPLETO']).upper()
@@ -330,8 +232,7 @@ def import_project(anos):
                                 sigla = rows[0]
                                 estratos = rows[-1]
                                 break
-                # documento.append(resultado[0])
-                # ano_evento.append(resultado[1])
+                
                 # siglas.append(sigla)
                 if ('COMPLETO' in tituloAnais):                          #Correção de tabela, elimina o "COMPLETO" do lugar errado
                     tituloAnais = (resultado[2] + resultado [3] + resultado[4])
@@ -357,135 +258,20 @@ def import_project(anos):
                             autor = (resultado[8])
                     else:
                         autor = (autor)
-                # estratoss.append(estratos)
+                
                 
                 nota = 'SEM QUALIS'             #Calcula a nota do estrato
                 
                 nota_temp = busca_pontuacao_estrato(estratos)
                 nota = float(nota_temp[0])
-                # if (estratos == 'A1'):
-                #     nota = models.BaseDeCorrecoes.A1c
-                # elif (estratos == 'A2'):
-                #     nota = models.BaseDeCorrecoes.A2c
-                # elif (estratos == 'A3'):
-                #     nota = models.BaseDeCorrecoes.A3c
-                # elif (estratos == 'A4'):
-                #     nota = models.BaseDeCorrecoes.A4c
-                # elif (estratos == 'B1'):
-                #     nota = models.BaseDeCorrecoes.B1c
-                # elif (estratos == 'B2'):
-                #     nota = models.BaseDeCorrecoes.B2c
-                # elif (estratos == 'B3'):
-                #     nota = models.BaseDeCorrecoes.B3c
-                # elif (estratos == 'B4'):
-                #     nota = models.BaseDeCorrecoes.B4c
-                # elif (estratos == 'C'):
-                #     nota = models.BaseDeCorrecoes.Cc
                 
-                # notas.append(nota)
-                
-                if (nota != 'SEM QUALIS'):                  #Contador de estratos das conferências
-                    totalNota = totalNota + nota
-                if (estratos != '-'):
-                    if (resultado[1] == str(anos_validos)[0]):
-                        cont17c = cont17c + 1
-                        if (nota != 'SEM QUALIS'):          #somador de notas de 2017
-                            nota17 = nota17 + nota
-                        if (estratos == 'A1'):
-                            c17A1 = c17A1 + 1
-                        elif (estratos == 'A2'):
-                            c17A2 = c17A2 + 1
-                        elif (estratos == 'A3'):
-                                c17A3 = c17A3 + 1
-                        elif (estratos == 'A4'):
-                            c17A4 = c17A4 + 1
-                        elif (estratos == 'B1'):
-                            c17B1 = c17B1 + 1
-                        elif (estratos == 'B2'):
-                                c17B2 = c17B2 + 1
-                        elif (estratos == 'B3'):
-                            c17B3 = c17B3 + 1
-                        elif (estratos == 'B4'):
-                            c17B4 = c17B4 + 1
-                        elif (estratos == 'C'):
-                            c17C = c17C + 1
-                    elif (resultado[1] == str(anos_validos)[1]):
-                        cont18c = cont18c + 1
-                        if (nota != 'SEM QUALIS'):          #somador de notas de 2018
-                            nota18 = nota18 + nota
-                        if (estratos == 'A1'):
-                            c18A1 = c18A1 + 1
-                        elif (estratos == 'A2'):
-                            c18A2 = c18A2 + 1
-                        elif (estratos == 'A3'):
-                            c18A3 = c18A3 + 1
-                        elif (estratos == 'A4'):
-                            c18A4 = c18A4 + 1
-                        elif (estratos == 'B1'):
-                            c18B1 = c18B1 + 1
-                        elif (estratos == 'B2'):
-                            c18B2 = c18B2 + 1
-                        elif (estratos == 'B3'):
-                            c18B3 = c18B3 + 1
-                        elif (estratos == 'B4'):
-                            c18B4 = c18B4 + 1
-                        elif (estratos == 'C'):
-                            c18C = c18C + 1
-                    elif (resultado[1] == str(anos_validos)[2]):
-                        cont19c = cont19c + 1
-                        if (nota != 'SEM QUALIS'):          #somador de notas de 2019
-                            nota19 = nota19 + nota
-                        if (estratos == 'A1'):
-                            c19A1 = c19A1 + 1
-                        elif (estratos == 'A2'):
-                            c19A2 = c19A2 + 1
-                        elif (estratos == 'A3'):
-                            c19A3 = c19A3 + 1
-                        elif (estratos == 'A4'):
-                            c19A4 = c19A4 + 1
-                        elif (estratos == 'B1'):
-                            c19B1 = c19B1 + 1
-                        elif (estratos == 'B2'):
-                            c19B2 = c19B2 + 1
-                        elif (estratos == 'B3'):
-                            c19B3 = c19B3 + 1
-                        elif (estratos == 'B4'):
-                            c19B4 = c19B4 + 1
-                        elif (estratos == 'C'):
-                            c19C = c19C + 1
-                    elif (resultado[1] == str(anos_validos)[3]):
-                        cont20c = cont20c + 1
-                        if (nota != 'SEM QUALIS'):          #somador de notas de 2020
-                            nota20 = nota20 + nota
-                        if (estratos == 'A1'):
-                            c20A1 = c20A1 + 1
-                        elif (estratos == 'A2'):
-                            c20A2 = c20A2 + 1
-                        elif (estratos == 'A3'):
-                            c20A3 = c20A3 + 1
-                        elif (estratos == 'A4'):
-                            c20A4 = c20A4 + 1
-                        elif (estratos == 'B1'):
-                            c20B1 = c20B1 + 1
-                        elif (estratos == 'B2'):
-                            c20B2 = c20B2 + 1
-                        elif (estratos == 'B3'):
-                            c20B3 = c20B3 + 1
-                        elif (estratos == 'B4'):
-                            c20B4 = c20B4 + 1
-                        elif (estratos == 'C'):
-                            c20C = c20C + 1
-                
-                #x = x + 1
-                
-                # print(nomeProf," | ", resultado[0], " | ", resultado[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos," | ", nota)
                 
                 if(estratos == 'c' or estratos == 'C ' or estratos == ' C'):
                     estratos= 'C'
-                    nota = '0'
+                    nota = 0.0
                 
                 if estratos == 'SEM QUALIS' or estratos == '-':
-                    nota = '0'
+                    nota = 0.0
                     
                 c = db.cursor()
                 
@@ -526,7 +312,7 @@ def import_project(anos):
             trabalho_valido = False
             for trab in trabalhos.iter():
                 if trab.tag == 'DADOS-BASICOS-DO-ARTIGO' and trab.attrib['NATUREZA'] == 'COMPLETO' and trab.attrib['ANO-DO-ARTIGO'] in str(anos_validos):
-                    periodico = 'Periídico;'
+                    periodico = 'Periódico;'
                     periodico = periodico + trab.attrib['ANO-DO-ARTIGO'] + ';'+ trab.attrib['TITULO-DO-ARTIGO'].replace("'","\'").replace("'","\'") +';' + trab.attrib['DOI'] +';' + trab.attrib['NATUREZA']
                     trabalho_valido = True
                     cont = cont + 1
@@ -550,6 +336,7 @@ def import_project(anos):
                 sigla2= '-'
                                   
                 #     ######################################################
+                #  método p/ traducao de nome_evento (torna o processamento lento, fica p/ futuras versões)
                 # if str(resultado2[5]) == translator.translate(str(resultado2[5]),src="en",dest="pt"):
                 #     nomeEvento = translator.translate(str(resultado2[5]),src="en",dest="pt")
                 #     print(nomeEvento)
@@ -584,134 +371,19 @@ def import_project(anos):
 						
                     nomeEvento = nomeEvento
                     autor = resultado2[6]
-                estratos2 = estratos2
+                estratos2 = estratos2.replace(" ","")
+                
                 
                 nota = 'SEM QUALIS'               #Calcula nota do estrato
-                nota = busca_pontuacao_estrato(estratos2)
+                nota_temp = busca_pontuacao_estrato(estratos2)
                 nota = float(nota_temp[0])
-                # if (estratos2 == 'A1'):
-                #     nota = models.BaseDeCorrecoes.A1p
-                # elif (estratos2 == 'A2'):
-                #     nota = models.BaseDeCorrecoes.A2p
-                # elif (estratos2 == 'A3'):
-                #     nota = models.BaseDeCorrecoes.A3p
-                # elif (estratos2 == 'A4'):
-                #     nota = models.BaseDeCorrecoes.A4p
-                # elif (estratos2 == 'B1'):
-                #     nota = models.BaseDeCorrecoes.B1p
-                # elif (estratos2 == 'B2'):
-                #     nota = models.BaseDeCorrecoes.B2p
-                # elif (estratos2 == 'B3'):
-                #     nota = models.BaseDeCorrecoes.B3p
-                # elif (estratos2 == 'B4'):
-                #     nota = models.BaseDeCorrecoes.B4p
-                # elif (estratos2 == 'C'):
-                #     nota = models.BaseDeCorrecoes.Cp
-					
-				
-                # notas.append(nota)
-                    
-                if (nota != 'SEM QUALIS'):            #Contador de estratos dos periódicos
-                    totalNota = totalNota + nota
-                if (estratos2 != '-'):
-                    if (resultado2[1] == '2017'):
-                        cont17p = cont17p + 1
-                        if (nota != 'SEM QUALIS'):          #somador de notas de 2017
-                            nota17 = nota17 + nota
-                        if (estratos2 == 'A1'):
-                            p17A1 = p17A1 + 1
-                        elif (estratos2 == 'A2'):
-                            p17A2 = p17A2 + 1
-                        elif (estratos2 == 'A3'):
-                            p17A3 = p17A3 + 1
-                        elif (estratos2 == 'A4'):
-                            p17A4 = p17A4 + 1
-                        elif (estratos2 == 'B1'):
-                            p17B1 = p17B1 + 1
-                        elif (estratos2 == 'B2'):
-                            p17B2 = p17B2 + 1
-                        elif (estratos2 == 'B3'):
-                            p17B3 = p17B3 + 1
-                        elif (estratos2 == 'B4'):
-                            p17B4 = p17B4 + 1
-                        elif (estratos2 == 'C'):
-                            p17C = p17C + 1
-                    elif (resultado2[1] == '2018'):
-                        cont18p = cont18p + 1
-                        if (nota != 'SEM QUALIS'):          #somador de notas de 2018
-                            nota18 = nota18 + nota
-                        if (estratos2 == 'A1'):
-                            p18A1 = p18A1 + 1
-                        elif (estratos2 == 'A2'):
-                            p18A2 = p18A2 + 1
-                        elif (estratos2 == 'A3'):
-                            p18A3 = p18A3 + 1
-                        elif (estratos2 == 'A4'):
-                            p18A4 = p18A4 + 1
-                        elif (estratos2 == 'B1'):
-                            p18B1 = p18B1 + 1
-                        elif (estratos2 == 'B2'):
-                            p18B2 = p18B2 + 1
-                        elif (estratos2 == 'B3'):
-                            p18B3 = p18B3 + 1
-                        elif (estratos2 == 'B4'):
-                            p18B4 = p18B4 + 1
-                        elif (estratos2 == 'C'):
-                            p18C = p18C + 1
-                    elif (resultado2[1] == '2019'):
-                        cont19p = cont19p + 1
-                        if (nota != 'SEM QUALIS'):          #somador de notas de 2019
-                            nota19 = nota19 + nota
-                        if (estratos2 == 'A1'):
-                            p19A1 = p19A1 + 1
-                        elif (estratos2 == 'A2'):
-                            p19A2 = p19A2 + 1
-                        elif (estratos2 == 'A3'):
-                            p19A3 = p19A3 + 1
-                        elif (estratos2 == 'A4'):
-                            p19A4 = p19A4 + 1
-                        elif (estratos2 == 'B1'):
-                            p19B1 = p19B1 + 1
-                        elif (estratos2 == 'B2'):
-                            p19B2 = p19B2 + 1
-                        elif (estratos2 == 'B3'):
-                            p19B3 = p19B3 + 1
-                        elif (estratos2 == 'B4'):
-                            p19B4 = p19B4 + 1
-                        elif (estratos2 == 'C'):
-                            p19C = p19C + 1
-                    elif (resultado2[1] == '2020'):
-                        cont20p = cont20p + 1
-                        if (nota != 'SEM QUALIS'):          #somador de notas de 2020
-                            nota20 = nota20 + nota
-                        if (estratos2 == 'A1'):
-                            p20A1 = p20A1 + 1
-                        elif (estratos2 == 'A2'):
-                            p20A2 = p20A2 + 1
-                        elif (estratos2 == 'A3'):
-                            p20A3 = p20A3 + 1
-                        elif (estratos2 == 'A4'):
-                            p20A4 = p20A4 + 1
-                        elif (estratos2 == 'B1'):
-                            p20B1 = p20B1 + 1
-                        elif (estratos2 == 'B2'):
-                            p20B2 = p20B2 + 1
-                        elif (estratos2 == 'B3'):
-                            p20B3 = p20B3 + 1
-                        elif (estratos2 == 'B4'):
-                            p20B4 = p20B4 + 1
-                        elif (estratos2 == 'C'):
-                            p20C = p20C + 1
                             
-                            
-                # x = x + 1
-                # print(nomeProf," | ", resultado2[0]," | ", resultado2[1]," | ", tituloAnais," | ", doi," | ", sigla ," | ",nomeEvento," | ", autor," | ", estratos2," | ", nota)
                 if(estratos2 == 'c' or estratos2 == 'C ' or estratos2 == ' C'):
                     estratos2= 'C'
-                    nota = '0'
+                    nota = 0.0
                 
                 if estratos2 == 'SEM QUALIS' or estratos2 == '-':
-                    nota = '0'
+                    nota = 0.0
                     
                 c = db.cursor()
                 tituloAnais = tituloAnais.replace("'","")
@@ -725,7 +397,7 @@ def import_project(anos):
                                                 
                     c.execute(data,(nomeProf, resultado2[0], resultado2[1], tituloAnais, doi, sigla2 ,nomeEvento, autor, estratos2, nota))
                     db.commit()
-                    # c.close()
+                    
                 elif result2 != 0 :
                     for r in result2:
                         if r[11] == 0:    
@@ -746,14 +418,11 @@ def import_project(anos):
 
                 eventosQualis.append(e2)
                 
-            #verificar aspas simples impedindo de inserir titulo
-        
-        totalNotas = []
-        totalNotas.append(totalNota)
+            
         print('Total de publicações = {}'.format(cont))            #Quantidade de documentos válidos de cada professor
-        print('Pontuação total = {}'.format(totalNota))            #Nota do professor
+       
         print('------------------------------------------------------------')
-        # print(str(anos_validos))
+        
 
     # for evento in eventosQualis:
     #     rep = titulo_repetido(evento[0])
@@ -765,24 +434,6 @@ def import_project(anos):
     #             estrato = r[2]
     #             nota_temp = busca_pontuacao_estrato(estrato)
     #             nota = nota_temp[0]
-    #             # if estrato == 'A1':
-    #             #     nota = str(models.BaseDeCorrecoes.A1p)
-    #             # elif estrato == 'A2':
-    #             #     nota = str(models.BaseDeCorrecoes.A2p)
-    #             # elif estrato == 'A3':
-    #             #     nota = str(models.BaseDeCorrecoes.A3p)
-    #             # elif estrato == 'A4':
-    #             #     nota = str(models.BaseDeCorrecoes.A4p)
-    #             # elif estrato == 'B1':
-    #             #     nota = str(models.BaseDeCorrecoes.B1p)
-    #             # elif estrato == 'B2':
-    #             #     nota = str(models.BaseDeCorrecoes.B2p)
-    #             # elif estrato == 'B3':
-    #             #     nota = str(models.BaseDeCorrecoes.B3p)
-    #             # elif estrato == 'B4':
-    #             #     nota = str(models.BaseDeCorrecoes.B4p)
-    #             # elif estrato == 'C':
-    #             #     nota = str(models.BaseDeCorrecoes.Cp)
                     
     #             update_notas(nota,r[0])
     #     reps = qualis_repetidos(evento[0])

@@ -14,7 +14,6 @@ import plotly.express as px
 from models.grafico import graficos
 from models.grafico import pizza
 from models.grafico import *
-# from models.grafico import tipo_grafo
 import models.BaseDeCorrecoes
 import models.connection as database
 from flask_sqlalchemy import SQLAlchemy
@@ -262,7 +261,7 @@ def corrige_notas():
                 for r in rep:
                     estrato = r[2]
                     nota_temp = busca_pontuacao_estrato(estrato)
-                    nota = nota_temp[0]
+                    nota = float(nota_temp[0])
                     update_notas(nota,r[0])
             reps = qualis_repetidos(titulo=t)
             for r in reps:
@@ -351,27 +350,10 @@ def atualiza():
         sigla = request.form['sigla']
         estratos = request.form['estratos']
         estratos = estratos.upper()
-                
-        if (estratos == 'A1'):
-            nota = str(models.BaseDeCorrecoes.A1p)
-        elif (estratos == 'A2'):
-            nota = str(models.BaseDeCorrecoes.A2p)
-        elif (estratos == 'A3'):
-            nota = str(models.BaseDeCorrecoes.A3p)
-        elif (estratos == 'A4'):
-            nota = str(models.BaseDeCorrecoes.A4p)
-        elif (estratos == 'B1'):
-            nota = str(models.BaseDeCorrecoes.B1p)
-        elif (estratos == 'B2'):
-            nota = str(models.BaseDeCorrecoes.B2p)
-        elif (estratos == 'B3'):
-            nota = str(models.BaseDeCorrecoes.B3p)
-        elif (estratos == 'B4'):
-            nota = str(models.BaseDeCorrecoes.B4p)
-        elif (estratos == 'C'):
-            nota = str(models.BaseDeCorrecoes.Cp)
-        elif (estratos == 'SEM QUALIS' or estratos == ' ' or estratos == '-' ):
-            nota = '0'
+        
+        nota_temp = busca_pontuacao_estrato(estratos)
+        nota = nota_temp[0] 
+
         
         versao = lista_por_id(id)    
         
@@ -394,27 +376,6 @@ def atualiza_docente():
         
         nota_temp = busca_pontuacao_estrato(estratos)
         nota = nota_temp[0]
-                
-        # if (estratos == 'A1'):
-        #     nota = str(models.BaseDeCorrecoes.A1p)
-        # elif (estratos == 'A2'):
-        #     nota = str(models.BaseDeCorrecoes.A2p)
-        # elif (estratos == 'A3'):
-        #     nota = str(models.BaseDeCorrecoes.A3p)
-        # elif (estratos == 'A4'):
-        #     nota = str(models.BaseDeCorrecoes.A4p)
-        # elif (estratos == 'B1'):
-        #     nota = str(models.BaseDeCorrecoes.B1p)
-        # elif (estratos == 'B2'):
-        #     nota = str(models.BaseDeCorrecoes.B2p)
-        # elif (estratos == 'B3'):
-        #     nota = str(models.BaseDeCorrecoes.B3p)
-        # elif (estratos == 'B4'):
-        #     nota = str(models.BaseDeCorrecoes.B4p)
-        # elif (estratos == 'C'):
-        #     nota = str(models.BaseDeCorrecoes.Cp)
-        # elif (estratos == 'SEM QUALIS' or estratos == ' ' or estratos == '-' ):
-        #     nota = '0'
         
         versao = lista_por_id(id)    
         
@@ -473,16 +434,43 @@ def configuracoes():
 def tabela_qualis():
     nota = request.form.getlist('nota')
     estrato = request.form.getlist('estrato')
+    notas = []
+    for n in nota:
+        
+        notas.append(float(n.replace(",",".")))
+    
     dados = {}
-    dados = zip(estrato,nota)
+    dados = zip(estrato,notas)
     print(dados)
     
     for dado in dados:
         update_pontuacoes(dado[0],dado[1])
+    return recalcula_notas()
+
+def recalcula_notas():
+    titulos = lista()
+    
+    for t in titulos:
+        estratos = t[9]
+        nota_temp = busca_pontuacao_estrato(estratos)
+        nota = float(nota_temp[0])
+        update_notas(nota,t[4])
+        # for t in tits:
+        #     rep = titulo_repetido(t)
+        #     if rep == 0:
+        #         continue
+        #     else:
+        #         for r in rep:
+        #             estrato = r[2]
+        #             nota_temp = busca_pontuacao_estrato(estrato)
+        #             nota = nota_temp[0]
+        #             update_notas(nota,r[0])
     flash("Tabela atualizada com sucesso!")
     return configuracoes()
-    
 
 if __name__ == "__main__":
     database.tabela_resultados()
+    database.tabela_pontuacoes()
+    database.insert_pontuacoes()
+
     app.run(host='0.0.0.0', debug=True)

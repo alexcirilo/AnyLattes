@@ -210,7 +210,10 @@ def resultado_total():
     
     tipo_grafo(valor_padrao,colaboracao)
     
-    return render_template("resultados.html", anos=anos ,graphJSON=graphJSON, graph=graph, medias=medias, listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos, data=data)
+    titulosRepetidos = titulos_qualis()
+    
+    return render_template("resultados.html", anos=anos ,graphJSON=graphJSON, graph=graph, medias=medias, listar = listar, totalNotas = totalNotas,
+                           contadorEstratos = contadorEstratos, data=data, titulosRepetidos=titulosRepetidos)
 
 
 @app.route("/projetos/inicio=<inicio>&fim=<fim>", methods=['POST'])
@@ -327,6 +330,12 @@ def gerar_grafico():
 def visualizaDados(id):
     mostra = mostra_dados_faltantes(id)
     retorna =  {'dados': id}
+    return jsonify(mostra=mostra)
+
+@app.route("/visualizar_dados/<titulo>",methods=['POST'])
+def visualizarDados(titulo):
+    mostra = titulo_repetido(titulo)
+    retorna =  {'dados': titulo}
     return jsonify(mostra=mostra)
 
 @app.route("/edita_publicacao/<id>",methods=['POST','GET'])
@@ -473,4 +482,4 @@ if __name__ == "__main__":
     database.tabela_pontuacoes()
     database.insert_pontuacoes()
 
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0')

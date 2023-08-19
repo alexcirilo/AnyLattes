@@ -87,7 +87,7 @@
     <i class="fas fa-table me-1"></i>
     Relação das publicações
 </div>
-<div class="card-body">
+<div class="card-body container">
     <table id="resultados" class="table table-sm responsive" style="font-size: small;">
         <thead class="table-dark">
             <tr>
@@ -97,7 +97,7 @@
                 <th>Título:</th>
                 <th>Estratos:</th>
                 <th>Notas:</th>
-                <th>Ação</th>
+                <th>Editar</th>
                 <th>DOI</th>
                 
             </tr>
@@ -110,8 +110,9 @@
                 <td>{{lista[1].split()[0]}} {{lista[1].split()[-1]}}</td>
                 <td>{{lista[2]}}</td>
                 <td>{{lista[3]}}</td>
-                <td><a class="link-offset-2" data-bs-toggle="modal" onclick='visualizarDados({{lista[0]}})'
-                        data-bs-target="#exampleModal" data-bs-whatever="{{lista[4]}}">{{lista[4]}}</a></td>
+                
+                <td><a class="link-offset-2" data-bs-toggle="modal" onclick='visualizaDados({{lista[0]}})'
+                    data-bs-target="#exampleModal" data-bs-whatever="{{lista[4]}}">{{lista[4]}}</a></td>
                 <td>{{lista[9]}}</td>
                 <td>{{lista[10]}}</td>
                 <td><a href="{{url_for('edita_publicacao',id=lista[0])}}"><i class="fas fa-pen me-1"></i></a></td>
@@ -151,6 +152,71 @@
                     <dd class="col-sm-9"><span id="sigla"></span></dd>
                 </dl>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- fim modal -->
+<br>
+
+<div class="card-header">
+    <i class="fas fa-table me-1"></i>
+    Tabela de Colaboração
+</div>
+<div class="card-body container">
+    <table id="res" class="table table-sm table-responsive" style="font-size: small;">
+        <thead class="table-dark">
+            <tr>
+                <th>Título:</th>
+                <th style="text-align: center;">Colaboradores</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {%for lista in titulosRepetidos%}
+            <tr>
+                <td>
+                    <input type="button" class="btn btn-outline btn-sm rep" id="{{lista[0]}}"  data-bs-toggle="modal" 
+                    data-bs-target="#eModal" data-bs-whatever="{{lista[0]}}" onclick="visualizarDados(this.value)" value="{{lista[0]}}">
+                </td>
+                <td align="center"><a class="link-offset-2" data-bs-toggle="modal"
+                    data-bs-target="#eModal" data-bs-whatever="{{lista[4]}}" onclick="dados(document.getElementById('{{lista[0]}}').value);"><i class="fas fa-user"></i></a>
+                </td>               
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+
+<!-- modal para exibir dados faltantes dos títulos-->
+
+
+<div class="modal fade" id="eModal" tabindex="-1" aria-labelledby="eModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eModalLabel">Dados</h5>
+            </div>
+
+            <div class="modal-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Colaboradores:</dt>
+                    <dd class="col-sm-9"><span id="colaboradores"></span></dd>
+                    <dt class="col-sm-3">Estrato:</dt>
+                    <dd class="col-sm-9"><span id="estrato"></span></dd>
+                    <dt class="col-sm-3">Nota:</dt>
+                    <dd class="col-sm-9"><span id="nota"></span></dd>
+                    <dt class="col-sm-3">DOI:</dt>
+                    <dd class="col-sm-9"><span id="doi"></span></dd>
+                    
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Fechar</button>
+            </div>
         </div>
     </div>
 </div>
@@ -174,21 +240,19 @@
 
 <script>
 
-    async function visualizarDados(id) {
-        
-
-        const dados = await fetch("/visualiza_dados/" + id);
-        const resposta = await dados.json();
-        console.log(resposta);
-
-        const visModal = new bootstrap.Modal(document.getElementById('exampleModal'));
-        
-        document.getElementById("nome_docente").innerHTML = resposta['mostra'][1];
-        document.getElementById("titulo").innerHTML = resposta['mostra'][2];
-        document.getElementById("autores").innerHTML = resposta['mostra'][3];
-        document.getElementById("sigla").innerHTML = resposta['mostra'][4];
-        document.getElementById("evento").innerHTML = resposta['mostra'][5];
-        
+    function visualizaDados(id){
+        $.ajax({
+            url: "/visualiza_dados/" + id,
+            method: "POST",
+            resposta: { id: id },
+            success: function(resposta){
+                document.getElementById("nome_docente").innerHTML = resposta['mostra'][1];
+                document.getElementById("titulo").innerHTML = resposta['mostra'][2];
+                document.getElementById("autores").innerHTML = resposta['mostra'][3];
+                document.getElementById("sigla").innerHTML = resposta['mostra'][4];
+                document.getElementById("evento").innerHTML = resposta['mostra'][5];
+            }
+        })
     }
 
     function tipoGrafo(valor){
@@ -229,7 +293,55 @@
 
     $(document).ready(function () {
         $('#resultado').DataTable();
-    });
+    });  
+   
+    $(document).ready(function () {
+        $('#res').DataTable();
+    });  
+
+    function dados(titulo){
+        titulos = titulo
+        console.log(titulos)
+        visualizarDados(titulos)
+        
+    }
+    
+    function visualizarDados(titulos){
+        titulo = titulos
+        //console.log(titulo)
+        $.ajax({
+            url: "/visualizar_dados/" + titulo,
+            method: "POST",
+            data: { titulo: titulo },
+            success: function(data){
+
+                var lista_nomes = [];
+                var lista_estratos = [];
+                var lista_nota = [];
+                var lista_doi = [];
+
+                for(var i=0;i<data['mostra'].length;i++){
+                    lista_nomes.unshift(data['mostra'][i][4]);
+                    lista_estratos.unshift(data['mostra'][i][2]);
+                    lista_nota.unshift(data['mostra'][i][3]);
+                    lista_doi.unshift(data['mostra'][i][5]);
+                }
+                
+                    document.getElementById("colaboradores").innerHTML = lista_nomes.join("<br>")
+                    document.getElementById("estrato").innerHTML = lista_estratos[0];
+                    document.getElementById("nota").innerHTML = lista_nota[0];
+                    document.getElementById("doi").innerHTML = lista_doi[0];
+                    if (lista_doi[0] != '-'){
+                        document.getElementById("doi").innerHTML += "<br><td><a href='http://dx.doi.org/"+lista_doi[0]+"' target='_blank'> Ir p/ DOI</a> </td>"
+                    
+                    }
+                    
+                
+            }
+        })
+    }
+
+
 </script>
 
 {%endblock%}

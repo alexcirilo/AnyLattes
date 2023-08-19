@@ -87,7 +87,7 @@ def qualis_repetidos(titulo):
     return resultado
 
 def titulo_repetido(titulo):
-    sql = "select distinct titulo, notas, estratos, count(*), nome_docente from resultados r where titulo LIKE '%"+titulo+"%' group by nome_docente;"
+    sql = "select distinct titulo, notas, estratos, count(*), nome_docente, doi from resultados r where titulo LIKE '%"+titulo+"%' group by nome_docente;"
     
     cursor = db.cursor()
     cursor.execute(sql)

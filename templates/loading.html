@@ -3,6 +3,7 @@
 
 <input type="hidden" value="{{inicio}}" id="hidden_inicio">
 <input type="hidden" value="{{fim}}" id="hidden_fim">
+<input type="hidden" value="{{page}}" id="page">
 <div id="preloader">
     <div id="status">&nbsp</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"> </script>
@@ -10,25 +11,33 @@
 
 
 <script>
-    window.onload = function(){
-        var inicio = $("#hidden_inicio").val();
-        var fim = $("#hidden_fim").val();
-        $.ajax({
-            url: "/projetos/inicio="+inicio+"&fim="+fim,
-            method: "POST",
-            data: { inicio: inicio, fim:fim },
-
-            success: function (data) {
-                console.log(inicio);
-                console.log(fim);
-                window.location.replace('/resultado_total');
-            },
-            error: function(){
-                window.location.replace('/');
-                //document.getElementById("alert").innerHTML = "<div id='alert' class='alert alert-danger alert-dismissible fade show' role='alert'>!</div>";   
-                alert('Falha ao importar currículo(s)!')
-            }
-        });
+    page = document.getElementById("page").value;
+    console.log(page)
+    if(page == "upload"){
+        window.onload = function(){
+            var inicio = $("#hidden_inicio").val();
+            var fim = $("#hidden_fim").val();
+            $.ajax({
+                url: "/projetos/inicio="+inicio+"&fim="+fim,
+                method: "POST",
+                data: { inicio: inicio, fim:fim },
+    
+                success: function (data) {
+                    console.log(inicio);
+                    console.log(fim);
+                    window.location.replace('/resultado_total');
+                },
+                error: function(){
+                    window.location.replace('/');
+                    //document.getElementById("alert").innerHTML = "<div id='alert' class='alert alert-danger alert-dismissible fade show' role='alert'>!</div>";   
+                    alert('Falha ao importar currículo(s)!')
+                }
+            });
+        }
+    }else if(page == "nuvem"){
+        window.onload = function(){
+            window.location.replace("{{url_for('nuvem')}}");
+        }
     }
 </script>
 

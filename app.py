@@ -120,8 +120,15 @@ def upload():
         # for r in range(int(ano_inicio),int((ano_fim))+1):
         #     anos.append(r)
         #     r+1
-        return render_template("loading.html",inicio=ano_inicio, fim=ano_fim)
+        page = "upload"
+        return loading(page=page,inicio=ano_inicio, fim=ano_fim)
         # return projetos()
+
+def loading(page, valor1, valor2):
+    if page == "upload":
+        return render_template("loading.html", inicio=valor1, fim=valor2, page=page)
+    elif page == "nuvem":
+        return render_template("loading.html", page=page)
 
 @app.route('/resultado_total')
 def resultado_total():
@@ -421,6 +428,11 @@ def mostra_grafo():
         g = grafico_colaboracao()
         grafo = tipo_grafo(tipo,g)
         return tipo
+    
+@app.route("/wordcloud")
+def wordcloud():
+    page = "nuvem"
+    return render_template("loading.html",page=page)
 
 @app.route("/nuvem")
 def nuvem():

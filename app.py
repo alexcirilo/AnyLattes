@@ -402,7 +402,6 @@ def atualiza_docente():
 
 @app.route('/resultado_docente',methods=['POST'])
 def resultado_docente(docente):
-    
     return resultado_editado(docente)
 
 def resultado_editado(docente):  

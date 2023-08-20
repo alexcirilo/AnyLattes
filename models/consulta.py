@@ -246,7 +246,7 @@ def lista_pontuacoes():
     return resultado
 
 def busca_pontuacao_estrato(estrato):
-    if estrato == '-' or estrato = '':
+    if estrato == '-' or estrato == '':
         estrato = 'SEM QUALIS'
     sql = "select nota from pontuacoes where estrato = '"+estrato+"'"
     cursor = db.cursor()

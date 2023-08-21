@@ -6,8 +6,21 @@ services:
     container_name: anylattes
     ports:
       - '5000:5000'
+    networks:
+      anylattes-network:
+        ipv4_address: 172.21.0.3
+
     depends_on:
       - redis
   redis:
     image: "redis:alpine"
     container_name: redis
+
+networks:
+  anylattes-network:
+    driver: bridge
+    ipam:
+      config:
+        -
+          subnet: 172.21.0.0/24
+          gateway: 172.21.0.1

@@ -17,6 +17,7 @@ from models.grafico import *
 import models.BaseDeCorrecoes
 import models.connection as database
 from flask_sqlalchemy import SQLAlchemy
+from zipfile import ZipFile
 
 
 app = Flask(__name__)
@@ -25,7 +26,7 @@ app.app_context().push()
 
 # configurações de upload arquivos
 
-ALLOWED_EXTENSIONS = {'xml', 'XML','pdf','xls','xlsx'}  # extensões validas
+ALLOWED_EXTENSIONS = {'xml', 'XML','pdf','xls','xlsx','zip','ZIP'}  # extensões validas
 
 # verifica se pasta existe
 if os.path.isdir('curriculos'):
@@ -106,12 +107,24 @@ def upload():
             else:
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-                    file.save(os.path.join(
+                    f = file.filename.rsplit('.',1)[1].lower()
+                    dir = 'curriculos/'
+                    if f == 'xml' or f == 'XML':
+                        file.save(os.path.join(
                         app.config['UPLOAD_FOLDER'], filename))
-                    flash('File(s) uploaded successfully')
-                else:
-                    flash(
-                        "Não foi possível efetuar upload. Arquivo com extensão inválida")
+                        flash('File(s) uploaded successfully')
+                    elif f == 'zip' or f == 'ZIP':
+                        nomeArquivoZip = file.filename.replace('.zip','')
+                        print(nomeArquivoZip)
+                        
+                        with ZipFile(file,'r') as z:
+                            z.extractall()
+                            
+                            os.rename('curriculo.xml',dir + nomeArquivoZip+'.xml')
+                        flash('File(s) uploaded successfully')
+                    else:
+                        flash(
+                            "Não foi possível efetuar upload. Arquivo com extensão inválida")
         anos = []
         result = []
         ano_inicio = request.form.get('ano_inicio')

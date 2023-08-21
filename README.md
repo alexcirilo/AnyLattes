@@ -12,6 +12,8 @@
     <td>Bootstrap 5.1 </td>
     <td><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" height="30" width="40"/></td>
     <td>SQLite </td>
+    <td><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" height="30" width="40"/></td>
+    <td>Docker (Opcional)</td>
 </div>
 
 <hr/>
@@ -36,3 +38,33 @@ Ele irá instalar todas as dependências necessárias para a aplicação, desde 
 </li>
 
 </ol>
+
+<hr/>
+<h2 align="center"> Instalação Container Docker </h2>
+<hr />
+<h3 align="center">Docker Compose </h3>
+<hr/>
+<ol>
+<li>Baixe o projeto. A Aplicação fará todo o deploy em container docker. Então execute, dentro do projeto o comando via docker-compose</li>
+<pre>docker-compose up -d --build anylattes</pre>
+
+Isso irá carregar a aplicação no IP: 172.21.0.3. Após finalizar, o container ficará rodando em 2° plano. Acesse a aplicação no navegador via URL:
+<pre>http://172.21.0.3:5000</pre>
+
+<hr />
+<h3 align="center">Docker Run </h3>
+<hr/>
+
+<li>Ou se não utilizar o docker-compose, dentro do projeto, execute o comando abaixo para criar o network do container: </li>
+<pre>docker network create -d bridge --subnet=172.21.0.0/24 --gateway=172.21.0.1 anylattes-network </pre>
+
+E o build da aplicação:
+<pre> docker build -t anylattes . </pre>
+
+E depois o comando para rodar a aplicação:
+<pre>docker run -d --name anylattes --network=anylattes-network --ip 172.21.0.3 anylattes</pre>
+
+Após finalizar, o container ficará rodando em 2° plano. Acesse a aplicação no navegador via URL:
+<pre>http://172.21.0.3:5000</pre>
+</ol>
+

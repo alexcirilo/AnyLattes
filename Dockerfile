@@ -1,13 +1,10 @@
-version: '2.4'
+FROM python:3.11.4-bullseye
+LABEL maintainer="AnyLattes"
+WORKDIR /app/AnyLattes
+EXPOSE 5000
+COPY . . 
+RUN pip install --no-cache-dir Flask xlrd pycairo==1.24.0
+run pip install -r requirements.txt --no-cache-dir
 
-services:
-  anylattes:
-    build: .
-    container_name: anylattes
-    ports:
-      - '5000:5000'
-    depends_on:
-      - redis
-  redis:
-    image: "redis:alpine"
-    container_name: redis
+#CMD ["python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+CMD python app.py

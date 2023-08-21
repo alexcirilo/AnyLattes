@@ -122,9 +122,6 @@ def upload():
                             
                             os.rename('curriculo.xml',dir + nomeArquivoZip+'.xml')
                         flash('File(s) uploaded successfully')
-                #     file.save(os.path.join(
-                #         app.config['UPLOAD_FOLDER'], filename))
-                #     flash('File(s) uploaded successfully')
                     else:
                         flash(
                             "Não foi possível efetuar upload. Arquivo com extensão inválida")

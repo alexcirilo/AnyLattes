@@ -103,6 +103,7 @@ def import_project(anos):
                     cont = cont + 1
                 if trabalho_valido and trab.tag == 'DETALHAMENTO-DO-TRABALHO':
                         conferencia = conferencia + ';' + trab.attrib['NOME-DO-EVENTO'].replace("amp;","") + ';' + trab.attrib['TITULO-DOS-ANAIS-OU-PROCEEDINGS'].replace("amp;","")
+                        conferencia = conferencia.replace('c&#807;a&#771;o','ção')
                 if trabalho_valido and trab.tag == 'AUTORES':
                     if autores:
                         autores = autores + '/ ' + trab.attrib['NOME-COMPLETO-DO-AUTOR']
@@ -381,6 +382,9 @@ def import_project(anos):
                 if(estratos2 == 'c' or estratos2 == 'C ' or estratos2 == ' C'):
                     estratos2= 'C'
                     nota = 0.0
+                    
+                if estratos2 == '':
+                    estratos2 = '-'    
                 
                 if estratos2 == 'SEM QUALIS' or estratos2 == '-':
                     nota = 0.0

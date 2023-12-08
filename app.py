@@ -19,10 +19,12 @@ import models.connection as database
 # from flask_sqlalchemy import SQLAlchemy
 from zipfile import ZipFile
 from flask_session import Session
+from datetime import timedelta
 
 
 app = Flask(__name__)
 app.app_context().push()
+app.permanent_session_lifetime = timedelta(seconds=90)
 
 
 
@@ -70,25 +72,47 @@ def page_not_found(e):
     return render_template('telas_erros/404.html')
 
 @app.route("/")
-def login():
-    global logado
+def index():
+    username = None
+    if 'login' in session:
+        username = session['login']
+    return render_template('login.html',username=username)
+    # global logado
     
-    if logado == True:
-        return redirect(url_for('index'))
+    # if logado == True:
+    #     username = None
+    #     if 'login' in session:
+    #         username = session['login']
+    #         print(username)
+    #         return render_template('index.html', username=username)
+    #     else:
+    #         print(username)
+    #         return render_template('login.html')
+        # return redirect(url_for('home'))
+    
     
     logado = False
     if logado == False:
         return render_template('login.html')
 
+
+def validar_login(sessao):
+    global logado
+    if sessao == False or sessao == None:
+        logado = False
+        return redirect('/')
+         
+
 @app.route("/login", methods=['POST','GET'])
 def check_login():
+    validar_login(session.permanent)
     
     global logado 
-    if logado == True:
-        return render_template('index.html')
+    # if logado == True:
+    #     return render_template('index.html')
     
     if logado == False:
-        if request.method == 'POST':
+        if request.method == 'POST' and request.form['login'] != '':
             login = request.form['login']
             senha = request.form['password']
             usuario_logado = usuario(login,senha)
@@ -97,22 +121,27 @@ def check_login():
                 if login == usuario_logado[2] and senha == usuario_logado[3]:
                     flash("Usuário "+usuario_logado[1]+" Logado")
                     session["name"] = usuario_logado[1]
+                    session.permanent = True
                     logado = True
-                    return redirect(url_for("index"))
+                    return redirect(url_for("home"))
             else:
                 logado = False
                 flash('Usuário ou senha incorreta.')
                 return redirect("/")
+        else:
+            return render_template('login.html')
     flash('Erro no redirecionamento da página')
     return redirect("/")
 
 
 @app.route("/logout")
 def logout():
+    validar_login(session.permanent)
     global logado
     logado = False
+    session.permanent = False
     flash("Logout efetuado com sucesso!")
-    return redirect(url_for("login"))
+    return redirect(url_for("index"))
 
 # @app.route("/signup")
 # def signup():
@@ -177,17 +206,21 @@ def logout():
     
         
 @app.route("/home")
-def index():
+def home():
     global logado
-    if logado == True:
-        return render_template('index.html')
-    
-    return redirect(url_for("login"))
+    if session.permanent == True:    
+        if logado == True:
+            return render_template('index.html')
+        if logado == False or logado == None:
+            return redirect('/')
+    return redirect("/")
 
 
 @app.route("/imports", methods=['GET','POST']) #upload arquivos qualis
 def imports():
+    validar_login(session.permanent)
     global logado
+    # if session.permanent == True:
     if logado == True:
         if request.method == 'POST':
             files = request.files.getlist('files[]')
@@ -219,11 +252,12 @@ def imports():
                             "Não foi possível efetuar upload. Arquivo com extensão inválida")
         return render_template('imports.html')
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 
 @app.route("/upload", methods=['GET', 'POST']) #upload currículos
 def upload():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         if request.method == 'POST':
@@ -263,11 +297,12 @@ def upload():
             page = "upload"
             return render_template('loading.html', inicio=ano_inicio, fim=ano_fim, page=page)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 
 @app.route('/resultado_total')
 def resultado_total():
+    validar_login(session.permanent)
     global logado
     if logado == True:
     
@@ -360,11 +395,12 @@ def resultado_total():
         return render_template("resultados.html", anos=anos ,graphJSON=graphJSON, graph=graph, medias=medias, listar = listar, totalNotas = totalNotas,
                             contadorEstratos = contadorEstratos, data=data, titulosRepetidos=titulosRepetidos)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 
 @app.route("/projetos/inicio=<inicio>&fim=<fim>", methods=['POST'])
 def projetos(inicio,fim):
+    validar_login(session.permanent)
     global logado
     if logado == True:
         if request.method == 'POST':
@@ -379,19 +415,21 @@ def projetos(inicio,fim):
 
         return import_project(anos)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route("/tabela_periodicos_e_qualis")
 def gerar_tabela_qualis():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         return render_template('qualis.html'), load_qualis()
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 
 @app.route('/resultado_por_docente')
 def resultado_por_docente():  
+    validar_login(session.permanent)
     global logado
     if logado == True:
         listar = lista()
@@ -400,10 +438,11 @@ def resultado_por_docente():
         contadorEstratos = contador_estratos()
         return render_template("resultados_por_docente.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route('/listar')
 def listar():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         contadorEstratos = contador_estratos()
@@ -411,10 +450,11 @@ def listar():
         totalNotas = soma_nota()
         return render_template("resultados_por_docente.html", listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route('/corrige_notas', methods=['POST','GET'])
 def corrige_notas():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         titulosRepetidos = titulos_qualis()
@@ -440,10 +480,11 @@ def corrige_notas():
                         break
         return redirect('/configuracoes')
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route('/contadores',methods=["POST","GET"])
 def contadores():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         if request.method == 'POST':
@@ -456,20 +497,22 @@ def contadores():
 
         return jsonify({'htmlresponse': render_template('tabela_notas.html',cont=cont, totalNotas=totalNotas)})
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route('/producao_intelectual/<docente>',methods=["POST","GET"])
 def producao_intelectual(docente):
+    validar_login(session.permanent)
     global logado
     if logado == True:
         listar = lista_docente(docente)
         
         return jsonify({'htmlresponse': render_template('producao_intelectual.html', listar=listar)})
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route('/grafico',methods=['POST','GET'])
 def gerar_grafico():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         busca = request.form['query']
@@ -502,48 +545,53 @@ def gerar_grafico():
         
         return jsonify({'htmlresponse': render_template('graficos.html',graphJSON=graphJSON,graph=graph)})
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
   
 @app.route("/visualiza_dados/<id>", methods=['POST','GET'])
 def visualizaDados(id):
+    validar_login(session.permanent)
     global logado
     if logado == True:
         mostra = mostra_dados_faltantes(id)
         retorna =  {'dados': id}
         return jsonify(mostra=mostra)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route("/visualizar_dados/<titulo>",methods=['POST'])
 def visualizarDados(titulo):
+    validar_login(session.permanent)
     global logado
     if logado == True:
         mostra = titulo_repetido(titulo)
         retorna =  {'dados': titulo}
         return jsonify(mostra=mostra)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route("/edita_publicacao/<id>",methods=['POST','GET'])
 def edita_publicacao(id):
+    validar_login(session.permanent)
     global logado
     if logado == True:
         mostra = mostra_publicacao(id)
         return render_template('edita_publicacao.html',mostra=mostra)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route("/edita_publicacao_docente/<id>",methods=['POST','GET'])
 def edita_publicacao_docente(id):
+    validar_login(session.permanent)
     global logado
     if logado == True:
         mostra = mostra_publicacao(id)
         return render_template('edita_publicacao_docente.html',mostra=mostra)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route('/atualiza',methods=['POST'])
 def atualiza():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         if request.method=="POST":
@@ -567,10 +615,11 @@ def atualiza():
             flash("Atualizado com Sucesso! ")
         return resultado_total()
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route('/atualiza_docente',methods=['POST'])
 def atualiza_docente():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         if request.method=="POST":
@@ -593,17 +642,19 @@ def atualiza_docente():
             flash("Atualizado com Sucesso! ")
         return resultado_docente(docente)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route('/resultado_docente',methods=['POST'])
 def resultado_docente(docente):
+    validar_login(session.permanent)
     global logado
     if logado == True:
         return resultado_editado(docente)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 def resultado_editado(docente):  
+    validar_login(session.permanent)
     global logado
     if logado == True:
         listar = lista()
@@ -612,21 +663,23 @@ def resultado_editado(docente):
         contadorEstratos = contador_estratos()
         return render_template("resultados_por_docente.html", docente=docente, listar = listar, totalNotas = totalNotas, contadorEstratos = contadorEstratos)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 
 @app.route("/deletarDocente/<docente>",methods=['POST'])
 def deletarDocente(docente):
+    validar_login(session.permanent)
     global logado
     if logado == True:
         deletar_docente(docente)
         
         return render_template('resultados_por_docente.html')
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route("/mostra_grafo", methods=['POST','GET'])
 def mostra_grafo():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         if request.method == "POST":
@@ -636,48 +689,53 @@ def mostra_grafo():
             grafo = tipo_grafo(tipo,g)
             return tipo
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
     
 @app.route("/wordcloud")
 def wordcloud():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         page = "nuvem"
         return render_template("loading.html",page=page)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route("/nuvem")
 def nuvem():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         nuvem_de_palavras()
         prof = busca_prof()
         return render_template('nuvem.html',prof=prof)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route("/nuvem_docente", methods=['POST','GET'])
 def nuvem_docente():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         docente = request.form['query']
         nuvem_por_docente(docente)
         return render_template('nuvem.html')
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route("/configuracoes")
 def configuracoes():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         valor = lista_pontuacoes()
         return render_template('notas.html',valor=valor)
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
-@app.route("/tabela_qualis",methods=['POST'])
+@app.route("/tabela_qualis",methods=['POST','GET'])
 def tabela_qualis():
+    validar_login(session.permanent)
     global logado
     if logado == True:
         nota = request.form.getlist('nota')
@@ -695,7 +753,7 @@ def tabela_qualis():
             update_pontuacoes(dado[0],dado[1])
         return recalcula_notas()
     if logado == False:
-        return render_template('login.html')
+        return redirect('/')
 
 def recalcula_notas():
     titulos = lista()

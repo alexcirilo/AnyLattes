@@ -221,7 +221,11 @@
         view.innerHTML += "<option value='grafico'>Gráficos</option>";
         view.innerHTML += "<option value='nuvem'>Nuvem de Palavras</option>";
         view.innerHTML += "</select>"
-        producao();
+        if (!$('#hidden_nome_docente').val() == ""){
+            producao();
+        }else{
+            ""
+        }
 
         $('#deletar').show();
         $('#deletar').val('');

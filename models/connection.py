@@ -1,13 +1,15 @@
 import sqlite3
 
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, inspect
 from flask import flash
 
+
 def conexao():
     conn = sqlite3.connect(database='anylattes.db',check_same_thread=False)
+    
     # flash("Abrindo conexão")
     return conn
+
 
 conn = conexao()
 
@@ -51,6 +53,19 @@ def tabela_pontuacoes():
     except Exception as e:
         print(e)
 
+def tabela_usuarios():
+    create_db = """ CREATE TABLE IF NOT EXISTS usuarios(
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                login TEXT NOT NULL UNIQUE,
+                senha TEXT NOT NULL
+                );
+                """
+    try:
+        conn.execute(create_db)
+    except Exception as e:
+        print(e)
+
 def insert_pontuacoes():
     sql = "select count(*) from pontuacoes;"
     cursor = conn.cursor()
@@ -81,6 +96,25 @@ def insert_pontuacoes():
             print(e)
     else:
         print("Valores já inseridos")
+        
+def insert_usuario():
+    sql = "select count(*) from usuarios;"
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    resultado_temp = cursor.fetchall()
+    resultado = resultado_temp[0]
+    if resultado[0] == 0:
+        db = (" INSERT INTO usuarios (nome, login, senha) "+
+              "VALUES('Administrador', 'admin','qwe123');")
+        
+        try:
+            cursor.execute(db)
+            conn.commit()
+        except Exception as e:
+            print(e)
+    else:
+        print('Usuário admin já registrado')
+
 # def tabela_periodicos():
 #     sql ="""
 #             CREATE TABLE periodicos(

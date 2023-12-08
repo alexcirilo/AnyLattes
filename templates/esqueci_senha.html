@@ -1,0 +1,72 @@
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="Alex Cirilo" />
+    <link rel="icon" href="{{url_for('static',filename= 'assets/favicon.ico') }}">
+    <title>{% block title %}Esqueci Senha{% endblock %}</title>
+    <script src="{{url_for('static',filename= 'js/plotly.min.js') }}"></script>
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
+        type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <link href="{{url_for('static',filename= 'css/styles.css') }}" rel="stylesheet" />
+    <link href="{{url_for('static',filename= 'css/estilos.css') }}" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css"
+        rel="stylesheet" />
+
+</head>
+
+<body class="sb-nav-fixed">
+
+    {% block content %}
+    <div class="container" style="padding: 3em;">
+        <div class="card-header"id="card">
+            <h3 style="text-align: center;">Esqueci minha Senha</h3>
+        </div>
+        <div class="card mb">
+            <div class="card-body" >
+                <form method="POST" action="{{url_for('esqueci_senha')}}" class="form-group" id="esqueci_senha">
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-large form-control col-md-6" type="text" name="nome"
+                                placeholder="Nome" autofocus="" required>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-large form-control col-md-6" type="text" name="login"
+                                placeholder="Login" autofocus="" required>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-large form-control col-md-6" type="password" name="senha"
+                                placeholder="Senha" required>
+                        </div>
+                    </div>
+
+                    <br>
+                    <div>
+                        <button class="button is-block btn btn-success is-info is-large is-fullwidth">Salvar</button>
+                        <a href="{{url_for('login')}}" class="btn btn-secondary">Voltar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+<div class="container">
+    {%extends 'footer.html'%}
+</div>
+</html>

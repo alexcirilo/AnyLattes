@@ -84,3 +84,18 @@ h2{
     padding: 1px 1px 1px 1px;
 
 }
+
+#telas_erros{
+    height: 100%;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    min-height: 100%;
+    background-color: #C2DEEF;
+}
+#card{
+    background-color: #353434;
+    color: white;
+}

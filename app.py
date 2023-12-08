@@ -114,65 +114,65 @@ def logout():
     flash("Logout efetuado com sucesso!")
     return redirect(url_for("login"))
 
-@app.route("/signup")
-def signup():
-    global logado 
-    if logado == False:
-        return render_template("signup.html")
-    else:
-        return redirect(url_for('login'))
+# @app.route("/signup")
+# def signup():
+#     global logado 
+#     if logado == False:
+#         return render_template("signup.html")
+#     else:
+#         return redirect(url_for('login'))
 
-@app.route("/novo_usuario", methods=['POST','GET'])
-def novo_usuario():
-    if request.method == 'POST':
-        nome = request.form['nome']
-        login = request.form['login']
-        senha = request.form['senha']
+# @app.route("/novo_usuario", methods=['POST','GET'])
+# def novo_usuario():
+#     if request.method == 'POST':
+#         nome = request.form['nome']
+#         login = request.form['login']
+#         senha = request.form['senha']
         
-        if nome == None or login == None or senha == None:
-            flash("Os campos não podem ser enviados vazios. ")
-            return redirect('/signup')
+#         if nome == None or login == None or senha == None:
+#             flash("Os campos não podem ser enviados vazios. ")
+#             return redirect('/signup')
             
-        else:
-            result = valida_usuario(nome, login)
-            if result == 0:
-                salvar_usuario(nome,login,senha)
-                flash("Usuário "+nome+ " foi salvo com sucesso!")
-                return redirect(url_for("login"))
-            else:
-                flash("Usuario "+nome+" encontra-se cadastrado, tente recuperar a senha")
-                return redirect("/")
+#         else:
+#             result = valida_usuario(nome, login)
+#             if result == 0:
+#                 salvar_usuario(nome,login,senha)
+#                 flash("Usuário "+nome+ " foi salvo com sucesso!")
+#                 return redirect(url_for("login"))
+#             else:
+#                 flash("Usuario "+nome+" encontra-se cadastrado, tente recuperar a senha")
+#                 return redirect("/")
 
-    flash('Erro no redirecionamento da página') 
-    return redirect("/")
+#     flash('Erro no redirecionamento da página') 
+#     return redirect("/")
 
-@app.route("/esqueci_senha")
-def tela_esqueci_senha():
-    return render_template('esqueci_senha.html')
+# @app.route("/esqueci_senha")
+# def tela_esqueci_senha():
+#     return render_template('esqueci_senha.html')
     
 
-@app.route("/esqueci_senha_", methods=['POST'])
-def esqueci_senha():
-    if request.method == 'POST':
-        nome = request.form['nome']
-        login = request.form['login']
-        senha = request.form['senha']
+# @app.route("/esqueci_senha_", methods=['POST'])
+# def esqueci_senha():
+#     if request.method == 'POST':
+#         nome = request.form['nome']
+#         login = request.form['login']
+#         senha = request.form['senha']
         
-        if nome == None or login == None or senha == None:
-            flash("Os campos não podem ser enviados vazios. ")
-            return redirect('/esqueci_senha')
-        else:
-            result = valida_usuario(nome, login)
+#         if nome == None or login == None or senha == None:
+#             flash("Os campos não podem ser enviados vazios. ")
+#             return redirect('/esqueci_senha')
+#         else:
+#             result = valida_usuario(nome, login)
             
-            if result != 0:
-                atualiza_usuario(nome,login,senha)
-                flash("Usuario "+nome+" atualizado com sucesso!")
-                return redirect("/")
-            else:
-                flash("Usuário não encontrado! Cadastre novo usuário para acessar o sistema.")
-                return redirect("/")
-    flash('Erro no redirecionamento da página')
-    return redirect("/")
+#             if result != 0:
+#                 atualiza_usuario(nome,login,senha)
+#                 flash("Usuario "+nome+" atualizado com sucesso!")
+#                 return redirect("/")
+#             else:
+#                 flash("Usuário não encontrado! Cadastre novo usuário para acessar o sistema.")
+#                 return redirect("/")
+#     flash('Erro no redirecionamento da página')
+#     return redirect("/")
             
     
         

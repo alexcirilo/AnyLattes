@@ -7,3 +7,4 @@ querys.testes.txt
 .idea
 curriculos
 Dockerfile
+flask_session
